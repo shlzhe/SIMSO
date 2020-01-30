@@ -7,16 +7,34 @@ class LoginPageController{
   
   LoginPageState state;
   IUserService _userService;
+  UserModel newUser = UserModel();
+  String userID;
 
   LoginPageController(this.state, this._userService);
 
   void getUserData() async {
-    state.user = await _userService.getUserDataByID('GKMeowyUPWf5eOj2ro0h');
-      state.stateChanged(() => {});
+    state.formKey.currentState.save();
+    state.user = await _userService.getUserDataByID(userID);
+    state.stateChanged(() => {});
   }
 
   void saveUser() async {
-    var user = UserModel(username: 'test from post', email: 'test@test.email');
-    await _userService.saveUser(user);
+    state.formKey.currentState.save();
+    state.returnedID = await _userService.saveUser(newUser);
+    state.idController.text = state.returnedID;
+    state.stateChanged(() => {});
+    print(state.returnedID);
+  }
+
+  void saveEmail(String value) {
+    newUser.email = value;
+  }
+
+  void saveUsername(String value) {
+    newUser.username = value;
+  }
+
+  void saveUserID(String value) {
+    userID = value;
   }
 }

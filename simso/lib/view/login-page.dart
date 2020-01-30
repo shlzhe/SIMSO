@@ -15,6 +15,8 @@ class LoginPageState extends State<LoginPage> {
   IUserService _userService = locator<IUserService>();
   LoginPageController _controller;
   UserModel user = UserModel();
+  String returnedID;
+  var idController = TextEditingController();
   var formKey = GlobalKey<FormState>();
 
   LoginPageState() {
@@ -31,19 +33,47 @@ class LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(),
       body: Container(
-        child: Column(children: <Widget>[
-          Text('Click the button to retrieve the user data.'),
-          RaisedButton(
-            child: Text('Get Data'),
-            onPressed: _controller.getUserData,
-          ),
-          Text('Username: ${user.username}'),
-          Text('Email: ${user.email}'),
-          RaisedButton(
-            child: Text('Add User'),
-            onPressed: _controller.saveUser,
-          ),
-        ],),
+        child: Form(
+            key: formKey,
+            child: Column(children: <Widget>[
+              TextFormField(
+                onSaved: _controller.saveEmail,
+                decoration: InputDecoration(
+                  labelText: 'Email'
+                ),
+              ),
+              TextFormField(
+                onSaved: _controller.saveUsername,
+                decoration: InputDecoration(
+                  labelText: 'Username'
+                ),
+              ),
+              FlatButton(
+                onPressed: _controller.saveUser,
+                child: Text(
+                  'Add Data',
+                ),
+              ),
+              Text( returnedID == null ? '' :
+                'The ID of your new document has returned', 
+                style: TextStyle(color: Colors.redAccent),),
+              TextFormField(
+                onSaved: _controller.saveUserID,
+                controller: idController,
+                decoration: InputDecoration(
+                  labelText: 'Get Customer by ID',
+                ),
+              ),
+              FlatButton(
+                onPressed: _controller.getUserData,
+                child: Text(
+                  'Get User',
+                ),
+              ),
+              Text('User Email: ${user.email}'),
+              Text('Username: ${user.username}'),
+            ],),
+        )
       ),
     );
   }

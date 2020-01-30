@@ -5,12 +5,12 @@ import 'iuser-service.dart';
 import 'dart:convert';
 
 class UserService extends IUserService {
-  String url = APIConstants.BaseAPIRUL + '/users';
+  String url = APIConstants.BaseAPIURL + '/users';
 
 
   @override
   Future<UserModel> getUserDataByID(String id) async {
-    Response response = await get(url + '/' + id);
+    Response response = await get('$url/$id');
     var jsonString = response.body;
     Map<String, dynamic> map = jsonDecode(jsonString);
     UserModel user = UserModel.fromJson(map);
@@ -20,8 +20,9 @@ class UserService extends IUserService {
   @override
   Future<String> saveUser(UserModel user) async {
     Response response = await post(url, body: user.toJson());
-    print(response.body);
-    return null;
+    if (response.statusCode == 201)
+      return response.body;
+    else
+      return null;
   }
-  
 }
