@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:simso/controller/login-page-controller.dart';
+import 'package:simso/model/services/itimer-service.dart';
 import 'package:simso/model/services/iuser-service.dart';
 import '../model/entities/user-model.dart';
 import '../service-locator.dart';
+import '../model/entities/globals.dart' as globals;
 class LoginPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -13,6 +15,7 @@ class LoginPage extends StatefulWidget {
 class LoginPageState extends State<LoginPage> {
   BuildContext _context;
   IUserService _userService = locator<IUserService>();
+  ITimerService _timerService = locator<ITimerService>();
   LoginPageController _controller;
   UserModel user = UserModel();
   String returnedID;
@@ -20,7 +23,7 @@ class LoginPageState extends State<LoginPage> {
   var formKey = GlobalKey<FormState>();
 
   LoginPageState() {
-    _controller = LoginPageController(this, this._userService);
+    _controller = LoginPageController(this, this._userService, this._timerService);
   }
 
   void stateChanged(Function f) {
@@ -72,6 +75,25 @@ class LoginPageState extends State<LoginPage> {
               ),
               Text('User Email: ${user.email}'),
               Text('Username: ${user.username}'),
+              Text(globals.timer == null ? '' : '${globals.timer.timeOnAppSec}'),
+              FlatButton(
+                onPressed: _controller.getTimer,
+                child: Text(
+                  'Get Timer',
+                ),
+              ),
+              FlatButton(
+                onPressed: _controller.saveTimer,
+                child: Text(
+                  'Save Timer',
+                ),
+              ),
+              FlatButton(
+                onPressed: _controller.refreshState,
+                child: Text(
+                  'Resfresh State',
+                ),
+              ),
             ],),
         )
       ),
