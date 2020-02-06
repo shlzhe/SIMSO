@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "193953997165",
+    "firebase_url": "https://capstone-16d44.firebaseio.com",
+    "project_id": "capstone-16d44",
+    "storage_bucket": "capstone-16d44.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:193953997165:android:261350f457e27d5435fa64",
+        "android_client_info": {
+          "package_name": "edu.uco.crobinson51.simso"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "193953997165-rpv153ojurq6nsdt5j5865pof00b2cri.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4xsWv8e8qvlG7MUOm6fK5WYuQJnCgWDE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "193953997165-rpv153ojurq6nsdt5j5865pof00b2cri.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
