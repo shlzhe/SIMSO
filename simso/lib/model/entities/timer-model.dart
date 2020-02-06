@@ -5,17 +5,19 @@ import '../../service-locator.dart';
 
 
 class TimerModel {
-  TimerModel({this.docID, this.userID, this.day, this.timeOnAppSec});
+  // Constructor
+  TimerModel({this.documentID, this.userID, this.day, this.timeOnAppSec});
 
-  String docID;
+  String documentID;
   String userID;
   String day;
   int timeOnAppSec;
   bool currentlyCounting;
 
-  bool newTimer;
+  // Service for updating timer
   ITimerService _timerService = locator<ITimerService>();
 
+  // Customer methods for this model
   startTimer() {
     print('Timer started');
     this.currentlyCounting = true;
@@ -39,15 +41,23 @@ class TimerModel {
     this.currentlyCounting = false;
   }
 
-  TimerModel.fromJson(Map<String, dynamic> json): 
-    userID = json['userID'],
-    day = json['day'],
-    timeOnAppSec = json['timeOnAppSec'];
+  // Map from Firebase to object
+  TimerModel.deserialize(Map<String, dynamic> map, String docID) :
+    documentID = docID,
+    userID = map[USER_ID],
+    day = map[DAY],
+    timeOnAppSec = map[TME_ON_APP_SEC];
 
-  Map<String, dynamic> toJson() => 
+  // From object to map for Firebase  
+  Map<String, dynamic> serialize() => 
   {
-    'userID': userID,
-    'day': day,
-    'timeOnAppSec': timeOnAppSec
+    USER_ID: userID,
+    DAY: day,
+    TME_ON_APP_SEC: timeOnAppSec
   };
+
+  // Fields
+  static const USER_ID = 'userID';
+  static const DAY = 'day';
+  static const TME_ON_APP_SEC = 'timeOnAppSec';
 }
