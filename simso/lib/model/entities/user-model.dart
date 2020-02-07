@@ -1,6 +1,14 @@
 class UserModel {
-  UserModel({this.docID, this.username, this.email});
-
+  UserModel({
+    this.docID, 
+    this.username, 
+    this.email,
+    });
+  UserModel.isEmpty(){
+    this.docID='';
+    this.username=''; 
+    this.email='';
+  }
   String docID;
   String username;
   String email;
