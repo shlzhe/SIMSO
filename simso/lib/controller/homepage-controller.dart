@@ -16,9 +16,9 @@ class HomepageController{
   HomepageController(this.state, this._userService, this._timerService);
 
   void setupTimer() async {
-    var timer = await _timerService.getTimer(state.user.docID, 0);
+    var timer = await _timerService.getTimer(state.user.uid, 0);
     if (timer == null){
-      timer = await _timerService.createTimer(state.user.docID);
+      timer = await _timerService.createTimer(state.user.uid);
     }
     
     globals.timer = timer;
