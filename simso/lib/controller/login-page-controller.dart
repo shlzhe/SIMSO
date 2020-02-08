@@ -5,7 +5,6 @@ import 'package:simso/controller/firebase.dart';
 import 'package:simso/view/homepage.dart';
 import 'package:simso/view/login-page.dart';
 import 'package:simso/view/mydialog.dart';
-import '';
 
 class LoginPageController{
   
