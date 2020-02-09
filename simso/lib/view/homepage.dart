@@ -17,18 +17,18 @@ class Homepage extends StatefulWidget {
 }
 
 class HomepageState extends State<Homepage> {
-  BuildContext _context;
-  IUserService _userService = locator<IUserService>();
-  ITimerService _timerService = locator<ITimerService>();
-  HomepageController _controller;
+  BuildContext context;
+  IUserService userService = locator<IUserService>();
+  ITimerService timerService = locator<ITimerService>();
+  HomepageController controller;
   UserModel user;
   String returnedID;
   var idController = TextEditingController();
   var formKey = GlobalKey<FormState>();
 
   HomepageState(this.user) {
-    _controller = HomepageController(this, this._userService, this._timerService);
-    _controller.setupTimer();
+    controller = HomepageController(this, this.userService, this.timerService);
+    controller.setupTimer();
   }
 
   void stateChanged(Function f) {
@@ -37,7 +37,7 @@ class HomepageState extends State<Homepage> {
 
   @override
   Widget build(BuildContext context) {
-    this._context = context;
+    this.context = context;
     return Scaffold(
       appBar: AppBar(),
       body: Container(
@@ -45,19 +45,19 @@ class HomepageState extends State<Homepage> {
             key: formKey,
             child: Column(children: <Widget>[
               TextFormField(
-                onSaved: _controller.saveEmail,
+                onSaved: controller.saveEmail,
                 decoration: InputDecoration(
                   labelText: 'Email'
                 ),
               ),
               TextFormField(
-                onSaved: _controller.saveUsername,
+                onSaved: controller.saveUsername,
                 decoration: InputDecoration(
                   labelText: 'Username'
                 ),
               ),
               FlatButton(
-                onPressed: _controller.saveUser,
+                onPressed: controller.saveUser,
                 child: Text(
                   'Add Data',
                 ),
@@ -66,23 +66,23 @@ class HomepageState extends State<Homepage> {
                 'The ID of your new document has returned', 
                 style: TextStyle(color: Colors.redAccent),),
               TextFormField(
-                onSaved: _controller.saveUserID,
+                onSaved: controller.saveUserID,
                 controller: idController,
                 decoration: InputDecoration(
                   labelText: 'Get Customer by ID',
                 ),
               ),
               FlatButton(
-                onPressed: _controller.getUserData,
+                onPressed: controller.getUserData,
                 child: Text(
                   'Get User',
                 ),
               ),
-              Text('User Email: ${user.email}'),
-              Text('Username: ${user.username}'),
+              Text('User Email: ' + user.email==null ? '': 'user.email'),
+              Text('Username: ' + user.username==null ? '': 'user.username'),
               Text(globals.timer == null ? '' : '${globals.timer.timeOnAppSec}'),
               FlatButton(
-                onPressed: _controller.refreshState,
+                onPressed: controller.refreshState,
                 child: Text(
                   'Resfresh State',
                 ),
