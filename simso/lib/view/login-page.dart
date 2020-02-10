@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:simso/controller/login-page-controller.dart';
 import 'package:simso/view/design-constants.dart';
 
+//Import Google Sign In library
+import 'package:google_sign_in/google_sign_in.dart';
+
 import '../model/entities/user-model.dart';
 
 class LoginPage extends StatefulWidget {
@@ -147,6 +150,13 @@ class LoginPageState extends State<LoginPage> {
                                 textColor: DesignConstants.yellow,
                                 color: DesignConstants.blueLight,
                               ),
+                           FlatButton.icon(
+                             onPressed: controller.gSignin,    //defined gSignin() in controller
+                             icon:Icon(Icons.email,color: DesignConstants.yellow),
+                             label: Text('Google Sign In', style: TextStyle(color: DesignConstants.yellow),),
+                             
+                             
+                             )  
                       ],
                     ),
                   ],

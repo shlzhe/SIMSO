@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:simso/controller/firebase.dart';
 import 'package:simso/view/create-account.dart';
+import 'package:simso/view/googleSignInPage.dart';
 import 'package:simso/view/homepage.dart';
 import 'package:simso/view/login-page.dart';
 import 'package:simso/view/mydialog.dart';
@@ -83,4 +84,13 @@ class LoginPageController{
     if (value=='') state.entry = false;
     state.stateChanged((){});
   }
-}
+
+  void gSignin(){
+    print('Google Sign In Called');
+    //Push to Google Sign In Page 
+    Navigator.push(state.context,MaterialPageRoute(
+      builder: (context)=> googleSignInPage()
+            ));
+        }
+      }
+  
