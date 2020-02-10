@@ -6,6 +6,7 @@ import 'package:simso/view/homepage.dart';
 import 'package:simso/view/login-page.dart';
 import 'package:simso/view/mydialog.dart';
 
+
 class LoginPageController{
   
   LoginPageState state;
