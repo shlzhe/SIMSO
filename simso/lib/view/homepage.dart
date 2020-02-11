@@ -1,3 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:simso/view/design-constants.dart';
 import 'package:unicorndial/unicorndial.dart';
 import 'package:flutter/material.dart';
 import 'package:simso/controller/homepage-controller.dart';
@@ -27,6 +30,12 @@ class HomepageState extends State<Homepage> {
   String returnedID;
   var idController = TextEditingController();
   var formKey = GlobalKey<FormState>();
+
+  //----------------------------------------------------
+  //CREATE INSTANCES FOR GOOGLE SIGN IN 
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  final GoogleSignIn googleSignIn = GoogleSignIn();
+  //----------------------------------------------------
 
   HomepageState(this.user) {
     controller = HomepageController(this, this.userService, this.timerService);
@@ -131,6 +140,12 @@ class HomepageState extends State<Homepage> {
     );
 
     return Scaffold(
+      //backgroundColor: DesignConstants.blueGreyish,   //Body's background color
+      appBar: AppBar(
+        backgroundColor: DesignConstants.blue,
+        title: Text('Home Page',style: TextStyle(color: DesignConstants.yellow),),
+        
+      ),
       floatingActionButton: UnicornDialer(
         backgroundColor: Colors.transparent,
         parentButtonBackground: Colors.blueGrey[300],
@@ -140,7 +155,7 @@ class HomepageState extends State<Homepage> {
         ),
         childButtons: childButtons,
       ),
-      appBar: AppBar(),
+     
       body: Container(
           child: Form(
         key: formKey,
@@ -191,6 +206,48 @@ class HomepageState extends State<Homepage> {
           ],
         ),
       )),
+
+
+      //Create DRAWER to replace return button on HOME PAGE
+        drawer: Drawer(
+          child: ListView(     
+            children: <Widget>[
+               UserAccountsDrawerHeader(
+                currentAccountPicture: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  child: (user.profilePic == '' || user.profilePic == null || user.profilePic.isEmpty) ? Text('No Image') : Text(''),
+                  backgroundImage: (user.profilePic == '' || user.profilePic == null || user.profilePic.isEmpty) ? null : NetworkImage(user.profilePic),
+                ),
+                accountName: Text(user.username,style: TextStyle(fontSize: 20,fontFamily: 'Modak',color: Colors.blue),),
+                accountEmail: Text(user.email,style: TextStyle(fontSize: 20,fontFamily: 'Modak',color:Colors.blue),),
+                decoration: BoxDecoration(color: Colors.yellow),
+              ),
+              
+               ListTile(
+                leading: Icon(Icons.person_outline),
+                title: Text('Profile'),   //Go to Profile Page
+                onTap: (){},
+
+              ),
+              
+              
+              ListTile(
+                leading: Icon(Icons.map),
+                title: Text('Friends in town'),
+                onTap: (){},            //go to google map display friends as markers around the user
+
+              ),
+              ListTile(
+                leading: Icon(Icons.exit_to_app),
+                title: Text('Sign Out'),
+                onTap: controller.signOutGoogle,
+              ),    //Special Widget for Drawer
+
+            ],
+          )
+        ),
+
+
     );
   }
 }

@@ -128,9 +128,6 @@ class LoginPageController{
 
   }
 
-
-
-
   void signOutGoogle() async{
     await state.googleSignIn.signOut();
 

@@ -87,4 +87,10 @@ class HomepageController {
   void refreshState() {
     state.stateChanged(() => {});
   }
+
+  void signOutGoogle() async{
+    await state.googleSignIn.signOut();
+
+  print("Google User Sign Out");
+  }
 }
