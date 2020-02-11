@@ -218,9 +218,9 @@ class HomepageState extends State<Homepage> {
                   child: (user.profilePic == '' || user.profilePic == null || user.profilePic.isEmpty) ? Text('No Image') : Text(''),
                   backgroundImage: (user.profilePic == '' || user.profilePic == null || user.profilePic.isEmpty) ? null : NetworkImage(user.profilePic),
                 ),
-                accountName: Text(user.username,style: TextStyle(fontSize: 20,fontFamily: 'Modak',color: Colors.blue),),
-                accountEmail: Text(user.email,style: TextStyle(fontSize: 20,fontFamily: 'Modak',color:Colors.blue),),
-                decoration: BoxDecoration(color: Colors.yellow),
+                accountName: Text(user.username,style: TextStyle(fontSize: 20, color:DesignConstants.yellow),),
+                accountEmail: Text(user.email,style: TextStyle(fontSize: 20,color:DesignConstants.yellow),),
+                decoration: BoxDecoration(color: DesignConstants.blue)
               ),
               
                ListTile(
