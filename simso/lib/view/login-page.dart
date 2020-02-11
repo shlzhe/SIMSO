@@ -163,7 +163,7 @@ class LoginPageState extends State<LoginPage> {
                             splashColor: Colors.grey,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
                             highlightElevation: 0,
-                            borderSide: BorderSide(color: DesignConstants.blue),
+                            borderSide: BorderSide(color: DesignConstants.yellow),
                             child: Padding(padding:const EdgeInsets.fromLTRB(0, 10, 0, 10), 
                               child: Row(
                                       mainAxisSize: MainAxisSize.min,
