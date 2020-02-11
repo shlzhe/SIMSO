@@ -89,7 +89,7 @@ class LoginPageController{
     print('Google Sign In Called');
     //Push to Google Sign In Page 
     Navigator.push(state.context,MaterialPageRoute(
-      builder: (context)=> googleSignInPage()
+      builder: (context)=> GoogleSignInPage(state.user)
             ));
         }
       }
