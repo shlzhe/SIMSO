@@ -1,6 +1,8 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:simso/controller/firebase.dart';
 import 'package:simso/view/create-account.dart';
 import 'package:simso/view/googleSignInPage.dart';
@@ -85,12 +87,58 @@ class LoginPageController{
     state.stateChanged((){});
   }
 
-  void gSignin(){
-    print('Google Sign In Called');
+  void googleSignIn(){
+    print('googleSignIn() called');
+    /*
     //Push to Google Sign In Page 
     Navigator.push(state.context,MaterialPageRoute(
       builder: (context)=> GoogleSignInPage(state.user)
             ));
+    */
+    signInWithGoogle().whenComplete((){
+      Navigator.of(state.context).push(
+        MaterialPageRoute(builder: (context)=>Homepage(state.user)
+        )); 
+    });
         }
-      }
+
+  //CREATE 2 METHODS FOR GOOGLE SIGN IN 
+  Future<String> signInWithGoogle() async {
+    final GoogleSignInAccount googleSignInAccount = await state.googleSignIn.signIn();
+  final GoogleSignInAuthentication googleSignInAuthentication =
+      await googleSignInAccount.authentication;
+
+  final AuthCredential credential = GoogleAuthProvider.getCredential(
+    accessToken: googleSignInAuthentication.accessToken,
+    idToken: googleSignInAuthentication.idToken,
+  );
+
+  final AuthResult authResult = await state.auth.signInWithCredential(credential);
+  final FirebaseUser user = authResult.user;
+
+  assert(!user.isAnonymous);
+  assert(await user.getIdToken() != null);
+
+  final FirebaseUser currentUser = await state.auth.currentUser();
+  assert(user.uid == currentUser.uid);
+
+  return 'signInWithGoogle succeeded: $user';
+
+
+
+  }
+
+
+
+
+  void signOutGoogle() async{
+    await state.googleSignIn.signOut();
+
+  print("Google User Sign Out");
+  }
+
+
+}
+
+    
   
