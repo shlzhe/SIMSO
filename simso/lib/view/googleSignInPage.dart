@@ -12,7 +12,7 @@ import '../model/entities/globals.dart' as globals;
 
 class GoogleSignInPage extends StatefulWidget {
   final UserModel user;
-
+ 
   GoogleSignInPage(this.user);
 
   @override
@@ -32,8 +32,8 @@ class GoogleSignInPageState extends State<GoogleSignInPage> {
   var formKey = GlobalKey<FormState>();
 
   GoogleSignInPageState(this.user) {
-    controller = GoogleSignInPageController(this, this.userService, this.timerService);
-    controller.setupTimer();
+    controller = GoogleSignInPageController(this);
+
   }
 
   void stateChanged(Function f) {
@@ -61,7 +61,7 @@ class GoogleSignInPageState extends State<GoogleSignInPage> {
           
           children: <Widget>[
 
-            Container(
+           Container(
                           padding: EdgeInsets.only(left: 30, right: 30),
                           child: TextFormField(
                             decoration: InputDecoration(
@@ -73,17 +73,18 @@ class GoogleSignInPageState extends State<GoogleSignInPage> {
                                 borderSide:
                                     BorderSide(color: DesignConstants.yellow),
                               ),
-                              labelText: 'Gmail address',
-                              hintText: 'Gmail address',
+                              labelText: 'Email',
+                              hintText: 'email',
                               hintStyle: TextStyle(
                                   color: DesignConstants.yellow, fontSize: 10),
                               labelStyle: TextStyle(
                                   color: DesignConstants.yellow, fontSize: 20),
                             ),
-                            keyboardType: TextInputType.visiblePassword,
-                            validator: null,
-                            onSaved: null,
+                            keyboardType: TextInputType.emailAddress,
+                            validator: controller.validateEmail,
+                            onSaved: controller.saveEmail,
                             style: TextStyle(color: DesignConstants.yellow),
+                            
                           ),
                         ),
            
@@ -107,8 +108,8 @@ class GoogleSignInPageState extends State<GoogleSignInPage> {
                                   color: DesignConstants.yellow, fontSize: 20),
                             ),
                             keyboardType: TextInputType.visiblePassword,
-                            validator: null,
-                            onSaved: null,
+                            validator: controller.validatePassword,
+                            onSaved: controller.savePassword,
                             style: TextStyle(color: DesignConstants.yellow),
                           ),
                         ),
@@ -116,7 +117,7 @@ class GoogleSignInPageState extends State<GoogleSignInPage> {
            
            //BUTTON FOR GOOGLE SIGN IN 
            FlatButton(
-                onPressed: (){},    //defined gSignin() in controller
+                onPressed: controller.googleSignIn,    //defined googleSignin() in controller
                 //icon:Icon(Icons.email,color: DesignConstants.yellow),
                 child:Text('Google Sign In', style: TextStyle(color: DesignConstants.yellow),),
             

@@ -54,6 +54,8 @@ flutter:
   assets:
     - assets/videos/sparkling.mov
     - assets/images/PlaylistNezuko_anime_design.png
+    - assets/images/google_logo.png
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

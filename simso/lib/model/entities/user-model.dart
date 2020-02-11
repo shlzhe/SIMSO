@@ -10,6 +10,11 @@ class UserModel {
     this.profilePic,
     this.favorites,
     this.password,
+
+    //Add for google sign in 
+    this.gmail,
+    this.gPassword,
+
     });
   UserModel.isEmpty(){
     this.uid = '';
@@ -33,6 +38,10 @@ class UserModel {
   String favorites;
   String password;
 
+  //Add for google sign in 
+  String gmail;
+  String gPassword;
+
   static const UID = 'UID';
   static const USERNAME = 'username';
   static const EMAIL = 'email';
@@ -43,6 +52,10 @@ class UserModel {
   static const PROFILEPIC = 'profilepic';
   static const FAVORITES = 'favorites';
   static const UserCollection = 'users';
+
+  //Add for google sign in 
+  static const GMAIL = 'gmail';
+  static const GPASSWORD = 'gPassword';
 
   Map<String, dynamic> serialize(){
     return <String, dynamic>{
