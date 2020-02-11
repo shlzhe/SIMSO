@@ -240,7 +240,7 @@ class HomepageState extends State<Homepage> {
               ListTile(
                 leading: Icon(Icons.exit_to_app),
                 title: Text('Sign Out'),
-                onTap: controller.signOutGoogle,
+                onTap: controller.signOut,
               ),    //Special Widget for Drawer
 
             ],
