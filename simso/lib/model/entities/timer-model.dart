@@ -19,25 +19,21 @@ class TimerModel {
 
   // Customer methods for this model
   startTimer() {
-    print('Timer started');
     this.currentlyCounting = true;
     var secs = Duration(seconds: 10);
     Timer.periodic(secs, (timer){
       if (!this.currentlyCounting)
         timer.cancel();
         else {
-          print('Timer incrimented'); 
           this.timeOnAppSec += 10;
         }
       if (this.timeOnAppSec % 60 == 0) {
-        print('uploadingChanges');
         this._timerService.updateTimer(this);
       }
     });  
   }
 
   stopTimer() {
-    print('Timer stopped');
     this.currentlyCounting = false;
   }
 

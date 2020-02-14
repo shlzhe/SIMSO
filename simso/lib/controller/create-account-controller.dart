@@ -34,26 +34,6 @@ class CreateAccountController{
     state.user.username = newValue;
   }
 
-  void saveAboutMe(String newValue) {
-    state.user.aboutme = newValue;
-  }
-
-  void saveCity(String newValue) {
-    state.user.city = newValue;
-  }
-
-  void saveRelationship(String newValue) {
-    state.user.relationship = newValue;
-  }
-
-  void saveMemo(String newValue) {
-    state.user.memo = newValue;
-  }
-
-  void saveFavorite(String newValue) {
-    state.user.favorites = newValue;
-  }
-
   void createAccount() async {
     if(!state.formKey.currentState.validate()){
       return;

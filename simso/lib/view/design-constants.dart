@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 // This class is where we store colors that will be used throughout the app
 class DesignConstants {
   
-  static const Color blue = const Color(0xFF02255B);
+  static const Color blue = const Color(0xFF00214A);
   static const Color blueGreyish = const Color(0xFF456990);
   static const Color blueLight = const Color(0xFF0F6FC1);
   static const Color yellow = const Color(0xFFF8E8A2);

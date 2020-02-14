@@ -1,18 +1,23 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:simso/controller/navigation-controller.dart';
 import 'package:simso/model/entities/user-model.dart';
+import 'package:simso/view/homepage.dart';
 
 import 'design-constants.dart';
 
 class MyDrawer extends StatelessWidget {
   final UserModel user;
-  MyDrawerController controller;
+  final BuildContext context;
 
-  MyDrawer(this.user) {
-    controller = new MyDrawerController(this);
+  MyDrawer(this.context, this.user);
+
+  void navigateHomepage() {
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) => Homepage(user)
+    ));
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +45,7 @@ class MyDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.format_quote),
             title: Text('My Quotes'),
-            onTap: controller.navigateHomepage,
+            onTap: navigateHomepage,
           ),
         ],
       ),

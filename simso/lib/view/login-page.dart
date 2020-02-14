@@ -1,9 +1,8 @@
-import 'package:video_player/video_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:simso/controller/login-page-controller.dart';
 import 'package:simso/view/design-constants.dart';
-
 import '../model/entities/user-model.dart';
 
 class LoginPage extends StatefulWidget {
@@ -30,30 +29,6 @@ class LoginPageState extends State<LoginPage> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    controller1 = VideoPlayerController.asset("assets/videos/sparkling.mov")
-      ..initialize().then((_) {
-        controller1.play();
-        controller1.setLooping(true);
-        controller1.setVolume(0.0);
-        // Ensure the first frame is shown after the video is initialized
-        setState(() {});
-      });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    controller1.dispose();
-  }
-
-  @override
-  void deactivate() {
-    super.deactivate();
-  }
-
-  @override
   Widget build(BuildContext context) {
     this.context = context;
     return MaterialApp(
@@ -62,23 +37,13 @@ class LoginPageState extends State<LoginPage> {
         body: Stack(
           children: <Widget>[
             Container(
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 1,
-                height: MediaQuery.of(context).size.height * .6,
-                // child: AspectRatio(
-                //   aspectRatio: 2 / 2,
-                child: VideoPlayer(controller1),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.only(top: 355),
               child: Form(
                 key: formKey,
                 child: ListView(
                   children: <Widget>[
                     Column(
                       children: <Widget>[
-                        //CachedNetworkImage(imageUrl: DesignConstants.logo),
+                        CachedNetworkImage(imageUrl: DesignConstants.logo),
                         Container(
                           padding: EdgeInsets.only(left: 30, right: 30),
                           child: TextFormField(
@@ -108,6 +73,7 @@ class LoginPageState extends State<LoginPage> {
                         Container(
                           padding: EdgeInsets.only(left: 30, right: 30),
                           child: TextFormField(
+                            obscureText: true,
                             decoration: InputDecoration(
                               enabledBorder: UnderlineInputBorder(
                                 borderSide:
