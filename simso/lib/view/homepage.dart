@@ -1,3 +1,4 @@
+import 'package:simso/view/navigation-drawer.dart';
 import 'package:unicorndial/unicorndial.dart';
 import 'package:flutter/material.dart';
 import 'package:simso/controller/homepage-controller.dart';
@@ -141,6 +142,7 @@ class HomepageState extends State<Homepage> {
         childButtons: childButtons,
       ),
       appBar: AppBar(),
+      drawer: MyDrawer(user),
       body: Container(
           child: Form(
         key: formKey,
