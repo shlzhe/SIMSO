@@ -29,9 +29,10 @@ class MyDrawer extends StatelessWidget {
             currentAccountPicture: CircleAvatar(
               child: ClipOval(
                 child: CachedNetworkImage(
-                  imageUrl: user.profilePic != null
+                  imageUrl: user.profilePic != null &&
+                            user.profilePic != ''
                       ? user.profilePic
-                      : "https://image.flaticon.com/icons/png/512/64/64572.png",
+                      : DesignConstants.profile,
                   placeholder: (context, url) =>
                       CircularProgressIndicator(),
                   errorWidget: (context, url, error) =>
@@ -43,8 +44,8 @@ class MyDrawer extends StatelessWidget {
             accountEmail: Text(user.email),
           ),
           ListTile(
-            leading: Icon(Icons.format_quote),
-            title: Text('My Quotes'),
+            leading: Icon(Icons.bubble_chart),
+            title: Text('My Thoughts'),
             onTap: navigateHomepage,
           ),
         ],
