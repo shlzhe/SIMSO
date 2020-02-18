@@ -1,3 +1,4 @@
+import 'package:simso/model/services/itouch-service.dart';
 import 'package:simso/view/navigation-drawer.dart';
 import 'package:unicorndial/unicorndial.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:simso/model/services/itimer-service.dart';
 import 'package:simso/model/services/iuser-service.dart';
 import '../model/entities/user-model.dart';
 import '../service-locator.dart';
+import 'design-constants.dart';
 
 class Homepage extends StatefulWidget {
   final UserModel user;
@@ -22,6 +24,7 @@ class HomepageState extends State<Homepage> {
   BuildContext context;
   IUserService userService = locator<IUserService>();
   ITimerService timerService = locator<ITimerService>();
+  ITouchService touchService = locator<ITouchService>();
   HomepageController controller;
   UserModel user;
   String returnedID;
@@ -29,8 +32,9 @@ class HomepageState extends State<Homepage> {
   var formKey = GlobalKey<FormState>();
 
   HomepageState(this.user) {
-    controller = HomepageController(this, this.timerService);
+    controller = HomepageController(this, this.timerService, this.touchService);
     controller.setupTimer();
+    controller.setupTouchCounter();
   }
 
   void stateChanged(Function f) {
@@ -124,7 +128,10 @@ class HomepageState extends State<Homepage> {
         ),
         childButtons: childButtons,
       ),
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text('Homepage'),
+        backgroundColor: DesignConstants.blue,
+      ),
       drawer: MyDrawer(context, user),
       body: Container(
           child: Form(

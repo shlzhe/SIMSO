@@ -3,12 +3,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/view/homepage.dart';
+import 'package:simso/view/time-management-page.dart';
 
 import 'design-constants.dart';
 
 class MyDrawer extends StatelessWidget {
   final UserModel user;
   final BuildContext context;
+
 
   MyDrawer(this.context, this.user);
 
@@ -18,6 +20,11 @@ class MyDrawer extends StatelessWidget {
     ));
   }
 
+  void navigateTimeManagement() async {
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) => TimeManagementPage(user)
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +51,18 @@ class MyDrawer extends StatelessWidget {
             accountEmail: Text(user.email),
           ),
           ListTile(
+            leading: Icon(Icons.home),
+            title: Text('Homepage'),
+            onTap: navigateHomepage,
+          ),
+          ListTile(
+            leading: Icon(Icons.timer),
+            title: Text('Time Management'),
+            onTap: navigateTimeManagement,
+          ),
+          ListTile(
             leading: Icon(Icons.bubble_chart),
             title: Text('My Thoughts'),
-            onTap: navigateHomepage,
           ),
         ],
       ),
