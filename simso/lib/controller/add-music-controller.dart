@@ -1,4 +1,3 @@
-
 import '../view/add-music-page.dart';
 
 class AddMusicController {
