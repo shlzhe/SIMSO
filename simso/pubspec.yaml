@@ -19,20 +19,16 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  permission_handler: ^3.0.0
+  camera: ^0.5.7+3
+  image_picker: ^0.5.0+3
+  cached_network_image: ^2.0.0
   http: 
   get_it: ^3.1.0
   firebase_core: ^0.4.3+3
   firebase_auth: ^0.15.4
   cloud_firestore: 0.13.0+1
-<<<<<<< HEAD
-  image_picker: ^0.5.0+3
-  cached_network_image: ^2.0.0
-  permission_handler: ^3.0.0
-  camera: ^0.5.7+3
-=======
-  cached_network_image: ^2.0.0
   unicorndial: ^1.1.5
->>>>>>> 4ead2dd2697b80bd98d3e0a61c307d32eeb6a406
   
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

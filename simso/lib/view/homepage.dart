@@ -29,11 +29,7 @@ class HomepageState extends State<Homepage> {
   var formKey = GlobalKey<FormState>();
 
   HomepageState(this.user) {
-<<<<<<< HEAD
-    controller = HomepageController(this, this.userService, this.timerService);
-=======
     controller = HomepageController(this, this.timerService);
->>>>>>> 4ead2dd2697b80bd98d3e0a61c307d32eeb6a406
     controller.setupTimer();
   }
 
@@ -44,8 +40,6 @@ class HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     this.context = context;
-<<<<<<< HEAD
-=======
     var childButtons = List<UnicornButton>();
 
     childButtons.add(
@@ -120,7 +114,6 @@ class HomepageState extends State<Homepage> {
       ),
     );
 
->>>>>>> 4ead2dd2697b80bd98d3e0a61c307d32eeb6a406
     return Scaffold(
       floatingActionButton: UnicornDialer(
         backgroundColor: Colors.transparent,
@@ -134,57 +127,6 @@ class HomepageState extends State<Homepage> {
       appBar: AppBar(),
       drawer: MyDrawer(context, user),
       body: Container(
-<<<<<<< HEAD
-        child: Form(
-            key: formKey,
-            child: Column(children: <Widget>[
-              TextFormField(
-                onSaved: controller.saveEmail,
-                decoration: InputDecoration(
-                  labelText: 'Email'
-                ),
-              ),
-              TextFormField(
-                onSaved: controller.saveUsername,
-                decoration: InputDecoration(
-                  labelText: 'Username'
-                ),
-              ),
-              FlatButton(
-                onPressed: controller.saveUser,
-                child: Text(
-                  'Add Data',
-                ),
-              ),
-              Text( returnedID == null ? '' :
-                'The ID of your new document has returned', 
-                style: TextStyle(color: Colors.redAccent),),
-              TextFormField(
-                onSaved: controller.saveUserID,
-                controller: idController,
-                decoration: InputDecoration(
-                  labelText: 'Get Customer by ID',
-                ),
-              ),
-              FlatButton(
-                onPressed: controller.getUserData,
-                child: Text(
-                  'Get User',
-                ),
-              ),
-              Text('User Email: ' + user.email==null ? '': 'user.email'),
-              Text('Username: ' + user.username==null ? '': 'user.username'),
-              Text(globals.timer == null ? '' : '${globals.timer.timeOnAppSec}'),
-              FlatButton(
-                onPressed: controller.refreshState,
-                child: Text(
-                  'Resfresh State',
-                ),
-              ),
-            ],),
-        )
-      ),
-=======
           child: Form(
         key: formKey,
         child: Column(
@@ -192,7 +134,6 @@ class HomepageState extends State<Homepage> {
           ],
         ),
       )),
->>>>>>> 4ead2dd2697b80bd98d3e0a61c307d32eeb6a406
     );
   }
 }
