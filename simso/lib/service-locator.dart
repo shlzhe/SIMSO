@@ -1,6 +1,8 @@
 import 'model/services/itimer-service.dart';
+import 'model/services/itouch-service.dart';
 import 'model/services/iuser-service.dart';
 import 'model/services/timer-service.dart';
+import 'model/services/touch-service.dart';
 import 'model/services/user-service.dart';
 import 'package:get_it/get_it.dart';
 
@@ -10,4 +12,5 @@ GetIt locator = GetIt.instance;
 setupServiceLocator() {
   locator.registerLazySingleton<IUserService>(() => UserService());
   locator.registerLazySingleton<ITimerService>(() => TimerService());
+  locator.registerLazySingleton<ITouchService>(() => TouchService());
 }
