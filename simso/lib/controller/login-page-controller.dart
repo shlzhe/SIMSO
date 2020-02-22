@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:simso/controller/firebase.dart';
 import 'package:simso/view/create-account.dart';
-import 'package:simso/view/googleSignInPage.dart';
 import 'package:simso/view/homepage.dart';
 import 'package:simso/view/login-page.dart';
 import 'package:simso/view/mydialog.dart';
@@ -108,6 +107,7 @@ class LoginPageController{
   final GoogleSignInAuthentication googleSignInAuthentication =
       await googleSignInAccount.authentication;
 
+    //Checking gmail acct and pass validation
   final AuthCredential credential = GoogleAuthProvider.getCredential(
     accessToken: googleSignInAuthentication.accessToken,
     idToken: googleSignInAuthentication.idToken,
@@ -120,6 +120,7 @@ class LoginPageController{
   assert(await user.getIdToken() != null);
 
   final FirebaseUser currentUser = await state.auth.currentUser();
+  print('UID: + ${user.uid}');
   assert(user.uid == currentUser.uid);
 
   return 'signInWithGoogle succeeded: $user';
