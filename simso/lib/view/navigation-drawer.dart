@@ -18,6 +18,10 @@ class MyDrawer extends StatelessWidget {
     ));
   }
 
+  void signOut(){
+    
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +52,11 @@ class MyDrawer extends StatelessWidget {
             title: Text('My Thoughts'),
             onTap: navigateHomepage,
           ),
+           ListTile(
+            leading: Icon(Icons.exit_to_app),
+                title: Text('Sign Out'),
+                onTap: signOut,
+              ),    //Special Widget for Drawer
         ],
       ),
     );
