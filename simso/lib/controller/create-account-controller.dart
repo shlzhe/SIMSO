@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/model/services/iuser-service.dart';
+import 'package:simso/view/choose-avatar.dart';
 import 'package:simso/view/create-account.dart';
 import 'package:simso/view/mydialog.dart';
 
@@ -10,19 +11,20 @@ class CreateAccountController{
   CreateAccountController(this.state, this.userService);
 
   String validateEmail(String value) {
-    if (!(value.contains('@') || value.contains('.')) || value.contains(' ')){
+    if (!(value.contains('@') || value.contains('.'))){
       return '  Invalid email format. \n  Must contain @ and . \n  Also no empty spaces.';
     }
     return null;
   }
 
   void saveEmail(String newValue) {
-    state.user.email = newValue;
+    newValue = newValue.replaceAll(' ', '');
+    state.user.email = newValue.replaceAll(String.fromCharCode(newValue.length-1), '');
   }
 
   String validatePassword(String value) {
-    if (value.length < 5){
-      return '  Please enter at least 5 characters.';
+    if (value.length <= 5){
+      return '  Please enter at least 6 characters.';
     }
     return null;
   }
@@ -53,7 +55,7 @@ class CreateAccountController{
         
         context: state.context,
         title: 'Account Creation Error',
-        message: error.message != null ? error.message: error.toString(),
+        message: 'Invalid data entered. \n Please enter data with the correct formatting',
         action: () => Navigator.pop(state.context),
       );
         return;  //Do not proceed if log in failed
@@ -65,5 +67,10 @@ class CreateAccountController{
 
   void createCancel() {
     Navigator.pop(state.context);
+  }
+
+  void avatarPicture() async {
+    state.user.profilePic = await Navigator.push(state.context, MaterialPageRoute(
+      builder: (context)=>ChooseAvatar()));
   }
 }

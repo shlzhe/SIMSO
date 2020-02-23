@@ -71,6 +71,14 @@ class CreateAccount extends StatefulWidget{
                   onSaved: controller.saveUsername,
                   style: TextStyle(color: DesignConstants.yellow),
                 ),
+                FlatButton(
+                  onPressed: controller.avatarPicture,
+                  child: Text(
+                    'Set Avatar as profile picture',
+                  ),
+                  textColor: DesignConstants.yellow,
+                  color: DesignConstants.blueLight,
+                ),
           ],
         ),
       ),

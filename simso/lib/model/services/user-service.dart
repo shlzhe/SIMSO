@@ -18,6 +18,7 @@ class UserService extends IUserService {
       return auth.user.uid;
     }
     catch(error){
+      print(error);
       return error;
     }
   }
