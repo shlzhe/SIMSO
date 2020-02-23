@@ -23,28 +23,26 @@ class _LifeCycleManagerState extends State<LifeCycleManager>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch(state) {
       case AppLifecycleState.resumed:
-        if (globals.timer != null) {
-          print('Resumed');
+        print('Resumed');
+        if (globals.touchCounter != null) 
+          globals.touchCounter..addOne();
+        if (globals.timer != null)
           globals.timer.startTimer();
-        }
         break;
       case AppLifecycleState.inactive:
-        if (globals.timer != null) {
-          print('Resumed');
+        print('Inactive');
+        if (globals.timer != null)
           globals.timer.stopTimer();
-        }
         break;
       case AppLifecycleState.paused:
-        if (globals.timer != null) {
-          print('Resumed');
+        print('paused');
+        if (globals.timer != null)
           globals.timer.stopTimer();
-        }
         break;
       case AppLifecycleState.detached:
-        if (globals.timer != null) {
-          print('Resumed');
+        print('detatched');
+        if (globals.timer != null)
           globals.timer.stopTimer();
-        }
         break;
     }
   }
