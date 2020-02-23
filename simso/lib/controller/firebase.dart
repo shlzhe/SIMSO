@@ -15,13 +15,13 @@ class FirebaseFunctions{
   }
   // create user database
   static void createProfile(UserModel user) async {
-    await Firestore.instance.collection(UserModel.UserCollection)
+    await Firestore.instance.collection(UserModel.USERCOLLECTION)
       .document(user.uid)
       .setData(user.serialize());
   }
   // read user into android
   static Future<UserModel> readUser(String uid) async{
-    DocumentSnapshot doc = await Firestore.instance.collection(UserModel.UserCollection)
+    DocumentSnapshot doc = await Firestore.instance.collection(UserModel.USERCOLLECTION)
       .document(uid)
       .get();
     return UserModel.deserialize(doc.data);

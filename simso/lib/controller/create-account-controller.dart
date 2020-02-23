@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:simso/controller/firebase.dart';
 import 'package:simso/model/entities/user-model.dart';
+import 'package:simso/model/services/iuser-service.dart';
 import 'package:simso/view/create-account.dart';
 import 'package:simso/view/mydialog.dart';
 
 class CreateAccountController{
   CreateAccountState state;
-  CreateAccountController(this.state);
+  IUserService userService;
+  CreateAccountController(this.state, this.userService);
 
   String validateEmail(String value) {
     if (!(value.contains('@') || value.contains('.')) || value.contains(' ')){
@@ -41,9 +42,9 @@ class CreateAccountController{
     state.formKey.currentState.save();
     MyDialog.showProgressBar(state.context);
     try{
-      state.user.uid = await FirebaseFunctions.createAccount(state.user.email, state.user.password);
+      state.user.uid = await userService.createAccount(state.user);
       if (state.user.uid!=''||state.user.uid!=null){
-        FirebaseFunctions.createProfile(state.user);
+        userService.createUserDB(state.user);
       }
     }
     catch(error){

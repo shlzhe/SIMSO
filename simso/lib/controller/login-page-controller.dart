@@ -1,7 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:simso/controller/firebase.dart';
+import 'package:simso/model/services/iuser-service.dart';
 import 'package:simso/view/create-account.dart';
 import 'package:simso/view/homepage.dart';
 import 'package:simso/view/login-page.dart';
@@ -10,20 +10,19 @@ import 'package:simso/view/mydialog.dart';
 class LoginPageController{
   
   LoginPageState state;
-
-  LoginPageController(this.state);
+  IUserService userService;
+  LoginPageController(this.state, this.userService);
 
   void goToHomepage() async{
     if(!state.formKey.currentState.validate()){
       return;
     }
     state.formKey.currentState.save();
-    print(state.user.email);
     MyDialog.showProgressBar(state.context);
     try{
-      state.user.uid = await FirebaseFunctions.login(state.user.email, state.user.password);
+      state.user.uid = await userService.login(state.user);
       if (state.user.uid!=''||state.user.uid!=null){
-        state.user = await FirebaseFunctions.readUser(state.user.uid);
+        state.user = await userService.readUser(state.user.uid);
         state.stateChanged((){});
       }
       }
