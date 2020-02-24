@@ -1,7 +1,6 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:simso/controller/firebase.dart';
+import 'package:simso/model/services/iuser-service.dart';
 import 'package:simso/view/create-account.dart';
 import 'package:simso/view/homepage.dart';
 import 'package:simso/view/login-page.dart';
@@ -10,30 +9,29 @@ import 'package:simso/view/mydialog.dart';
 class LoginPageController{
   
   LoginPageState state;
-
-  LoginPageController(this.state);
+  IUserService userService;
+  LoginPageController(this.state, this.userService);
 
   void goToHomepage() async{
     if(!state.formKey.currentState.validate()){
       return;
     }
     state.formKey.currentState.save();
-    print(state.user.email);
     MyDialog.showProgressBar(state.context);
     try{
-      state.user.uid = await FirebaseFunctions.login(state.user.email, state.user.password);
+      state.user.uid = await userService.login(state.user);
       if (state.user.uid!=''||state.user.uid!=null){
-        state.user = await FirebaseFunctions.readUser(state.user.uid);
+        state.user = await userService.readUser(state.user.uid);
         state.stateChanged((){});
       }
-      }
+    }
     catch(error){
        MyDialog.popProgressBar(state.context);
       MyDialog.info(
         
         context: state.context,
         title: 'Login Error',
-        message: error.message != null ? error.message: error.toString(),
+        message: 'Invalid username or password! \nTry again!',
         action: () => Navigator.pop(state.context),
       );
         return;  //Do not proceed if log in failed
@@ -49,19 +47,20 @@ class LoginPageController{
   }
 
   String validateEmail(String value) {
-    if (!(value.contains('@') || value.contains('.')) || value.contains(' ')){
+    if (!(value.contains('@') || value.contains('.'))){
       return '  Invalid email format. \n  Must contain @ and . \n  Also no empty spaces.';
     }
     return null;
   }
 
   void saveEmail(String newValue) {
-    state.user.email = newValue;
+    newValue = newValue.replaceAll(' ', '');
+    state.user.email = newValue.replaceAll(String.fromCharCode(newValue.length-1), '');
   }
 
   String validatePassword(String value) {
-    if (value.length < 5){
-      return '  Please enter at least 5 characters.';
+    if (value.length <= 5){
+      return '  Please enter at least 6 characters.';
     }
     return null;
   }

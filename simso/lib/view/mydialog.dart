@@ -14,8 +14,8 @@ class MyDialog {
           content: Container(
             child: Column(
               children: <Widget>[
-                Icon(Icons.error, size: 200,color: Colors.blue,),
-                Text(message),
+                Icon(Icons.error, size: 200,color: Colors.red,),
+                Expanded(child: Text(message)),
               ],
             ),
           ),
