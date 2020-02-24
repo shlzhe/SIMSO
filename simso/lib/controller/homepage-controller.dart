@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/model/services/itimer-service.dart';
 import 'package:simso/view/homepage.dart';
@@ -43,7 +42,7 @@ class HomepageController {
     Navigator.push(
         state.context,
         MaterialPageRoute(
-          builder: (context) => AddPhoto(),
+          builder: (context) => AddPhoto(state.user),
         ));
   }
 

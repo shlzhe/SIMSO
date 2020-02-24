@@ -23,6 +23,8 @@ dependencies:
   camera: ^0.5.7+3
   image_picker: ^0.5.0+3
   cached_network_image: ^2.0.0
+  path_provider:
+  path:
   http: 
   get_it: ^3.1.0
   firebase_core: ^0.4.3+3
