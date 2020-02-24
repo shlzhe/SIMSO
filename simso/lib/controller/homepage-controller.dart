@@ -67,7 +67,7 @@ class HomepageController {
         globals.touchCounter = await touchService.createTouchCounter(state.user.uid);
       }
 
-      touchCounter.addOne();
+      globals.touchCounter.addOne();
 
       globals.touchCounter = touchCounter;
     }
