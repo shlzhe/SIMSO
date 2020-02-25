@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:simso/controller/homepage-controller.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/view/homepage.dart';
 
@@ -9,8 +10,9 @@ import 'design-constants.dart';
 class MyDrawer extends StatelessWidget {
   final UserModel user;
   final BuildContext context;
-
-  MyDrawer(this.context, this.user);
+  final HomepageController controller;
+  
+  MyDrawer(this.context, this.user, this.controller);
 
   void navigateHomepage() {
     Navigator.push(
@@ -57,7 +59,7 @@ class MyDrawer extends StatelessWidget {
             child: ListTile(
               leading: Icon(Icons.group_add),
               title: Text('Recommended Friends'),
-              onTap: navigateHomepage,
+              onTap: controller.recommendFriends,
             ),
           ),
         ],

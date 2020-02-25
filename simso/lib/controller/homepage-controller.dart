@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/model/services/itimer-service.dart';
 import 'package:simso/view/homepage.dart';
+import 'package:simso/view/recommend-friends-page.dart';
 import '../view/add-music-page.dart';
 import '../model/entities/globals.dart' as globals;
 
@@ -43,6 +44,13 @@ class HomepageController {
         state.context,
         MaterialPageRoute(
           builder: (context) => AddMusic(),
+        ));
+  }
+  Future recommendFriends() async {
+    Navigator.push(
+        state.context,
+        MaterialPageRoute(
+          builder: (context) => RecommendFriends(),
         ));
   }
 
