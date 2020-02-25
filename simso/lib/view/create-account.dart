@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:simso/controller/create-account-controller.dart';
 import 'package:simso/model/entities/user-model.dart';
+import 'package:simso/model/services/iuser-service.dart';
+import 'package:simso/service-locator.dart';
 import 'package:simso/view/design-constants.dart';
 
 class CreateAccount extends StatefulWidget{
@@ -15,10 +17,11 @@ class CreateAccount extends StatefulWidget{
     class CreateAccountState extends State<CreateAccount> {
       CreateAccountController controller;
       BuildContext context;
+      IUserService userService = locator<IUserService>();
       var formKey = GlobalKey<FormState>();
       UserModel user;
       CreateAccountState(){
-        controller = CreateAccountController(this);
+        controller = CreateAccountController(this, this.userService);
         user = UserModel.isEmpty();
       }
       void stateChanged(Function f) {
@@ -67,6 +70,14 @@ class CreateAccount extends StatefulWidget{
                   ),
                   onSaved: controller.saveUsername,
                   style: TextStyle(color: DesignConstants.yellow),
+                ),
+                FlatButton(
+                  onPressed: controller.avatarPicture,
+                  child: Text(
+                    'Set Avatar as profile picture',
+                  ),
+                  textColor: DesignConstants.yellow,
+                  color: DesignConstants.blueLight,
                 ),
           ],
         ),
