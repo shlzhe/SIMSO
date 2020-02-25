@@ -13,10 +13,14 @@ class MyDialog {
         return AlertDialog(
           title: Text(title),
           content: Container(
-          height: 120,
+            height: 120,
             child: Column(
               children: <Widget>[
-                Icon(Icons.error, size: 200,color: Colors.red,),
+                Icon(
+                  Icons.error,
+                  size: 50,
+                  color: Colors.red,
+                ),
                 Expanded(child: Text(message)),
               ],
             ),

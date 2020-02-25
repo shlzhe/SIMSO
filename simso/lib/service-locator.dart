@@ -15,4 +15,6 @@ setupServiceLocator() {
   locator.registerLazySingleton<IUserService>(() => UserService());
   locator.registerLazySingleton<ITimerService>(() => TimerService());
   locator.registerLazySingleton<ITouchService>(() => TouchService());
+  locator.registerLazySingleton<ISongService>(() => SongService());
+
 }
