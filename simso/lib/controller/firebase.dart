@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:simso/model/entities/user-model.dart';
+import 'package:simso/model/entities/song-model.dart';
+
 
 class FirebaseFunctions{
 
@@ -25,5 +27,16 @@ class FirebaseFunctions{
       .document(uid)
       .get();
     return UserModel.deserialize(doc.data);
+  }
+
+  static Future<String> addSong(SongModel song) async {
+    // save it from firstore instance
+    // collection name is Song.SONG_COLLECTION
+    // add function after serialized data
+    // returns document reference type
+    DocumentReference ref = await Firestore.instance
+        .collection(SongModel.SONG_COLLECTION)
+        .add(song.serialize());
+    return ref.documentID;
   }
 }
