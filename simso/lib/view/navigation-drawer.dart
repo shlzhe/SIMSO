@@ -25,7 +25,7 @@ class MyDrawer extends StatelessWidget {
 
   void signOut(){  
     FirebaseAuth.instance.signOut();      //Email/pass sign out  
-    
+    GoogleSignIn().signOut();
     //this.googleSignIn.signOut();          //Google sign out
      //Display confirmation dialog box after user clicking on "Sign Out" button
     showDialog (
