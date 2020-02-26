@@ -41,24 +41,22 @@ class FriendService extends IFriendService {
   }
 
   @override
-  Future<bool> checkFriendRequest(
-      UserModel currentUser, UserModel friendUser) async {
+  Future<bool> checkFriendRequest(UserModel currentUser, UserModel friendUser) async {
     try {
-      await Firestore.instance
-          .collection(FriendRequest + currentUser.uid)
-          .document(friendUser.uid)
-          .get()
-          .then((doc) {
-        if (doc.exists) {
-          return true;
-        } else {
-          return false;
-        }
-      });
+      var document =  await Firestore.instance
+          .collection(FriendRequest)
+          .document(currentUser.uid)
+          .collection(friendUser.uid)
+          .document(friendUser.email)
+          .get();
+      if(document.exists){
+        return true;
+      } else {
+        return false;
+      }
     } catch (e) {
       print(e);
       return null;
     }
-    return null;
   }
 }

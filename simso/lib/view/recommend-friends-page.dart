@@ -85,10 +85,14 @@ class RecommendFriendsState extends State<RecommendFriends> {
     );
   }
 
-  void _sendRequest(UserModel friendUser) {
-print(currentUser.email);
-print(friendUser.email);
+  Future<void> _sendRequest(UserModel friendUser) async {
+  if((await _friendService.checkFriendRequest(currentUser, friendUser)) != false){
+    print("Friend request already sent");
+  } else {
+    print("Friend request not sent");
   _friendService.addFriendRequest(currentUser, friendUser);
+  }
+  
     // showModalBottomSheet(
     //   context: context,
     //   builder: (context) {
