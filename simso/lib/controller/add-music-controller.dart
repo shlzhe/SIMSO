@@ -4,9 +4,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:simso/model/services/isong-service.dart';
-import '../view/add-music-page.dart';
-import '../view/mydialog.dart';
-import '../service-locator.dart';
 
 class AddMusicController {
   // bookpage state obj as instance member
