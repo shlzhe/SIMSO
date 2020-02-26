@@ -69,12 +69,11 @@ class HomepageController {
     if (globals.touchCounter == null) {
       var touchCounter = await touchService.getTouchCounter(state.user.uid, 0);
       if (touchCounter == null) {
-        globals.touchCounter = await touchService.createTouchCounter(state.user.uid);
+        touchCounter = await touchService.createTouchCounter(state.user.uid);
       }
 
-      touchCounter.addOne();
-
       globals.touchCounter = touchCounter;
+      globals.touchCounter.addOne();
     }
   }
 }
