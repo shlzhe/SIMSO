@@ -13,8 +13,11 @@ class MyDrawer extends StatelessWidget {
   final UserModel user;
   final BuildContext context;
 
-
   MyDrawer(this.context, this.user);
+
+
+
+
 
   void navigateHomepage() {
     Navigator.push(context, MaterialPageRoute(
@@ -22,11 +25,10 @@ class MyDrawer extends StatelessWidget {
     ));
   }
 
-  void signOut(){
-    //print('${state.user.email}');
+  void signOut(){  
+    FirebaseAuth.instance.signOut();      //Email/pass sign out  
     
-    FirebaseAuth.instance.signOut();    //Email/pass sign out
-    //state.googleSignIn.signOut();       //Goole sign out
+    //this.googleSignIn.signOut();          //Google sign out
      //Display confirmation dialog box after user clicking on "Sign Out" button
     showDialog (
       context: context,
@@ -63,11 +65,19 @@ class MyDrawer extends StatelessWidget {
     );
   }
 
+
   void navigateTimeManagement() async {
     Navigator.push(context, MaterialPageRoute(
       builder: (context) => TimeManagementPage(user)
     ));
   }
+
+  //  GOOGLE SIGN IN 
+  
+
+
+ //----------------------------------------------------------------
+
 
   @override
   Widget build(BuildContext context) {

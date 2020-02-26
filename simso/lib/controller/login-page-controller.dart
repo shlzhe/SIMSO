@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/model/services/iuser-service.dart';
 import 'package:simso/view/create-account.dart';
 import 'package:simso/view/homepage.dart';
@@ -12,6 +14,7 @@ class LoginPageController{
   
   LoginPageState state;
   IUserService userService;
+
   LoginPageController(this.state, this.userService);
 
   void goToHomepage() async{
@@ -92,10 +95,20 @@ void googleSignIn(){
       builder: (context)=> GoogleSignInPage(state.user)
             ));
     */
-    signInWithGoogle().whenComplete((){
-      Navigator.of(state.context).push(
-        MaterialPageRoute(builder: (context)=>Homepage(state.user)
-        )); 
+    signInWithGoogle().whenComplete(() {
+      //Retrieve UID from userProfile in Firebase
+     
+                  
+
+
+      //Compare signed in UID with every single element 
+
+      //If signed in UID has not stored, create a new document ID for this UID
+
+    
+
+
+      
     });
         }
 
@@ -110,7 +123,7 @@ void googleSignIn(){
     accessToken: googleSignInAuthentication.accessToken,
     idToken: googleSignInAuthentication.idToken,
   );
-
+ 
   final AuthResult authResult = await state.auth.signInWithCredential(credential);
   final FirebaseUser user = authResult.user;
 
@@ -118,9 +131,56 @@ void googleSignIn(){
   assert(await user.getIdToken() != null);
 
   final FirebaseUser currentUser = await state.auth.currentUser();
-  print('UID: + ${user.uid}');
-  assert(user.uid == currentUser.uid);
+  print('GOOGLE UID: + ${user.uid}');
 
+  //------
+   try{
+                    QuerySnapshot querySnapshot = await Firestore.instance.collection('users')
+                                            .getDocuments();
+                    var users = <UserModel>[];  //List array
+                    if(querySnapshot == null || querySnapshot.documents.length == 0){
+                    print('no docID found');
+                    //return users;
+                  }
+                   bool matchedUID = false;
+                  //---------------------------------------------------------
+                  //PRINT ALL DOCUMENT ID IN USERS COLLECTION (FIREBASE)
+                  for(DocumentSnapshot doc in querySnapshot.documents){
+                    
+                  //spaces.add(Space.deserialize(doc.data, doc.documentID));
+                        print('Selected (users collection) docID: ${doc.documentID}');
+                  //---------------------------------------------------------
+                        if(doc.documentID == user.uid) {
+                          matchedUID = true;
+                          break;   
+                        } //no matchedUID
+                   
+                    }  //end FOR loop
+                if(matchedUID == true){
+                  // NO CREATION OF NEW DOCUMENT ID
+                   Navigator.of(state.context).push(
+                       MaterialPageRoute(builder: (context)=>Homepage(state.user)
+               )); 
+                } else{
+                  // CREATION OF NEW DOCUMENT ID
+                    
+                    Navigator.of(state.context).push(
+                       MaterialPageRoute(builder: (context)=>Homepage(state.user)
+
+               )); 
+                }
+                      
+                  }catch(e){
+                    throw e;
+                  }
+
+  //------
+
+
+
+
+  
+  assert(user.uid == currentUser.uid);
   return 'signInWithGoogle succeeded: $user';
 
 
