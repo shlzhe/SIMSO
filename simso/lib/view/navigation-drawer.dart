@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/view/homepage.dart';
 import 'package:simso/view/login-page.dart';
@@ -20,6 +21,7 @@ class MyDrawer extends StatelessWidget {
       builder: (context) => Homepage(user)
     ));
   }
+
 
   void signOut(){  
     FirebaseAuth.instance.signOut();      //Email/pass sign out  
@@ -61,19 +63,11 @@ class MyDrawer extends StatelessWidget {
     );
   }
 
-
   void navigateTimeManagement() async {
     Navigator.push(context, MaterialPageRoute(
       builder: (context) => TimeManagementPage(user)
     ));
   }
-
-  //  GOOGLE SIGN IN 
-  
-
-
- //----------------------------------------------------------------
-
 
   @override
   Widget build(BuildContext context) {
