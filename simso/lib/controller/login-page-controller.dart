@@ -82,4 +82,54 @@ class LoginPageController{
     if (value=='') state.entry = false;
     state.stateChanged((){});
   }
+void googleSignIn(){
+    print('googleSignIn() called');
+    /*
+    //Push to Google Sign In Page 
+    Navigator.push(state.context,MaterialPageRoute(
+      builder: (context)=> GoogleSignInPage(state.user)
+            ));
+    */
+    signInWithGoogle().whenComplete((){
+      Navigator.of(state.context).push(
+        MaterialPageRoute(builder: (context)=>Homepage(state.user)
+        )); 
+    });
+        }
+
+  //CREATE 2 METHODS FOR GOOGLE SIGN IN 
+  Future<String> signInWithGoogle() async {
+    final GoogleSignInAccount googleSignInAccount = await state.googleSignIn.signIn();
+  final GoogleSignInAuthentication googleSignInAuthentication =
+      await googleSignInAccount.authentication;
+
+    //Checking gmail acct and pass validation
+  final AuthCredential credential = GoogleAuthProvider.getCredential(
+    accessToken: googleSignInAuthentication.accessToken,
+    idToken: googleSignInAuthentication.idToken,
+  );
+
+  final AuthResult authResult = await state.auth.signInWithCredential(credential);
+  final FirebaseUser user = authResult.user;
+
+  assert(!user.isAnonymous);
+  assert(await user.getIdToken() != null);
+
+  final FirebaseUser currentUser = await state.auth.currentUser();
+  print('UID: + ${user.uid}');
+  assert(user.uid == currentUser.uid);
+
+  return 'signInWithGoogle succeeded: $user';
+
+
+  }
+
+  void signOutGoogle() async{
+    await state.googleSignIn.signOut();
+
+  print("Google User Sign Out");
+  }
+
+
 }
+
