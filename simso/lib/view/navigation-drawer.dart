@@ -15,10 +15,6 @@ class MyDrawer extends StatelessWidget {
 
   MyDrawer(this.context, this.user);
 
-
-
-
-
   void navigateHomepage() {
     Navigator.push(context, MaterialPageRoute(
       builder: (context) => Homepage(user)

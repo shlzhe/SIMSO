@@ -166,7 +166,12 @@ void googleSignIn(){
                   // CREATION OF NEW DOCUMENT ID
                     //------------------------------------------------------------
                     state.user.uid = user.uid;
-                    state.user.username =user.email;     //Set username as Google acount
+                    //TRIM USERNAME FROM GOOGLE ACCOUNT
+                    int iend = user.email.indexOf('@');
+                    String substring = user.email.substring(0 , iend);
+                    state.user.username = substring;     //Set username as Google acount trimmed until '@'
+                    
+                    //-----------------------------------
                     state.user.email=user.email;         //Set email as input email
                     if (state.user.uid!=''||state.user.uid!=null){
                     userService.createUserDB(state.user);
