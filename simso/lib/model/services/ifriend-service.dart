@@ -1,4 +1,6 @@
 
+import 'package:simso/model/entities/user-model.dart';
+
 abstract class IFriendService {
-  Future getFriend(); 
+  Future<List<UserModel>> getFriend(); 
 }
