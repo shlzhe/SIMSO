@@ -50,7 +50,7 @@ class HomepageController {
     Navigator.push(
         state.context,
         MaterialPageRoute(
-          builder: (context) => RecommendFriends(),
+          builder: (context) => RecommendFriends(state.user),
         ));
   }
 

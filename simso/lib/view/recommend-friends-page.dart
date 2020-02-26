@@ -5,16 +5,21 @@ import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/model/services/friend-service.dart';
 
 class RecommendFriends extends StatefulWidget {
+  final UserModel currentUser;
+  RecommendFriends(this.currentUser);
   @override
   State<StatefulWidget> createState() {
-    return RecommendFriendsState();
+    return RecommendFriendsState(currentUser);
   }
 }
 
 class RecommendFriendsState extends State<RecommendFriends> {
+  UserModel currentUser;
+  RecommendFriendsState(this.currentUser);
+  FriendService _friendService = new FriendService();
   List<UserModel> friendList = new List<UserModel>();
   Future<List<UserModel>> getList() async {
-    return await FriendService().getUsers();
+    return await _friendService.getUsers();
   }
 
   @override
@@ -37,14 +42,14 @@ class RecommendFriendsState extends State<RecommendFriends> {
             return ListView.builder(
               itemCount: users.length,
               itemBuilder: (context, index) {
-                UserModel user = users[index];
+                UserModel friendUser = users[index];
                 return new ListTile(
                   leading: CircleAvatar(
                       backgroundImage: null // AssetImage(user.profilePicture),
                       ),
-                  title: new Text(user.email),
+                  title: new Text(friendUser.email),
                   onTap: () {
-                    _showDialog(user);
+                    _showDialog(friendUser);
                   },
                 );
               },
@@ -55,12 +60,12 @@ class RecommendFriendsState extends State<RecommendFriends> {
     );
   }
 
-  void _showDialog(UserModel user) {
+  void _showDialog(UserModel friendUser) {
     showDialog(
       context: context,
       builder: (context) {
         return new AlertDialog(
-          title: new Text(user.email),
+          title: new Text(friendUser.email),
           content: Icon(Icons.account_box),
           actions: <Widget>[
             new FlatButton(
@@ -70,7 +75,7 @@ class RecommendFriendsState extends State<RecommendFriends> {
             new FlatButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                _sendRequest(user);
+                _sendRequest(friendUser);
               },
               child: new Text('Send Friend Request'),
             ),
@@ -80,8 +85,10 @@ class RecommendFriendsState extends State<RecommendFriends> {
     );
   }
 
-  void _sendRequest(UserModel user) {
-
+  void _sendRequest(UserModel friendUser) {
+print(currentUser.email);
+print(friendUser.email);
+  _friendService.addFriendRequest(currentUser, friendUser);
     // showModalBottomSheet(
     //   context: context,
     //   builder: (context) {
