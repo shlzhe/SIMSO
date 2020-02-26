@@ -177,7 +177,13 @@ class AddMusicController {
       //source: ImageSource.gallery); /*.then((image)*/
       state.stateChanged(() {
         state.audio = song;
-        state.songLoaded = true;
+        if (state.audio == null || state.audio.trim().isEmpty) {
+          state.songLoaded = false;
+        } else {
+          state.songLoaded = true;
+        }
+        print(state.audio);
+        
       });
     } on PlatformException catch (e) {
       print("Unsupported operation" + e.toString());
