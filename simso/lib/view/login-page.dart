@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:simso/model/services/iuser-service.dart';
 import 'package:simso/service-locator.dart';
 import 'package:video_player/video_player.dart';
@@ -30,6 +32,12 @@ class LoginPageState extends State<LoginPage> {
   void stateChanged(Function f) {
     setState(f);
   }
+
+  //----------------------------------------------------
+  //CREATE INSTANCES FOR GOOGLE SIGN IN 
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  final GoogleSignIn googleSignIn = GoogleSignIn();
+  //----------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
