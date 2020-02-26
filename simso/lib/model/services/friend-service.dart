@@ -4,13 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FriendService extends IFriendService {
   UserModel userModel;
+
   List<UserModel> friendList = new List<UserModel>();
   @override
-  Future<List<UserModel>> getFriend() async {
+  Future<List<UserModel>> getUsers() async {
     try{
         var query = await Firestore.instance.collection(UserModel.UserCollection)
         .getDocuments();
-        
+
         if(query.documents.isEmpty){
           return null;
         } else {

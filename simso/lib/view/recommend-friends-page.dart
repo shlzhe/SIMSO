@@ -14,7 +14,7 @@ class RecommendFriends extends StatefulWidget {
 class RecommendFriendsState extends State<RecommendFriends> {
   List<UserModel> friendList = new List<UserModel>();
   Future<List<UserModel>> getList() async {
-    return await FriendService().getFriend();
+    return await FriendService().getUsers();
   }
 
   @override
@@ -43,10 +43,9 @@ class RecommendFriendsState extends State<RecommendFriends> {
                       backgroundImage: null // AssetImage(user.profilePicture),
                       ),
                   title: new Text(user.email),
-                  onTap: (){
+                  onTap: () {
                     _showDialog(user);
                   },
-                  
                 );
               },
             );
@@ -57,20 +56,20 @@ class RecommendFriendsState extends State<RecommendFriends> {
   }
 
   void _showDialog(UserModel user) {
-
     showDialog(
       context: context,
       builder: (context) {
         return new AlertDialog(
           title: new Text(user.email),
-          content: null,
+          content: Icon(Icons.account_box),
           actions: <Widget>[
             new FlatButton(
               onPressed: null,
               child: new Text('View Profile'),
             ),
             new FlatButton(
-              onPressed: (){
+              onPressed: () {
+                Navigator.of(context).pop();
                 _sendRequest(user);
               },
               child: new Text('Send Friend Request'),
@@ -81,14 +80,24 @@ class RecommendFriendsState extends State<RecommendFriends> {
     );
   }
 
-  void _sendRequest(UserModel user){
-    showModalBottomSheet(context: context, builder: (context){
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          new Text("Friend Request Send"),
-        ],
-      );
-    },);
+  void _sendRequest(UserModel user) {
+
+    // showModalBottomSheet(
+    //   context: context,
+    //   builder: (context) {
+    //     Future.delayed(Duration(milliseconds: 500), () {
+    //       Navigator.of(context, rootNavigator: true).pop();
+    //     });
+    //     return Column(
+    //       mainAxisSize: MainAxisSize.min,
+    //       children: <Widget>[
+    //         new ListTile(
+    //           leading: Icon(Icons.announcement),
+    //           title: new Text('Friend Request Send'),
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
   }
 }
