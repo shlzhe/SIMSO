@@ -158,12 +158,21 @@ void googleSignIn(){
                     }  //end FOR loop
                 if(matchedUID == true){
                   // NO CREATION OF NEW DOCUMENT ID
+                  //Only Direct to Home Page
                    Navigator.of(state.context).push(
                        MaterialPageRoute(builder: (context)=>Homepage(state.user)
                )); 
                 } else{
                   // CREATION OF NEW DOCUMENT ID
-                    
+                    //------------------------------------------------------------
+                    state.user.uid = user.uid;
+                    state.user.username =user.email;     //Set username as Google acount
+                    state.user.email=user.email;         //Set email as input email
+                    if (state.user.uid!=''||state.user.uid!=null){
+                    userService.createUserDB(state.user);
+                      }
+                    //------------------------------------------------------------
+                    //Direct to Home Page
                     Navigator.of(state.context).push(
                        MaterialPageRoute(builder: (context)=>Homepage(state.user)
 
