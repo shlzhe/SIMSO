@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:simso/model/services/iuser-service.dart';
 import 'package:simso/service-locator.dart';
 import 'package:video_player/video_player.dart';
@@ -6,8 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:simso/controller/login-page-controller.dart';
 import 'package:simso/view/design-constants.dart';
 import '../model/entities/user-model.dart';
+import 'package:simso/model/entities/local-user.dart';
 
 class LoginPage extends StatefulWidget {
+  final LocalUser localUserFunction;
+  LoginPage({Key key, @required this.localUserFunction}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
     return LoginPageState();
@@ -19,16 +23,31 @@ class LoginPageState extends State<LoginPage> {
   LoginPageController controller;
   VideoPlayerController controller1;
   UserModel user;
+  String readInData;
+  LocalUser localUserFunction;
+  LocalAuthentication bioAuth = LocalAuthentication();
+  bool checkBiometric = false;
+  String authBio = "Not Authorized";
+  List<BiometricType> biometricList = List<BiometricType>();
   IUserService userService = locator<IUserService>();
   bool entry = false;
   var formKey = GlobalKey<FormState>();
   LoginPageState() {
-    controller = LoginPageController(this, this.userService);
+    controller = LoginPageController(this, this.userService, this.localUserFunction);
     user = UserModel.isEmpty();
   }
 
   void stateChanged(Function f) {
     setState(f);
+  }
+  // implement this in user profile
+  // void setUserLogin(UserModel user){
+  //   widget.localUserFunction.writeLocalUser(
+  //     user.email + ' ' + user.password
+  //   );
+  // }
+  void readLocalUser(){
+    widget.localUserFunction.readLocalUser().then((value) => readInData = value.toString());
   }
 
   @override
@@ -116,6 +135,14 @@ class LoginPageState extends State<LoginPage> {
                                 textColor: DesignConstants.yellow,
                                 color: DesignConstants.blueLight,
                               ),
+                              FlatButton(
+                                onPressed: controller.checkBiometric,
+                                child: Text(
+                                  'Touch/Face ID',
+                                ),
+                                textColor: DesignConstants.yellow,
+                                color: DesignConstants.blueLight,
+                              )
                       ],
                     ),
                   ],

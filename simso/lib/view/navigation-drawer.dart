@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:simso/model/entities/local-user.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/view/homepage.dart';
 import 'package:simso/view/login-page.dart';
@@ -12,8 +13,6 @@ import 'design-constants.dart';
 class MyDrawer extends StatelessWidget {
   final UserModel user;
   final BuildContext context;
-
-
   MyDrawer(this.context, this.user);
 
   void navigateHomepage() {
@@ -47,7 +46,7 @@ class MyDrawer extends StatelessWidget {
                 Navigator.pop(context);  //Close Drawer
                 //Navigator.pop(state.context);  //Close Home Page 
                 Navigator.push(context, MaterialPageRoute(
-                  builder: (context)=> LoginPage(),
+                  builder: (context)=> LoginPage(localUserFunction: LocalUser(),),
                 ));
               },
             ),
