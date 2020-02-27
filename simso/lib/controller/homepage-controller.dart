@@ -4,6 +4,7 @@ import 'package:simso/model/services/itimer-service.dart';
 import 'package:simso/model/services/itouch-service.dart';
 import 'package:simso/view/homepage.dart';
 import '../view/add-music-page.dart';
+import '../view/add-thought-page.dart';
 import '../model/entities/globals.dart' as globals;
 
 class HomepageController {
@@ -37,11 +38,11 @@ class HomepageController {
         ));
   }
 
-  Future addThoughts() async {
+  Future addThought() async {
     Navigator.push(
         state.context,
         MaterialPageRoute(
-          builder: null,
+          builder: (context) => AddThoughtPage(state.user),
         ));
   }
 
