@@ -22,6 +22,7 @@ class SnapshotPageState extends State<SnapshotPage> {
   void stateChanged(Function fn) {
     setState(fn);
   }
+
   @override
   Widget build(BuildContext context) {
     this.context = context;
@@ -30,6 +31,27 @@ class SnapshotPageState extends State<SnapshotPage> {
         title: Text('Snapshots'),
         backgroundColor: DesignConstants.blueGreyish,
       ),
+      body: RefreshIndicator(
+        onRefresh: _refresh,
+        child: buildPost(),
+      ),
     );
   }
+}
+
+  buildPost() {
+    // if (postData != null) {
+    //   return ListView(
+    //     children: postData,
+    //   );
+    // } else {
+      return Container(
+          alignment: FractionalOffset.center,
+          child: CircularProgressIndicator());
+    //}
+  }
+
+Future<Null> _refresh() async {
+
+  return;
 }

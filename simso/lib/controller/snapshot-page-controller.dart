@@ -5,3 +5,4 @@ class SnapshotPageController {
   SnapshotPageState state;
   SnapshotPageController(this.state);
 }
+

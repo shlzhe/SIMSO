@@ -8,6 +8,8 @@ import 'design-constants.dart';
 
 import '../view/snapshot-page.dart';
 import '../view/meme-page.dart';
+import '../view/account-setting-page.dart';
+
 
 class MyDrawer extends StatelessWidget {
   final UserModel user;
@@ -28,6 +30,11 @@ class MyDrawer extends StatelessWidget {
     void navigateMemePage() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => MemePage()));
+  }
+
+      void navigateAccountSettingPage() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => AccountSettingPage()));
   }
 
   @override
@@ -66,6 +73,11 @@ class MyDrawer extends StatelessWidget {
             leading: Icon(Icons.bubble_chart),
             title: Text('My Memes'),
             onTap: navigateMemePage,
+          ), 
+                    ListTile(
+            leading: Icon(Icons.bubble_chart),
+            title: Text('Account Settings'),
+            onTap: navigateAccountSettingPage,
           ), 
         ],
       ),
