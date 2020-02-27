@@ -1,3 +1,6 @@
+import 'package:simso/model/services/limit-service.dart';
+
+import 'model/services/ilimit-service.dart';
 import 'model/services/itimer-service.dart';
 import 'model/services/itouch-service.dart';
 import 'model/services/iuser-service.dart';
@@ -16,5 +19,5 @@ setupServiceLocator() {
   locator.registerLazySingleton<ITimerService>(() => TimerService());
   locator.registerLazySingleton<ITouchService>(() => TouchService());
   locator.registerLazySingleton<ISongService>(() => SongService());
-
+  locator.registerLazySingleton<ILimitService>(() => LimitService());
 }

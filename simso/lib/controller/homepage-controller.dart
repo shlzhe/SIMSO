@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:simso/model/entities/user-model.dart';
+import 'package:simso/model/services/ilimit-service.dart';
 import 'package:simso/model/services/itimer-service.dart';
 import 'package:simso/model/services/itouch-service.dart';
 import 'package:simso/view/homepage.dart';
@@ -10,10 +11,11 @@ class HomepageController {
   HomepageState state;
   ITimerService timerService;
   ITouchService touchService;
+  ILimitService limitService;
   UserModel newUser = UserModel();
   String userID;
 
-  HomepageController(this.state, this.timerService, this.touchService);
+  HomepageController(this.state, this.timerService, this.touchService, this.limitService);
 
   Future addMusic() async {
     //SongModel s =
@@ -75,5 +77,16 @@ class HomepageController {
       globals.touchCounter = touchCounter;
       globals.touchCounter.addOne();
     }
+  }
+
+  void getLimits() async {
+    if (globals.limit == null) {
+      var limit = await limitService.getLimit(state.user.uid);
+      if (limit == null) 
+        limit = await limitService.createLimit(state.user.uid);
+
+      globals.limit = limit;
+    } 
+    
   }
 }
