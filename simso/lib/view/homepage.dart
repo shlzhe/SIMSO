@@ -125,13 +125,12 @@ class HomepageState extends State<Homepage> {
         childButtons: childButtons,
       ),
       appBar: AppBar(),
-      drawer: MyDrawer(context, user),
+      drawer: MyDrawer(context, user, controller),
       body: Container(
           child: Form(
         key: formKey,
         child: Column(
-          children: <Widget>[
-          ],
+          children: <Widget>[],
         ),
       )),
     );
