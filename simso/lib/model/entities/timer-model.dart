@@ -13,22 +13,40 @@ class TimerModel {
   String day;
   int timeOnAppSec;
   bool currentlyCounting;
+  String get hours { 
+    var hrInt = (this.timeOnAppSec / 3600).truncate(); 
+    if (hrInt < 10)  
+      return '0' + hrInt.toString();
+    return hrInt.toString();
+  }
+  String get minutes { 
+    var minInt = ((this.timeOnAppSec / 60) % 60).truncate(); 
+    if (minInt < 10)  
+      return '0' + minInt.toString();
+    return minInt.toString();
+  }
+  String get seconds { 
+    var secInt = (this.timeOnAppSec % 60).truncate(); 
+    if (secInt < 10)  
+      return '0' + secInt.toString();
+    return secInt.toString();
+  }
 
   // Service for updating timer
-  ITimerService _timerService = locator<ITimerService>();
+  ITimerService timerService = locator<ITimerService>();
 
   // Customer methods for this model
   startTimer() {
     this.currentlyCounting = true;
-    var secs = Duration(seconds: 10);
+    var secs = Duration(seconds: 1);
     Timer.periodic(secs, (timer){
       if (!this.currentlyCounting)
         timer.cancel();
         else {
-          this.timeOnAppSec += 10;
+          this.timeOnAppSec += 1;
         }
       if (this.timeOnAppSec % 60 == 0) {
-        this._timerService.updateTimer(this);
+        this.timerService.updateTimer(this);
       }
     });  
   }
