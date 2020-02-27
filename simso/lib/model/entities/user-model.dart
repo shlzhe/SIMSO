@@ -42,7 +42,7 @@ class UserModel {
   static const MEMO = 'memo';
   static const PROFILEPIC = 'profilepic';
   static const FAVORITES = 'favorites';
-  static const UserCollection = 'users';
+  static const USERCOLLECTION = 'users';
 
   Map<String, dynamic> serialize(){
     return <String, dynamic>{
@@ -58,19 +58,16 @@ class UserModel {
     };
   }
 
-  static UserModel deserialize(Map<String, dynamic> doc){
-    return UserModel(
-      uid: doc[UID],
-      username: doc[USERNAME],
-      email: doc[EMAIL],
-      aboutme: doc[ABOUTME],
-      city: doc[CITY],
-      relationship: doc[RELATIONSHIP],
-      memo: doc[MEMO],
-      profilePic: doc[PROFILEPIC],
-      favorites: doc[FAVORITES],
-    );
-  }
+  UserModel.deserialize(Map<String, dynamic> doc):
+      uid = doc[UID],
+      username = doc[USERNAME],
+      email = doc[EMAIL],
+      aboutme = doc[ABOUTME],
+      city = doc[CITY],
+      relationship = doc[RELATIONSHIP],
+      memo = doc[MEMO],
+      profilePic = doc[PROFILEPIC],
+      favorites = doc[FAVORITES];
 
   UserModel.fromJson(Map<String, dynamic> json): 
     username = json['username'],

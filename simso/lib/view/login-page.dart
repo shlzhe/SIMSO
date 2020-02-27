@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:simso/model/services/iuser-service.dart';
+import 'package:simso/service-locator.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:simso/controller/login-page-controller.dart';
@@ -17,10 +19,11 @@ class LoginPageState extends State<LoginPage> {
   LoginPageController controller;
   VideoPlayerController controller1;
   UserModel user;
+  IUserService userService = locator<IUserService>();
   bool entry = false;
   var formKey = GlobalKey<FormState>();
   LoginPageState() {
-    controller = LoginPageController(this);
+    controller = LoginPageController(this, this.userService);
     user = UserModel.isEmpty();
   }
 
