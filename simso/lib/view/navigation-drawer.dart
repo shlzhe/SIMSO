@@ -107,11 +107,22 @@ class MyDrawer extends StatelessWidget {
             leading: Icon(Icons.bubble_chart),
             title: Text('My Thoughts'),
           ),
+          
+           ListTile(
+            leading: Icon(Icons.help),
+                title: Text('HELP'),   //Autobot messenger function
+                onTap: signOut,
+              ),
+           ListTile(
+            leading: Icon(Icons.message),
+                title: Text('Messenger'),   //Autobot messenger function
+                onTap: signOut,
+              ),   
            ListTile(
             leading: Icon(Icons.exit_to_app),
                 title: Text('Sign Out'),
                 onTap: signOut,
-              ),    //Special Widget for Drawer
+              ),    //Special Widget for Drawer   
         ],
       ),
     );
