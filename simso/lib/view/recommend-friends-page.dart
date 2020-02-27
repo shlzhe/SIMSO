@@ -15,11 +15,17 @@ class RecommendFriends extends StatefulWidget {
 
 class RecommendFriendsState extends State<RecommendFriends> {
   UserModel currentUser;
+  var text;
   RecommendFriendsState(this.currentUser);
   FriendService _friendService = new FriendService();
-  List<UserModel> friendList = new List<UserModel>();
+  List<UserModel> userList;
+
   Future<List<UserModel>> getList() async {
     return await _friendService.getUsers();
+  }
+
+  void stateChanged(Function f) {
+    setState(f);
   }
 
   @override
@@ -38,18 +44,25 @@ class RecommendFriendsState extends State<RecommendFriends> {
             if (snapshot.hasError) {
               return new Text(snapshot.error.toString());
             }
-            List<UserModel> users = snapshot.data ?? [];
+            userList = snapshot.data ?? [];
             return ListView.builder(
-              itemCount: users.length,
+              itemCount: userList.length,
               itemBuilder: (context, index) {
-                UserModel friendUser = users[index];
+                UserModel friendUser = userList[index];
                 return new ListTile(
                   leading: CircleAvatar(
                       backgroundImage: null // AssetImage(user.profilePicture),
                       ),
                   title: new Text(friendUser.email),
                   onTap: () {
-                    _showDialog(friendUser);
+                    _showDialog(context, friendUser).then(
+                      (value) {
+                        var mySnackbar =
+                            SnackBar(content: Text("Friend Request sent"));
+                        Scaffold.of(context).showSnackBar(mySnackbar);
+                      },
+                    );
+                  print(text);
                   },
                 );
               },
@@ -60,8 +73,8 @@ class RecommendFriendsState extends State<RecommendFriends> {
     );
   }
 
-  void _showDialog(UserModel friendUser) {
-    showDialog(
+  Future<String> _showDialog(BuildContext context, UserModel friendUser) {
+    return showDialog(
       context: context,
       builder: (context) {
         return new AlertDialog(
@@ -74,8 +87,8 @@ class RecommendFriendsState extends State<RecommendFriends> {
             ),
             new FlatButton(
               onPressed: () {
-                Navigator.of(context).pop();
                 _sendRequest(friendUser);
+                Navigator.of(context).pop();
               },
               child: new Text('Send Friend Request'),
             ),
@@ -86,29 +99,12 @@ class RecommendFriendsState extends State<RecommendFriends> {
   }
 
   Future<void> _sendRequest(UserModel friendUser) async {
-  if((await _friendService.checkFriendRequest(currentUser, friendUser)) != false){
-    print("Friend request already sent");
-  } else {
-    print("Friend request not sent");
-  _friendService.addFriendRequest(currentUser, friendUser);
-  }
-  
-    // showModalBottomSheet(
-    //   context: context,
-    //   builder: (context) {
-    //     Future.delayed(Duration(milliseconds: 500), () {
-    //       Navigator.of(context, rootNavigator: true).pop();
-    //     });
-    //     return Column(
-    //       mainAxisSize: MainAxisSize.min,
-    //       children: <Widget>[
-    //         new ListTile(
-    //           leading: Icon(Icons.announcement),
-    //           title: new Text('Friend Request Send'),
-    //         ),
-    //       ],
-    //     );
-    //   },
-    // );
+    if ((await _friendService.checkFriendRequest(currentUser, friendUser)) !=
+        false) {
+      text = "Friend request is already sent";
+    } else {
+      text = "Friend request sent";
+      _friendService.addFriendRequest(currentUser, friendUser);
+    }
   }
 }
