@@ -33,7 +33,7 @@ class LoginPageController{
         
         context: state.context,
         title: 'Login Error',
-        message: error.toString(),
+        message: error.message != null ? error.message: error.toString(),
         action: () => Navigator.pop(state.context),
       );
         return;  //Do not proceed if log in failed

@@ -1,4 +1,3 @@
-import 'package:simso/view/navigation-drawer.dart';
 import 'package:unicorndial/unicorndial.dart';
 import 'package:flutter/material.dart';
 import 'package:simso/controller/homepage-controller.dart';
@@ -6,6 +5,7 @@ import 'package:simso/model/services/itimer-service.dart';
 import 'package:simso/model/services/iuser-service.dart';
 import '../model/entities/user-model.dart';
 import '../service-locator.dart';
+import '../model/entities/globals.dart' as globals;
 
 class Homepage extends StatefulWidget {
   final UserModel user;
@@ -29,7 +29,7 @@ class HomepageState extends State<Homepage> {
   var formKey = GlobalKey<FormState>();
 
   HomepageState(this.user) {
-    controller = HomepageController(this, this.timerService);
+    controller = HomepageController(this, this.userService, this.timerService);
     controller.setupTimer();
   }
 
@@ -52,9 +52,13 @@ class HomepageState extends State<Homepage> {
           backgroundColor: Colors.white,
           mini: true,
           child: Icon(
-            Icons.bubble_chart,
+            Icons.library_music,
             color: Colors.black,
           ),
+          // Text(
+          //   "Add Playlist",
+          //   style: TextStyle(color: Colors.black),
+          // ),
           onPressed: controller.addThoughts,
         ),
       ),
@@ -70,9 +74,13 @@ class HomepageState extends State<Homepage> {
           backgroundColor: Colors.white,
           mini: true,
           child: Icon(
-            Icons.camera,
+            Icons.library_music,
             color: Colors.black,
           ),
+          // Text(
+          //   "Add Playlist",
+          //   style: TextStyle(color: Colors.black),
+          // ),
           onPressed: controller.addPhotos,
         ),
       ),
@@ -88,9 +96,13 @@ class HomepageState extends State<Homepage> {
           backgroundColor: Colors.white,
           mini: true,
           child: Icon(
-            Icons.mood,
+            Icons.library_music,
             color: Colors.black,
           ),
+          // Text(
+          //   "Add Playlist",
+          //   style: TextStyle(color: Colors.black),
+          // ),
           onPressed: controller.addMemes,
         ),
       ),
@@ -109,6 +121,10 @@ class HomepageState extends State<Homepage> {
             Icons.music_note,
             color: Colors.black,
           ),
+          // Text(
+          //   "Add Song",
+          //   style: TextStyle(color: Colors.black),
+          // ),
           onPressed: controller.addMusic,
         ),
       ),
@@ -120,17 +136,67 @@ class HomepageState extends State<Homepage> {
         parentButtonBackground: Colors.blueGrey[300],
         orientation: UnicornOrientation.VERTICAL,
         parentButton: Icon(
-          Icons.add,
+          Icons.menu,
         ),
         childButtons: childButtons,
       ),
       appBar: AppBar(),
+<<<<<<< HEAD
       drawer: MyDrawer(context, user, controller),
+=======
+>>>>>>> parent of 4ead2dd... Merge pull request #25 from TheRedPanda17/sprint1-prep
       body: Container(
           child: Form(
         key: formKey,
         child: Column(
+<<<<<<< HEAD
           children: <Widget>[],
+=======
+          children: <Widget>[
+            TextFormField(
+              onSaved: controller.saveEmail,
+              decoration: InputDecoration(labelText: 'Email'),
+            ),
+            TextFormField(
+              onSaved: controller.saveUsername,
+              decoration: InputDecoration(labelText: 'Username'),
+            ),
+            FlatButton(
+              onPressed: controller.saveUser,
+              child: Text(
+                'Add Data',
+              ),
+            ),
+            Text(
+              returnedID == null
+                  ? ''
+                  : 'The ID of your new document has returned',
+              style: TextStyle(color: Colors.redAccent),
+            ),
+            TextFormField(
+              onSaved: controller.saveUserID,
+              controller: idController,
+              decoration: InputDecoration(
+                labelText: 'Get Customer by ID',
+              ),
+            ),
+            FlatButton(
+              onPressed: controller.getUserData,
+              child: Text(
+                'Get User',
+              ),
+            ),
+            Text('User Email: ' + user.email == null ? '' : 'user.email'),
+            Text('Username: ' + user.username == null ? '' : 'user.username'),
+            Text(globals.timer == null ? '' : '${globals.timer.timeOnAppSec}'),
+            FlatButton(
+              onPressed: controller.refreshState,
+              child: Text(
+                'Resfresh State',
+              ),
+            ),
+          ],
+>>>>>>> parent of 4ead2dd... Merge pull request #25 from TheRedPanda17/sprint1-prep
         ),
       )),
     );
