@@ -71,7 +71,7 @@ class MyDrawer extends StatelessWidget {
            ListTile(
             leading: Icon(Icons.exit_to_app),
                 title: Text('Sign Out'),
-                onTap: signOut,
+                onTap: null,
               ),    //Special Widget for Drawer
         ],
       ),

@@ -10,7 +10,7 @@ class FriendService extends IFriendService {
   Future<List<UserModel>> getUsers() async {
     try {
       var query = await Firestore.instance
-          .collection(UserModel.UserCollection)
+          .collection(UserModel.USERCOLLECTION)
           .getDocuments();
 
       if (query.documents.isEmpty) {

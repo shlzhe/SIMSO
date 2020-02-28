@@ -5,7 +5,6 @@ import 'package:simso/model/services/itouch-service.dart';
 import 'package:simso/view/homepage.dart';
 import 'package:simso/view/recommend-friends-page.dart';
 import '../view/add-music-page.dart';
-import '../view/add-photo-page.dart';
 import '../model/entities/globals.dart' as globals;
 
 class HomepageController {
@@ -52,7 +51,7 @@ class HomepageController {
         state.context,
         MaterialPageRoute(
 
-          builder: (context) => AddPhoto(),
+          builder: null,
          ));
   }
   Future recommendFriends() async {
