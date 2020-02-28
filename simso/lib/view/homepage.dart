@@ -59,7 +59,7 @@ class HomepageState extends State<Homepage> {
             Icons.bubble_chart,
             color: Colors.black,
           ),
-          onPressed: () {},
+          onPressed: controller.addThoughts,
         ),
       ),
     );
@@ -77,7 +77,7 @@ class HomepageState extends State<Homepage> {
             Icons.camera,
             color: Colors.black,
           ),
-          onPressed: () {},
+          onPressed: controller.addPhotos,
         ),
       ),
     );
@@ -128,17 +128,14 @@ class HomepageState extends State<Homepage> {
         ),
         childButtons: childButtons,
       ),
-      appBar: AppBar(
-        title: Text('Homepage'),
-        backgroundColor: DesignConstants.blue,
-      ),
-      drawer: MyDrawer(context, user),
+      appBar: AppBar(),
+      drawer: MyDrawer(context, user, controller),
+
       body: Container(
           child: Form(
         key: formKey,
         child: Column(
-          children: <Widget>[
-          ],
+          children: <Widget>[],
         ),
       )),
     );
