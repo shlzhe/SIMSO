@@ -10,6 +10,11 @@ import 'package:simso/view/time-management-page.dart';
 
 import 'design-constants.dart';
 
+import '../view/snapshot-page.dart';
+import '../view/meme-page.dart';
+import '../view/account-setting-page.dart';
+
+
 class MyDrawer extends StatelessWidget {
   final UserModel user;
   final BuildContext context;
@@ -23,6 +28,22 @@ class MyDrawer extends StatelessWidget {
         context, MaterialPageRoute(builder: (context) => Homepage(user)));
   }
 
+  void navigateSnapshotPage() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => SnapshotPage()));
+  }
+
+    void navigateMemePage() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => MemePage()));
+  }
+
+      void navigateAccountSettingPage() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => AccountSettingPage()));
+  }
+
+=======
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -68,6 +89,23 @@ class MyDrawer extends StatelessWidget {
             ),
 
           ),
+          
+          ListTile(
+            leading: Icon(Icons.bubble_chart),
+            title: Text('My Snapshots'),
+            onTap: navigateSnapshotPage,
+          ), 
+                    ListTile(
+            leading: Icon(Icons.bubble_chart),
+            title: Text('My Memes'),
+            onTap: navigateMemePage,
+          ), 
+                    ListTile(
+            leading: Icon(Icons.bubble_chart),
+            title: Text('Account Settings'),
+            onTap: navigateAccountSettingPage,
+          ), 
+
            ListTile(
             leading: Icon(Icons.exit_to_app),
                 title: Text('Sign Out'),
