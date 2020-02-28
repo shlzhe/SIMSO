@@ -4,8 +4,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:simso/model/services/isong-service.dart';
-import '../view/add-music-page.dart';
 import '../view/mydialog.dart';
+import '../view/add-music-page.dart';
 import '../service-locator.dart';
 
 class AddMusicController {
@@ -204,6 +204,7 @@ class AddMusicController {
       ),
     );
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+    print('complete ');
 
     storageRef.getDownloadURL().then((fileURL) async {
       await _songService.updateSongURL(fileURL, state.songCopy);
