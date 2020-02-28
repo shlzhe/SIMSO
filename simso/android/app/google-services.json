@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "193953997165-bb4o78hgm5s7rvq1pqrma3mms06ju4gv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.uco.crobinson51.simso",
+            "certificate_hash": "a60fb08df84b8f7af978f5ef3ae4aaefed3fb0b0"
+          }
+        },
+        {
           "client_id": "193953997165-cuararuqan13fsc027t4d8ffkme56463.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
