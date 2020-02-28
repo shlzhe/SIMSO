@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/model/services/itimer-service.dart';
 import 'package:simso/model/services/itouch-service.dart';
+import 'package:simso/view/add-photo-page.dart';
 import 'package:simso/view/homepage.dart';
+import 'package:simso/view/recommend-friends-page.dart';
 import '../view/add-music-page.dart';
-import '../view/add-photo-page.dart';
 import '../model/entities/globals.dart' as globals;
 
 class HomepageController {
@@ -54,6 +55,13 @@ class HomepageController {
           builder: (context) => AddPhoto(state.user, null),
         ));
   }
+  Future recommendFriends() async {
+    Navigator.push(
+        state.context,
+        MaterialPageRoute(
+          builder: (context) => RecommendFriends(state.user),
+        ));
+  }
 
   void setupTimer() async {
     if (globals.timer == null) {
@@ -71,12 +79,11 @@ class HomepageController {
     if (globals.touchCounter == null) {
       var touchCounter = await touchService.getTouchCounter(state.user.uid, 0);
       if (touchCounter == null) {
-        globals.touchCounter = await touchService.createTouchCounter(state.user.uid);
+        touchCounter = await touchService.createTouchCounter(state.user.uid);
       }
 
-      touchCounter.addOne();
-
       globals.touchCounter = touchCounter;
+      globals.touchCounter.addOne();
     }
   }
 }
