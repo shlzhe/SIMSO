@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:simso/controller/homepage-controller.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/view/homepage.dart';
 import 'package:simso/view/my-thoughts-page.dart';
@@ -23,8 +22,9 @@ class MyDrawer extends StatelessWidget {
   MyDrawer(this.context, this.user);
 
   void navigateHomepage() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => Homepage(user)));
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) => Homepage(user)
+    ));
   }
 
   void navigateSnapshotPage() {
@@ -122,10 +122,12 @@ class MyDrawer extends StatelessWidget {
             currentAccountPicture: CircleAvatar(
               child: ClipOval(
                 child: CachedNetworkImage(
-                  imageUrl: user.profilePic != null && user.profilePic != ''
+                  imageUrl: user.profilePic != null &&
+                            user.profilePic != ''
                       ? user.profilePic
                       : DesignConstants.profile,
-                  placeholder: (context, url) => CircularProgressIndicator(),
+                  placeholder: (context, url) =>
+                      CircularProgressIndicator(),
                   errorWidget: (context, url, error) =>
                       Icon(Icons.account_circle),
                 ),

@@ -130,12 +130,12 @@ class HomepageState extends State<Homepage> {
       ),
       appBar: AppBar(),
       drawer: MyDrawer(context, user),
-
       body: Container(
           child: Form(
         key: formKey,
         child: Column(
-          children: <Widget>[],
+          children: <Widget>[
+          ],
         ),
       )),
     );

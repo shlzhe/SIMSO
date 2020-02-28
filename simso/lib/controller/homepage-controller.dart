@@ -5,7 +5,6 @@ import 'package:simso/model/services/itimer-service.dart';
 import 'package:simso/model/services/itouch-service.dart';
 import 'package:simso/view/add-photo-page.dart';
 import 'package:simso/view/homepage.dart';
-import 'package:simso/view/recommend-friends-page.dart';
 import '../view/add-music-page.dart';
 import '../view/add-thought-page.dart';
 import '../model/entities/globals.dart' as globals;
