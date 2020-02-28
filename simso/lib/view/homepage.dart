@@ -59,7 +59,7 @@ class HomepageState extends State<Homepage> {
             Icons.bubble_chart,
             color: Colors.black,
           ),
-          onPressed: () {},
+          onPressed: controller.addThoughts,
         ),
       ),
     );
@@ -77,7 +77,7 @@ class HomepageState extends State<Homepage> {
             Icons.camera,
             color: Colors.black,
           ),
-          onPressed: () {},
+          onPressed: controller.addPhotos,
         ),
       ),
     );

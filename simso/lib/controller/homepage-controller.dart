@@ -1,7 +1,9 @@
+import 'package:camera/new/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/model/services/itimer-service.dart';
 import 'package:simso/model/services/itouch-service.dart';
+import 'package:simso/view/add-photo-page.dart';
 import 'package:simso/view/homepage.dart';
 import 'package:simso/view/recommend-friends-page.dart';
 import '../view/add-music-page.dart';
@@ -50,9 +52,8 @@ class HomepageController {
     Navigator.push(
         state.context,
         MaterialPageRoute(
-
-          builder: null,
-         ));
+          builder: (context) => AddPhoto(state.user, null),
+        ));
   }
   Future recommendFriends() async {
     Navigator.push(
