@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:simso/model/services/iuser-service.dart';
 import 'package:simso/service-locator.dart';
 import 'package:video_player/video_player.dart';
@@ -30,6 +32,12 @@ class LoginPageState extends State<LoginPage> {
   void stateChanged(Function f) {
     setState(f);
   }
+
+  //----------------------------------------------------
+  //CREATE INSTANCES FOR GOOGLE SIGN IN 
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  final GoogleSignIn googleSignIn = GoogleSignIn();
+  //----------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
@@ -116,6 +124,31 @@ class LoginPageState extends State<LoginPage> {
                                 textColor: DesignConstants.yellow,
                                 color: DesignConstants.blueLight,
                               ),
+                              //----------------------------------------------------
+                          //GOOGLE SIGN IN BUTTON
+                          OutlineButton(
+                            onPressed: controller.googleSignIn,
+                            splashColor: Colors.grey,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+                            highlightElevation: 0,
+                            borderSide: BorderSide(color: DesignConstants.yellow),
+                            child: Padding(padding:const EdgeInsets.fromLTRB(0, 10, 0, 10), 
+                              child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        CachedNetworkImage(imageUrl: DesignConstants.google_logo, height: 35.0),
+                                        Padding(
+                                          padding: const EdgeInsets.only(left: 10),
+                                          child: Text('Sign In with Google Account',style:TextStyle(color:DesignConstants.yellow,fontSize: 15),
+                                          )
+                                        )
+                                      ],
+
+                              )
+                            ),
+                            ) 
+                            //----------------------------------------------------
                       ],
                     ),
                   ],
