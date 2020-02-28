@@ -7,6 +7,7 @@ import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/view/homepage.dart';
 import 'package:simso/view/my-thoughts-page.dart';
 import 'package:simso/view/login-page.dart';
+import 'package:simso/view/recommend-friends-page.dart';
 import 'package:simso/view/time-management-page.dart';
 
 import 'design-constants.dart';
@@ -15,14 +16,11 @@ import '../view/snapshot-page.dart';
 import '../view/meme-page.dart';
 import '../view/account-setting-page.dart';
 
-
 class MyDrawer extends StatelessWidget {
   final UserModel user;
   final BuildContext context;
-  final HomepageController controller;
-  
-  MyDrawer(this.context, this.user, this.controller);
 
+  MyDrawer(this.context, this.user);
 
   void navigateHomepage() {
     Navigator.push(
@@ -44,58 +42,74 @@ class MyDrawer extends StatelessWidget {
         context, MaterialPageRoute(builder: (context) => AccountSettingPage()));
   }
 
-  
   void navigateMyThoughts() {
-    Navigator.push(context, MaterialPageRoute(
-      builder: (context) => MyThoughtsPage(user)
-    ));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => MyThoughtsPage(user)));
   }
 
-  void signOut(){
+  void signOut() {
     //print('${state.user.email}');
-    
-    FirebaseAuth.instance.signOut();    //Email/pass sign out
+
+    FirebaseAuth.instance.signOut(); //Email/pass sign out
     //state.googleSignIn.signOut();       //Goole sign out
-     //Display confirmation dialog box after user clicking on "Sign Out" button
-    showDialog (
+    //Display confirmation dialog box after user clicking on "Sign Out" button
+    showDialog(
       context: context,
-      builder: (BuildContext context){
+      builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirmation',style: TextStyle(color: DesignConstants.yellow,fontSize: 30),),
-          content: Text('Would you like to sign out?', style: TextStyle(color: DesignConstants.yellow)) ,
+          title: Text(
+            'Confirmation',
+            style: TextStyle(color: DesignConstants.yellow, fontSize: 30),
+          ),
+          content: Text('Would you like to sign out?',
+              style: TextStyle(color: DesignConstants.yellow)),
           backgroundColor: DesignConstants.blue,
           actions: <Widget>[
             RaisedButton(
-              child: Text('YES', style: TextStyle(color: DesignConstants.yellow,fontSize: 20),),
+              child: Text(
+                'YES',
+                style: TextStyle(color: DesignConstants.yellow, fontSize: 20),
+              ),
               color: DesignConstants.blue,
-              onPressed: (){
+              onPressed: () {
                 //Dialog box pop up to confirm signing out
-                FirebaseAuth.instance.signOut();     
+                FirebaseAuth.instance.signOut();
                 //Close Drawer, then go back to Front Page
-                Navigator.pop(context);  //Close Dialog box
-                Navigator.pop(context);  //Close Drawer
-                //Navigator.pop(state.context);  //Close Home Page 
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (context)=> LoginPage(),
-                ));
+                Navigator.pop(context); //Close Dialog box
+                Navigator.pop(context); //Close Drawer
+                //Navigator.pop(state.context);  //Close Home Page
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginPage(),
+                    ));
               },
             ),
             RaisedButton(
-              child: Text('NO', style: TextStyle(color: DesignConstants.yellow, fontSize: 20),),
+              child: Text(
+                'NO',
+                style: TextStyle(color: DesignConstants.yellow, fontSize: 20),
+              ),
               color: DesignConstants.blue,
-              onPressed: ()=>Navigator.pop(context),  //close dialog box 
+              onPressed: () => Navigator.pop(context), //close dialog box
             ),
           ],
         );
-        
       },
     );
   }
 
+  recommendFriends() async {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => RecommendFriends(user),
+        ));
+  }
+
   void navigateTimeManagement() async {
-    Navigator.push(context, MaterialPageRoute(
-      builder: (context) => TimeManagementPage(user)
-    ));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => TimeManagementPage(user)));
   }
 
   @override
@@ -131,35 +145,35 @@ class MyDrawer extends StatelessWidget {
             onTap: navigateTimeManagement,
           ),
           ListTile(
-              leading: Icon(Icons.group_add),
-              title: Text('Recommended Friends'),
-              onTap: controller.recommendFriends,
-            ),    
+            leading: Icon(Icons.group_add),
+            title: Text('Recommended Friends'),
+            onTap: recommendFriends,
+          ),
           ListTile(
             leading: Icon(Icons.camera),
             title: Text('My Snapshots'),
             onTap: navigateSnapshotPage,
-          ), 
-                    ListTile(
+          ),
+          ListTile(
             leading: Icon(Icons.mood),
             title: Text('My Memes'),
             onTap: navigateMemePage,
-          ), 
-                    ListTile(
+          ),
+          ListTile(
             leading: Icon(Icons.settings),
             title: Text('Account Settings'),
             onTap: navigateAccountSettingPage,
-          ), 
+          ),
           ListTile(
             leading: Icon(Icons.bubble_chart),
             title: Text('My Thoughts'),
             onTap: navigateMyThoughts,
           ),
-           ListTile(
+          ListTile(
             leading: Icon(Icons.exit_to_app),
-                title: Text('Sign Out'),
-                onTap: signOut,
-              ),    //Special Widget for Drawer
+            title: Text('Sign Out'),
+            onTap: signOut,
+          ), //Special Widget for Drawer
         ],
       ),
     );

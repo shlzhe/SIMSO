@@ -56,13 +56,6 @@ class HomepageController {
           builder: (context) => AddPhoto(state.user, null),
         ));
   }
-  Future recommendFriends() async {
-    Navigator.push(
-        state.context,
-        MaterialPageRoute(
-          builder: (context) => RecommendFriends(state.user),
-        ));
-  }
 
   void setupTimer() async {
     if (globals.timer == null) {
