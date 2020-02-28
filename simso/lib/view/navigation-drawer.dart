@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:simso/model/entities/friend-model.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:simso/controller/homepage-controller.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/model/services/ifriend-service.dart';
 import 'package:simso/view/friends-page.dart';
@@ -55,8 +57,9 @@ class MyDrawer extends StatelessWidget {
 
   void signOut() {
     //print('${state.user.email}');
-
-    FirebaseAuth.instance.signOut(); //Email/pass sign out
+    
+    FirebaseAuth.instance.signOut();    //Email/pass sign out
+    GoogleSignIn().signOut();
     //state.googleSignIn.signOut();       //Goole sign out
     //Display confirmation dialog box after user clicking on "Sign Out" button
     showDialog(
