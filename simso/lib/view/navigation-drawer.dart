@@ -2,13 +2,18 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:simso/model/entities/friend-model.dart';
 import 'package:simso/model/entities/user-model.dart';
+import 'package:simso/model/services/ifriend-service.dart';
+import 'package:simso/view/friends-page.dart';
 import 'package:simso/view/homepage.dart';
 import 'package:simso/view/my-thoughts-page.dart';
 import 'package:simso/view/login-page.dart';
 import 'package:simso/view/recommend-friends-page.dart';
 import 'package:simso/view/time-management-page.dart';
+import '../model/entities/globals.dart' as globals;
 
+import '../service-locator.dart';
 import 'design-constants.dart';
 
 import '../view/snapshot-page.dart';
@@ -18,6 +23,7 @@ import '../view/account-setting-page.dart';
 class MyDrawer extends StatelessWidget {
   final UserModel user;
   final BuildContext context;
+  final IFriendService friendService = locator<IFriendService>();
 
   MyDrawer(this.context, this.user);
 
@@ -74,6 +80,8 @@ class MyDrawer extends StatelessWidget {
               onPressed: () {
                 //Dialog box pop up to confirm signing out
                 FirebaseAuth.instance.signOut();
+                globals.timer = null;
+                globals.touchCounter = null;
                 //Close Drawer, then go back to Front Page
                 Navigator.pop(context); //Close Dialog box
                 Navigator.pop(context); //Close Drawer
@@ -99,7 +107,15 @@ class MyDrawer extends StatelessWidget {
     );
   }
 
-  recommendFriends() async {
+  void myFriendsMenu() async {
+    List<Friend> friends = await friendService.getFriends(user.friends);
+     Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => FriendPage(user, friends)));
+  }
+
+  void recommendFriends() async {
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -146,6 +162,11 @@ class MyDrawer extends StatelessWidget {
             title: Text('Time Management'),
             onTap: navigateTimeManagement,
           ),
+          ListTile(
+              leading: Icon(Icons.group),
+              title: Text('Friends'),
+              onTap: myFriendsMenu,
+            ),
           ListTile(
             leading: Icon(Icons.group_add),
             title: Text('Recommended Friends'),

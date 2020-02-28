@@ -1,3 +1,4 @@
+import 'package:simso/model/entities/friend-model.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/model/services/ifriend-service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -58,5 +59,31 @@ class FriendService extends IFriendService {
       print(e);
       return null;
     }
+  }
+
+  @override
+  Future<List<Friend>> getFriends(List friendList) async {
+    if (friendList.isEmpty)
+     return new List<Friend>();
+
+    var friends = <Friend>[];
+    for (var friendId in friendList) {
+      try {
+
+        DocumentSnapshot documentSnapshot = await Firestore.instance
+          .collection(UserModel.USERCOLLECTION)     
+          .document(friendId)
+          .get();
+        
+        if (documentSnapshot == null) {
+          return friends;
+        } 
+        friends.add(Friend.deserialize(documentSnapshot.data));
+      } catch(e) {
+        throw e;
+      }
+    }
+    print(friends[0].profilePic);
+    return friends;
   }
 }

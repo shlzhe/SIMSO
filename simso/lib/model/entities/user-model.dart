@@ -10,6 +10,7 @@ class UserModel {
     this.profilePic,
     this.favorites,
     this.password,
+    this.friends
     });
   UserModel.isEmpty(){
     this.uid = '';
@@ -21,6 +22,7 @@ class UserModel {
     this.memo = '';
     this.profilePic = '';
     this.favorites = '';
+    this.friends = [];
   }
   String uid;
   String username;
@@ -32,6 +34,7 @@ class UserModel {
   String profilePic;
   String favorites;
   String password;
+  List<dynamic> friends;
 
   static const UID = 'UID';
   static const USERNAME = 'username';
@@ -43,6 +46,7 @@ class UserModel {
   static const PROFILEPIC = 'profilepic';
   static const FAVORITES = 'favorites';
   static const USERCOLLECTION = 'users';
+  static const FRIENDS = 'friends';
 
   Map<String, dynamic> serialize(){
     return <String, dynamic>{
@@ -55,6 +59,7 @@ class UserModel {
       MEMO: memo,
       PROFILEPIC: profilePic,
       FAVORITES: favorites,
+      FRIENDS: friends
     };
   }
 
@@ -67,16 +72,6 @@ class UserModel {
       relationship = doc[RELATIONSHIP],
       memo = doc[MEMO],
       profilePic = doc[PROFILEPIC],
-      favorites = doc[FAVORITES];
-
-  UserModel.fromJson(Map<String, dynamic> json): 
-    username = json['username'],
-    email = json['email'];
-
-  Map<String, dynamic> toJson() {
-    return {
-      'username' : username,
-      'email' : email
-    };
-  }
+      favorites = doc[FAVORITES],
+      friends =  doc[FRIENDS];
 }

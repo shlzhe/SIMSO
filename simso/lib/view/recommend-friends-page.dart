@@ -3,6 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/model/services/friend-service.dart';
+import 'package:simso/model/services/ifriend-service.dart';
+
+import '../service-locator.dart';
 
 class RecommendFriends extends StatefulWidget {
   final UserModel currentUser;
@@ -17,11 +20,11 @@ class RecommendFriendsState extends State<RecommendFriends> {
   UserModel currentUser;
   var text;
   RecommendFriendsState(this.currentUser);
-  FriendService _friendService = new FriendService();
+  final IFriendService friendService = locator<IFriendService>();
   List<UserModel> userList;
 
   Future<List<UserModel>> getList() async {
-    return await _friendService.getUsers();
+    return await friendService.getUsers();
   }
 
   void stateChanged(Function f) {
@@ -99,12 +102,12 @@ class RecommendFriendsState extends State<RecommendFriends> {
   }
 
   Future<void> _sendRequest(UserModel friendUser) async {
-    if ((await _friendService.checkFriendRequest(currentUser, friendUser)) !=
+    if ((await friendService.checkFriendRequest(currentUser, friendUser)) !=
         false) {
       text = "Friend request is already sent";
     } else {
       text = "Friend request sent";
-      _friendService.addFriendRequest(currentUser, friendUser);
+      friendService.addFriendRequest(currentUser, friendUser);
     }
   }
 }
