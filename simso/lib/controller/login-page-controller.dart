@@ -148,7 +148,7 @@ void googleSignIn(){
                   for(DocumentSnapshot doc in querySnapshot.documents){
                     
                   //spaces.add(Space.deserialize(doc.data, doc.documentID));
-                        print('Selected (users collection) docID: ${doc.documentID}');
+                        //print('Selected (users collection) docID: ${doc.documentID}');
                   //---------------------------------------------------------
                         if(doc.documentID == user.uid) {
                           matchedUID = true;
