@@ -75,6 +75,8 @@ class LoginPageController{
       ));
   }
 
+  
+
   void entry(String value) {
     if (value!=null){
       state.entry = true;
