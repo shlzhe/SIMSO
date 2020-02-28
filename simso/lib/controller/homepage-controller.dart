@@ -7,6 +7,7 @@ import 'package:simso/view/add-photo-page.dart';
 import 'package:simso/view/homepage.dart';
 import 'package:simso/view/recommend-friends-page.dart';
 import '../view/add-music-page.dart';
+import '../view/add-thought-page.dart';
 import '../model/entities/globals.dart' as globals;
 
 class HomepageController {
@@ -40,11 +41,11 @@ class HomepageController {
         ));
   }
 
-  Future addThoughts() async {
+  Future addThought() async {
     Navigator.push(
         state.context,
         MaterialPageRoute(
-          builder: null,
+          builder: (context) => AddThoughtPage(state.user),
         ));
   }
 

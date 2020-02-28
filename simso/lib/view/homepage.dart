@@ -59,7 +59,7 @@ class HomepageState extends State<Homepage> {
             Icons.bubble_chart,
             color: Colors.black,
           ),
-          onPressed: controller.addThoughts,
+          onPressed: controller.addThought,
         ),
       ),
     );

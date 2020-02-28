@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:simso/controller/homepage-controller.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/view/homepage.dart';
+import 'package:simso/view/my-thoughts-page.dart';
 import 'package:simso/view/login-page.dart';
 import 'package:simso/view/time-management-page.dart';
 
@@ -41,6 +42,13 @@ class MyDrawer extends StatelessWidget {
   void navigateAccountSettingPage() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => AccountSettingPage()));
+  }
+
+  
+  void navigateMyThoughts() {
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) => MyThoughtsPage(user)
+    ));
   }
 
   void signOut(){
@@ -142,7 +150,11 @@ class MyDrawer extends StatelessWidget {
             title: Text('Account Settings'),
             onTap: navigateAccountSettingPage,
           ), 
-
+          ListTile(
+            leading: Icon(Icons.bubble_chart),
+            title: Text('My Thoughts'),
+            onTap: navigateMyThoughts,
+          ),
            ListTile(
             leading: Icon(Icons.exit_to_app),
                 title: Text('Sign Out'),
