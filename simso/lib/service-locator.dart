@@ -1,3 +1,5 @@
+import 'model/services/friend-service.dart';
+import 'model/services/ifriend-service.dart';
 import 'model/services/itimer-service.dart';
 import 'model/services/itouch-service.dart';
 import 'model/services/iuser-service.dart';
@@ -8,6 +10,8 @@ import 'model/services/touch-service.dart';
 import 'model/services/user-service.dart';
 import 'model/services/song-service.dart';
 import 'model/services/picture-service.dart';
+import 'model/services/thought-service.dart';
+import 'model/services/ithought-service.dart';
 import 'package:get_it/get_it.dart';
 
 // This is for dependancy injection. Register each new service here
@@ -19,6 +23,6 @@ setupServiceLocator() {
   locator.registerLazySingleton<ITouchService>(() => TouchService());
   locator.registerLazySingleton<ISongService>(() => SongService());
   locator.registerLazySingleton<IImageService>(() => ImageService());
-
-
+  locator.registerLazySingleton<IThoughtService>(() => ThoughtService());
+  locator.registerLazySingleton<IFriendService>(() => FriendService());
 }
