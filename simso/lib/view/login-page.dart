@@ -170,14 +170,6 @@ class LoginPageState extends State<LoginPage> {
                                 icon: Image.network('https://firebasestorage.googleapis.com/v0/b/capstone-16d44.appspot.com/o/ApplicationImages%2Ffingerprint.png.jpg?alt=media&token=88b15f2e-269c-484b-9a43-1690f067180e'),
                                 color: DesignConstants.yellow, 
                               )
-                            : FlatButton(
-                                onPressed: controller.createAccount,
-                                child: Text(
-                                  'Create Account',
-                                ),
-                                textColor: DesignConstants.yellow,
-                                color: DesignConstants.blueLight,
-                              ),
                           ],
                         ),
                                //----------------------------------------------------
