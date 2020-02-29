@@ -50,7 +50,9 @@ class LoginPageState extends State<LoginPage> {
   //   );
   // }
   void readLocalUser(){
-    widget.localUserFunction.readLocalUser().then((value) => readInData = value.toString());
+    widget.localUserFunction.readLocalUser().then((value) => 
+    value != null? readInData = value.toString() : readInData=null
+    );
   }
   void writeLocalUser(UserModel localuser){
     var data = localuser.email+" "+localuser.password;
@@ -166,7 +168,7 @@ class LoginPageState extends State<LoginPage> {
                                     color: DesignConstants.blueLight,
                                   ),
                                   IconButton(
-                                onPressed: controller.checkBiometric,
+                                onPressed: controller.loginBiometric,
                                 icon: Image.network('https://firebasestorage.googleapis.com/v0/b/capstone-16d44.appspot.com/o/ApplicationImages%2Ffingerprint.png.jpg?alt=media&token=88b15f2e-269c-484b-9a43-1690f067180e'),
                                 color: DesignConstants.yellow, 
                               )

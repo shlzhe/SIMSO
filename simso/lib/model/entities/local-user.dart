@@ -18,11 +18,13 @@ class LocalUser {
       final file = await localFile;
 
       // Read the file
-      String contents = await file.readAsString();
+      var contents = await file.readAsString();
+      if (contents==null) return null;
       return contents;
     } catch (e) {
       // If encountering an error, return 0
-      return e;
+      // print('Error in readLocalUser');
+      return null;
     }
   }
 
