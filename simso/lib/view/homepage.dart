@@ -118,6 +118,24 @@ class HomepageState extends State<Homepage> {
       ),
     );
 
+    childButtons.add(
+      UnicornButton(
+        hasLabel: true,
+        labelText: "Messenger",
+        labelFontSize: 10,
+        currentButton: FloatingActionButton(
+          heroTag: "Messenger",
+          backgroundColor: Colors.white,
+          mini: true,
+          child: Icon(
+            Icons.message,
+            color: Colors.black,
+          ),
+          onPressed: controller.mainScreenMessenger,
+        ),
+      ),
+    );
+
     return Scaffold(
       floatingActionButton: UnicornDialer(
         backgroundColor: Colors.transparent,

@@ -5,6 +5,7 @@ import 'package:simso/model/services/itimer-service.dart';
 import 'package:simso/model/services/itouch-service.dart';
 import 'package:simso/view/add-photo-page.dart';
 import 'package:simso/view/homepage.dart';
+import 'package:simso/view/main-screen-page.dart';
 import '../view/add-music-page.dart';
 import '../view/add-thought-page.dart';
 import '../model/entities/globals.dart' as globals;
@@ -78,5 +79,16 @@ class HomepageController {
       globals.touchCounter = touchCounter;
       globals.touchCounter.addOne();
     }
+  }
+
+  void mainScreenMessenger() {
+    print('Messenger button called');
+
+    //Navigate to Main Screen Page
+    Navigator.push(
+        state.context,
+        MaterialPageRoute(
+          builder: (context) => MainScreenPage(state.user),
+        ));
   }
 }
