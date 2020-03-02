@@ -25,8 +25,19 @@
                 android:name="io.flutter.app.android.SplashScreenUntilFirstFrame"
                 android:value="true" />
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+               <action android:name="android.intent.action.MAIN"/>
+
+                <!--
+                    Solve the problem:
+                    "No application found for TargetPlatform.android_x86.
+                    Is your project missing an android/app/src/main/AndroidManifest.xml?
+                    Consider running "flutter create ." to create one."
+                -->
+                <!--<pages.category android:name="android.intent.pages.category.LAUNCHER"/>-->
+                <category android:name="android.intent.category.LAUNCHER" />
+                <!--
+                    Solved.
+                -->
             </intent-filter>
         </activity>
     </application>

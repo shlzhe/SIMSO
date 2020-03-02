@@ -128,7 +128,11 @@ class HomepageState extends State<Homepage> {
         ),
         childButtons: childButtons,
       ),
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text('Home Page'),
+        backgroundColor: DesignConstants.blue,
+        
+      ),
       drawer: MyDrawer(context, user),
       body: Container(
           child: Form(
