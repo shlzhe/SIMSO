@@ -212,11 +212,13 @@ class LoginPageController{
   print("Google User Sign Out");
   }
   Future<void> loginBiometric() async {
+      state.stateChanged((){
+        state.readInData = state.readLocalUser();
+      });
+      state.biometricList = await state.bioAuth.getAvailableBiometrics();
     try{
       // state.checkBiometric = await state.bioAuth.canCheckBiometrics;
       // print(state.checkBiometric);
-      state.readLocalUser();
-      state.biometricList = await state.bioAuth.getAvailableBiometrics();
       if(state.biometricList.length<1||state.readInData==null) {
         MyDialog.info(
           context: state.context, 
@@ -236,10 +238,12 @@ class LoginPageController{
         if (state.checkBiometric) {
           // state.localuser();
           state.readLocalUser();
+          print(state.biometricList);
+          print(state.user.email + '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+          int i = state.readInData.indexOf(' ');
+          state.user.email = state.readInData.substring(0,i);
+          state.user.password=state.readInData.substring(i+1);
           if (state.user.email != null && state.user.email!=''&&state.user.password!=''){
-            int i = state.readInData.indexOf(' ');
-            state.user.email = state.readInData.substring(0,i);
-            state.user.password=state.readInData.substring(i+1);
             userService.login(state.user)
               .then((value) => 
                 Navigator.push(state.context, MaterialPageRoute(

@@ -49,10 +49,11 @@ class LoginPageState extends State<LoginPage> {
   //     user.email + ' ' + user.password
   //   );
   // }
-  void readLocalUser(){
+  String readLocalUser(){
     widget.localUserFunction.readLocalUser().then((value) => 
-    value != null? readInData = value.toString() : readInData=null
+    value != null? readInData = value.toString() : this.readInData=null
     );
+    return readInData;
   }
   void writeLocalUser(UserModel localuser){
     var data = localuser.email+" "+localuser.password;
