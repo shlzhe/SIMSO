@@ -1,7 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:simso/controller/mainChatPage-controller.dart';
-import 'package:simso/model/entities/myfirebase.dart';
-import 'package:simso/model/services/ifriend-service.dart';
 import 'package:simso/model/services/itouch-service.dart';
 import 'package:simso/view/navigation-drawer.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +31,7 @@ class MainChatPageState extends State<MainChatPage> {
   String returnedID;
   var idController = TextEditingController();
   var formKey = GlobalKey<FormState>();
-  
+  bool publicFlag = false;
   MainChatPageState(this.user,this.userList) {
     controller = MainChatPageController(this);
   
@@ -63,12 +61,13 @@ class MainChatPageState extends State<MainChatPage> {
           padding: const EdgeInsets.all(8.0),   //Top center raise buttin
           child: Column(     
           children: <Widget>[  
-             new RaisedButton.icon(    
-             icon: Icon(Icons.public), 
+            
+          publicFlag==false?  new RaisedButton.icon(    
+            icon: Icon(Icons.public), 
             label: Text('Public'),
             textColor: DesignConstants.blue,
             onPressed: controller.showUsers, 
-             ),
+             )  :
              Expanded(
                child: ListView.builder(
                  itemCount: userList.length,
@@ -85,8 +84,8 @@ class MainChatPageState extends State<MainChatPage> {
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                                children: <Widget>[
-                                //Text('City: '+ userList[index].city),
                                 Text(userList[index].email),
+                                Text(userList[index].city == null ? '': userList[index].city),
                                 //Text('Memo: ' +userList[index].memo),         
                   ],
                             )

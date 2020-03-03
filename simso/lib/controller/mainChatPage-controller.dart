@@ -9,7 +9,7 @@ class MainChatPageController {
   ITouchService touchService;
   UserModel user;
   List<UserModel>userList;
-
+  bool publicFlag;
   String userID;
   //Constructor
   MainChatPageController (this.state);
@@ -17,8 +17,12 @@ class MainChatPageController {
 
   Future<void> showUsers() async {
     print('showUsers() called');
+    publicFlag = true;
     try{
       print('${state.userList.length.toString()}');
+      state.stateChanged((){
+        state.publicFlag = true;
+      });
     }catch(e){
       throw e.toString();
     }
