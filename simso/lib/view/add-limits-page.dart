@@ -36,8 +36,18 @@ class AddLimitsPageState extends State<AddLimitsPage> {
       touchController.text = this.limit.touchLimit.toString();
     
     if (this.limit.timeLimitMin != null && this.limit.timeLimitMin > 0) {
-      minuteController.text = (this.limit.timeLimitMin % 60).toString();
-      hourController.text = (this.limit.timeLimitMin / 60).truncate().toString();
+      var minInt = (this.limit.timeLimitMin % 60);
+      String minString = minInt.toString();
+      if (minInt < 10)
+        minString = '0' + minInt.toString();
+
+      var hourInt = (this.limit.timeLimitMin / 60).truncate();
+      String hourString = hourInt.toString();
+      if (hourInt < 10)
+        hourString = '0' + hourInt.toString();
+
+      minuteController.text = minString;
+      hourController.text = hourString;
     }
   }
 
@@ -60,7 +70,7 @@ class AddLimitsPageState extends State<AddLimitsPage> {
             children: <Widget>[
               Center(
                 child: Container(
-                  margin: EdgeInsets.only(top: 75),
+                  margin: EdgeInsets.only(top: 55),
                     child: Text(
                   'Time Limit',
                   style: TextStyle(fontSize: 24, color: Colors.white),
@@ -111,7 +121,15 @@ class AddLimitsPageState extends State<AddLimitsPage> {
               ],),
               Center(
                 child: Container(
-                  margin: EdgeInsets.only(top: 65),
+                  margin: EdgeInsets.only(top: 10),
+                    child: Text(
+                  '   hours              minutes',
+                  style: TextStyle(fontSize: 16, color: Colors.white),
+                )),
+              ),
+              Center(
+                child: Container(
+                  margin: EdgeInsets.only(top: 55),
                     child: Text(
                   'Touch Limit',
                   style: TextStyle(fontSize: 24, color: Colors.white),
@@ -136,6 +154,14 @@ class AddLimitsPageState extends State<AddLimitsPage> {
                     keyboardType: TextInputType.number
                   ),
                 ),
+              ),
+              Center(
+                child: Container(
+                  margin: EdgeInsets.only(top: 10),
+                    child: Text(
+                  'touches  ',
+                  style: TextStyle(fontSize: 16, color: Colors.white),
+                )),
               ),
               Center(
                 child: Container(

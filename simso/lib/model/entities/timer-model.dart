@@ -46,10 +46,7 @@ class TimerModel {
           this.timeOnAppSec += 1;
         }
       if (this.timeOnAppSec % 60 == 0) {
-        if (this.timeOnAppSec >= (globals.limit.timeLimitMin * 60))
-          globals.showAlert = true;
-        else  
-          this.timerService.updateTimer(this);
+        this.timerService.updateTimer(this);
       }
     });  
   }

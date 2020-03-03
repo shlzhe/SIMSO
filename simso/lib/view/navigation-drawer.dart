@@ -83,6 +83,7 @@ class MyDrawer extends StatelessWidget {
                 FirebaseAuth.instance.signOut();
                 globals.timer = null;
                 globals.touchCounter = null;
+                globals.limit = null;
                 //Close Drawer, then go back to Front Page
                 Navigator.pop(context); //Close Dialog box
                 Navigator.pop(context); //Close Drawer

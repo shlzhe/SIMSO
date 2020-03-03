@@ -1,7 +1,6 @@
 import 'package:simso/model/services/ilimit-service.dart';
 import 'package:simso/model/services/itouch-service.dart';
 import 'package:simso/view/navigation-drawer.dart';
-import 'package:simso/view/time-limit-dialog.dart';
 import 'package:unicorndial/unicorndial.dart';
 import 'package:flutter/material.dart';
 import 'package:simso/controller/homepage-controller.dart';
@@ -10,7 +9,6 @@ import 'package:simso/model/services/iuser-service.dart';
 import '../model/entities/user-model.dart';
 import '../service-locator.dart';
 import 'design-constants.dart';
-import './../model/entities/globals.dart' as globals;
 
 class Homepage extends StatefulWidget {
   final UserModel user;
