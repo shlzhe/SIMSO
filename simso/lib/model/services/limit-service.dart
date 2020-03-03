@@ -47,6 +47,7 @@ class LimitService implements ILimitService {
 
   @override
   Future<bool> updateLimit(LimitModel limit) async {
+    limit.lastUpdated = _getDate(0);
     await Firestore.instance.collection(LIMIT_COLLECTION)
       .document(limit.documentID)
       .updateData(limit.serialize())
