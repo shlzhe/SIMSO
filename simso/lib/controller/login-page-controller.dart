@@ -217,8 +217,6 @@ class LoginPageController{
       });
       state.biometricList = await state.bioAuth.getAvailableBiometrics();
     try{
-      // state.checkBiometric = await state.bioAuth.canCheckBiometrics;
-      // print(state.checkBiometric); 
       if(state.biometricList.length<1) {
         MyDialog.info(
           context: state.context, 
@@ -227,7 +225,6 @@ class LoginPageController{
           action: (){Navigator.pop(state.context);});
       }
       else
-      // state.checkBiometric = false;
       {
         state.checkBiometric = await state.bioAuth.authenticateWithBiometrics(
         localizedReason: 'Checking Fingerprint',
@@ -241,10 +238,7 @@ class LoginPageController{
           action: (){Navigator.pop(state.context);});
         }
         else if (state.checkBiometric) {
-          // state.localuser();
           state.readLocalUser();
-          print(state.biometricList);
-          print(state.user.email + '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
           int i = state.readInData.indexOf(' ');
           state.user.email = state.readInData.substring(0,i);
           state.user.password=state.readInData.substring(i+1);
