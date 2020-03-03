@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:simso/model/services/itimer-service.dart';
-
+import './globals.dart' as globals;
 import '../../service-locator.dart';
 
 
@@ -46,7 +46,10 @@ class TimerModel {
           this.timeOnAppSec += 1;
         }
       if (this.timeOnAppSec % 60 == 0) {
-        this.timerService.updateTimer(this);
+        if (this.timeOnAppSec >= (globals.limit.timeLimitMin * 60))
+          globals.showAlert = true;
+        else  
+          this.timerService.updateTimer(this);
       }
     });  
   }
