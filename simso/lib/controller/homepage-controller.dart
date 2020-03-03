@@ -1,5 +1,6 @@
 import 'package:camera/new/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:simso/model/entities/myfirebase.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/model/services/itimer-service.dart';
 import 'package:simso/model/services/itouch-service.dart';
@@ -15,6 +16,7 @@ class HomepageController {
   ITimerService timerService;
   ITouchService touchService;
   UserModel newUser = UserModel();
+  List<UserModel>userList;
   String userID;
 
   HomepageController(this.state, this.timerService, this.touchService);
@@ -81,13 +83,20 @@ class HomepageController {
     }
   }
 
-  void mainChatScreen() {
+  void mainChatScreen() async {
     print('mainChatPage() called');
+    //Retrieve all SimSo users
+    try{
+      userList  = await MyFirebase.getUsers(); 
+    }catch(e){
+      throw e.toString();
+    }
     //Navigate MainChatScreen Page
+    //Passing the userList array to MainChatScreen Page
      Navigator.push(
         state.context,
         MaterialPageRoute(
-          builder: (context) => MainChatPage(state.user),
+          builder: (context) => MainChatPage(state.user,userList),
         ));
   }
 }
