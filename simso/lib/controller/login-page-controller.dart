@@ -216,6 +216,8 @@ class LoginPageController{
         state.readLocalUser();
       });
       state.biometricList = await state.bioAuth.getAvailableBiometrics();
+      print(state.biometricList);
+      print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
     try{
       if(state.biometricList.length<1) {
         MyDialog.info(
