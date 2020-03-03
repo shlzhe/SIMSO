@@ -213,19 +213,17 @@ class LoginPageController{
   }
   Future<void> loginBiometric() async {
       state.stateChanged((){
-        state.readInData = state.readLocalUser();
+        state.readLocalUser();
       });
       state.biometricList = await state.bioAuth.getAvailableBiometrics();
     try{
       // state.checkBiometric = await state.bioAuth.canCheckBiometrics;
-      // print(state.checkBiometric);
-      if(state.biometricList.length<1||state.readInData==null) {
+      // print(state.checkBiometric); 
+      if(state.biometricList.length<1) {
         MyDialog.info(
           context: state.context, 
           title: 'Biometric Authentication Error', 
-          message: state.readInData!=null?'No Biometric hardware available'
-            :
-            'You need to setup/link your fingerprint to an account!', 
+          message:'No Biometric hardware available',
           action: (){Navigator.pop(state.context);});
       }
       else
@@ -235,7 +233,14 @@ class LoginPageController{
         localizedReason: 'Checking Fingerprint',
         useErrorDialogs: true,
         stickyAuth: true);
-        if (state.checkBiometric) {
+        if (state.readInData==null){
+          MyDialog.info(
+          context: state.context, 
+          title: 'Biometric Authentication Error', 
+          message:'You need to setup/link an account!',
+          action: (){Navigator.pop(state.context);});
+        }
+        else if (state.checkBiometric) {
           // state.localuser();
           state.readLocalUser();
           print(state.biometricList);
@@ -250,7 +255,6 @@ class LoginPageController{
                   builder: (context)=>Homepage(state.user))),
             );
           }
-    
         }
       }
     }
