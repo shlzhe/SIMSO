@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:simso/model/entities/user-model.dart';
+import 'package:simso/model/entities/local-user.dart';
 import 'package:simso/model/services/iuser-service.dart';
 import 'package:simso/view/create-account.dart';
 import 'package:simso/view/homepage.dart';
@@ -11,10 +12,11 @@ import 'package:simso/view/login-page.dart';
 import 'package:simso/view/mydialog.dart';
 
 class LoginPageController{
-  
   LoginPageState state;
   IUserService userService;
-  LoginPageController(this.state, this.userService);
+  final LocalUser localUser;
+  
+  LoginPageController(this.state, this.userService, this.localUser);
 
   void goToHomepage() async{
     if(!state.formKey.currentState.validate()){
@@ -25,6 +27,7 @@ class LoginPageController{
     try{
       state.user.uid = await userService.login(state.user);
       if (state.user.uid!=''||state.user.uid!=null){
+        if (state.setTouchID) state.writeLocalUser(state.user);
         state.user = await userService.readUser(state.user.uid);
         state.stateChanged((){});
       }
@@ -70,7 +73,8 @@ class LoginPageController{
   }
 
   void savePassword(String newValue) {
-    state.user.password = newValue;
+    newValue = newValue.replaceAll(' ', '');
+    state.user.password = newValue.replaceAll(String.fromCharCode(newValue.length-1), '');
   }
 
   void createAccount() {
@@ -88,8 +92,7 @@ class LoginPageController{
     if (value=='') state.entry = false;
     state.stateChanged((){});
   }
-
-void googleSignIn(){
+  void googleSignIn(){
     print('googleSignIn() called');
     /*
     //Push to Google Sign In Page 
@@ -119,13 +122,13 @@ void googleSignIn(){
     final GoogleSignInAccount googleSignInAccount = await state.googleSignIn.signIn();
   final GoogleSignInAuthentication googleSignInAuthentication =
       await googleSignInAccount.authentication;
-
+  
     //Checking gmail acct and pass validation
   final AuthCredential credential = GoogleAuthProvider.getCredential(
     accessToken: googleSignInAuthentication.accessToken,
     idToken: googleSignInAuthentication.idToken,
   );
- 
+  
   final AuthResult authResult = await state.auth.signInWithCredential(credential);
   final FirebaseUser user = authResult.user;
 
@@ -208,6 +211,61 @@ void googleSignIn(){
 
   print("Google User Sign Out");
   }
+  Future<void> loginBiometric() async {
+      state.stateChanged((){
+        state.readLocalUser();
+      });
+      state.biometricList = await state.bioAuth.getAvailableBiometrics();
+      print(state.biometricList);
+      print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+    try{
+      if(state.biometricList.length<1) {
+        MyDialog.info(
+          context: state.context, 
+          title: 'Biometric Authentication Error', 
+          message:'No Biometric hardware available',
+          action: (){Navigator.pop(state.context);});
+      }
+      else
+      {
+        state.checkBiometric = await state.bioAuth.authenticateWithBiometrics(
+        localizedReason: 'Checking Fingerprint',
+        useErrorDialogs: true,
+        stickyAuth: true);
+        if (state.readInData==null){
+          MyDialog.info(
+          context: state.context, 
+          title: 'Biometric Authentication Error', 
+          message:'You need to setup/link an account!',
+          action: (){Navigator.pop(state.context);});
+        }
+        else if (state.checkBiometric) {
+          state.readLocalUser();
+          int i = state.readInData.indexOf(' ');
+          state.user.email = state.readInData.substring(0,i);
+          state.user.password=state.readInData.substring(i+1);
+          if (state.user.email != null && state.user.email!=''&&state.user.password!=''){
+            userService.login(state.user)
+              .then((value) => 
+                Navigator.push(state.context, MaterialPageRoute(
+                  builder: (context)=>Homepage(state.user))),
+            );
+          }
+        }
+      }
+    }
+    catch(error){
+      print(error);
+    }
+  }
 
-
+  void setTouchID(bool value) {
+    if (state.setTouchID==false) {
+      state.setTouchID=true;
+    }
+    else state.setTouchID = false;
+    state.stateChanged((){});
+  }
 }
+
+  
