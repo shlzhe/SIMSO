@@ -23,7 +23,7 @@ class AddPhotoController {
 
   String validateSummary(String value) {
     if (value == null || value.length < 5) {
-      return 'Please enter a summary';
+      return 'Please enter a summary (5 or more chars)';
     }
     return null;
   }
@@ -75,6 +75,7 @@ class AddPhotoController {
         }
 
         state.formKey.currentState.save();
+        print('saved');
         state.imageCopy.createdBy = state.user.email;
         state.imageCopy.lastUpdatedAt = DateTime.now();
 
