@@ -1,3 +1,4 @@
+import 'package:simso/model/entities/local-user.dart';
 import 'package:simso/service-locator.dart';
 import './view/login-page.dart';
 import 'package:flutter/material.dart';
@@ -9,11 +10,12 @@ void main() {
   runApp(SimsoApp());
 }
 class SimsoApp extends StatelessWidget {
+  SimsoApp();
   @override
   Widget build(BuildContext context) {
     return LifeCycleManager(
       child: MaterialApp(
-        home: LoginPage(),
+        home: LoginPage(localUserFunction: LocalUser(),),
       )
     );
   }

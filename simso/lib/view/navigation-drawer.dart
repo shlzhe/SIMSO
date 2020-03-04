@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:simso/controller/homepage-controller.dart';
+import 'package:simso/model/entities/local-user.dart';
 import 'package:simso/model/entities/friend-model.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:simso/model/entities/user-model.dart';
@@ -84,14 +86,12 @@ class MyDrawer extends StatelessWidget {
                 globals.timer = null;
                 globals.touchCounter = null;
                 //Close Drawer, then go back to Front Page
-                Navigator.pop(context); //Close Dialog box
-                Navigator.pop(context); //Close Drawer
-                //Navigator.pop(state.context);  //Close Home Page
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LoginPage(),
-                    ));
+                Navigator.pop(context);  //Close Dialog box
+                Navigator.pop(context);  //Close Drawer
+                //Navigator.pop(state.context);  //Close Home Page 
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (context)=> LoginPage(localUserFunction: LocalUser(),),
+                ));
               },
             ),
             RaisedButton(
