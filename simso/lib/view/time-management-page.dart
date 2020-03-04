@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:simso/controller/time-management-controller.dart';
 import 'package:simso/model/entities/user-model.dart';
+import 'package:simso/model/services/ilimit-service.dart';
 import '../model/entities/globals.dart' as globals;
 
+import '../service-locator.dart';
 import 'design-constants.dart';
 
 class TimeManagementPage extends StatefulWidget {
@@ -19,9 +21,10 @@ class TimeManagementPage extends StatefulWidget {
 class TimeManagementPageState extends State<TimeManagementPage> {
   UserModel user;
   TimeManagementController controller;
+  ILimitService limitService = locator<ILimitService>();
 
   TimeManagementPageState(this.user) {
-    controller = TimeManagementController(this);
+    controller = TimeManagementController(this, this.limitService);
   }
 
   void stateChanged(Function f) {
@@ -123,7 +126,7 @@ class TimeManagementPageState extends State<TimeManagementPage> {
                   borderRadius: new BorderRadius.circular(5.0),
                 ),
                 color: DesignConstants.blueLight,
-                child: Text('Review Week', style: TextStyle(color: Colors.white),),
+                child: Text('Review Week', style: TextStyle(color: Colors.white, fontSize: 18),),
                 onPressed: controller.reviewWeek,
               ),),
             Container(
@@ -133,7 +136,7 @@ class TimeManagementPageState extends State<TimeManagementPage> {
                   borderRadius: new BorderRadius.circular(5.0),
                 ),
                 color: DesignConstants.yellow,
-                child: Text('Set Limits', style: TextStyle(color: Colors.black),),
+                child: Text('Set Limits', style: TextStyle(color: Colors.black, fontSize: 18),),
                 onPressed: controller.setLimits,
               ),),
           ],
