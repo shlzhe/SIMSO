@@ -30,7 +30,8 @@ class CreateAccountController{
   }
 
   void savePassword(String newValue) {
-    state.user.password = newValue;
+    newValue = newValue.replaceAll(' ', '');
+    state.user.password = newValue.replaceAll(String.fromCharCode(newValue.length-1), '');
   }
 
   void saveUsername(String newValue) {
