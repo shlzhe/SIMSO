@@ -153,7 +153,7 @@ class MyThoughtsPageState extends State<MyThoughtsPage> {
                   //color: Colors.grey[200],
                   padding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   decoration: BoxDecoration(
-                    color: const Color(0xff7c94b6),
+                    color: const Color(0xFFFFFFFF),
 
         
                     border: Border.all(

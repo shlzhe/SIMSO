@@ -7,14 +7,13 @@ import 'package:flutter/material.dart';
 import '../service-locator.dart';
 import '../model/entities/globals.dart' as globals;
 import '../model/entities/user-model.dart';
-import '../model/services/itimer-service.dart';
-import '../model/services/iuser-service.dart';
-import '../model/services/thought-service.dart';
+import '../model/entities/thought-model.dart';
 import '../model/services/ithought-service.dart';
 
 import '../view/mydialog.dart';
 import '../view/homepage.dart';
 import '../view/add-thought-page.dart';
+import '../view/my-thoughts-page.dart';
 
 
 class AddThoughtController{
@@ -27,9 +26,7 @@ class AddThoughtController{
   AddThoughtController(this.state);
 
   void getUserInfo() {
-    print("First");
     print(state.user.username);
-    print("Last");
   }
 /*
   void getUserName() async{
@@ -52,9 +49,6 @@ class AddThoughtController{
   
 
     void save() async {
-
-    print('saving thought: '+ state.thoughtCopy.text);
-    print('for ' + state.user.username);
     if(!state.formKey.currentState.validate()){
       return;
     }
@@ -71,13 +65,13 @@ class AddThoughtController{
         //await _thoughtService.updateThought(state.thoughtCopy);
       }
       state.thought = state.thoughtCopy;
+      List<Thought> myThoughtsList = await _thoughtService.getThoughts(state.user.uid.toString());
       await Navigator.push(
           state.context,
           MaterialPageRoute(
-            builder: (context) => Homepage(state.user),
+            builder: (context) => MyThoughtsPage(state.user, myThoughtsList),
           ));
           Navigator.pop(state.context); 
-      //Navigator.pop(state.context, state.courseCopy); 
     } catch (e) {
       MyDialog.info(
         context: state.context,

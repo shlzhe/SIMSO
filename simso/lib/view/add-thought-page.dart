@@ -38,8 +38,6 @@ class AddThoughtPageState extends State<AddThoughtPage> {
   AddThoughtPageState(this.user) {
     controller =
         AddThoughtController(this);
-
-    print("yes");
     thoughtCopy = Thought.empty();
   }
 
