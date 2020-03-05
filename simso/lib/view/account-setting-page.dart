@@ -8,6 +8,8 @@ import 'mydialog.dart';
 import '../service-locator.dart';
 import 'package:simso/model/services/iuser-service.dart';
 import '../controller/account-setting-controller.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 
 class AccountSettingPage extends StatefulWidget {
@@ -24,14 +26,11 @@ class AccountSettingPageState extends State<AccountSettingPage> {
   BuildContext context;
   AccountSettingController controller;
   UserModel user;
-  // once the form submits, this is flipped to true, and fields can then go into autovalidate mode.
+  UserModel userCopy;
   bool _autoValidate = true;
   var formKey = GlobalKey<FormState>();
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-    AccountSettingPageState(this.user) {
+  AccountSettingPageState(this.user) {
     controller = AccountSettingController(this);
   }
 
@@ -47,9 +46,9 @@ class AccountSettingPageState extends State<AccountSettingPage> {
         title: Text("Account Settings"),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.save),
-            onPressed: controller.save,
-          ),
+              icon: Icon(Icons.save),
+              onPressed: controller.save,
+              ),
         ],
       ),
       body: Form(key: formKey, child: _buildPortraitLayout()),
@@ -97,7 +96,6 @@ class AccountSettingPageState extends State<AccountSettingPage> {
   }
 
   /* BUILDERS FOR EACH FIELD */
-
   CardSettingsButton _buildCardSettingsButton_Inactive() {
     return CardSettingsButton(
       label: 'INACTIVE',
@@ -111,7 +109,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
   CardSettingsButton _buildCardSettingsButton_Logout() {
     return CardSettingsButton(
       label: 'LOGOUT',
-      onPressed: _logoutPressed,
+      onPressed: ()=>FirebaseAuth.instance.signOut(),
     );
   }
 
@@ -131,7 +129,6 @@ class AccountSettingPageState extends State<AccountSettingPage> {
         setState(() {
           user.password = value;
         });
-        _showSnackBar('Password', value);
       },
     );
   }
@@ -153,29 +150,9 @@ class AccountSettingPageState extends State<AccountSettingPage> {
         setState(() {
           user.email = value;
         });
-        _showSnackBar('Email', value);
       },
     );
   }
-
-  // CardSettingsDatePicker _buildCardSettingsDatePicker() {
-  //   return CardSettingsDatePicker(
-  //     key: _dateKey,
-  //     justDate: true,
-  //     icon: Icon(Icons.calendar_today),
-  //     label: 'Birthday',
-  //     initialValue: user.showDateTime,
-  //     onSaved: (value) => user.showDateTime =
-  //         updateJustDate(value, user.showDateTime),
-  //     onChanged: (value) {
-  //       setState(() {
-  //         user.showDateTime = value;
-  //       });
-  //       _showSnackBar(
-  //           'Show Date', updateJustDate(value, user.showDateTime));
-  //     },
-  //   );
-  // }
 
   CardSettingsParagraph _buildCardSettingsParagraph(int lines) {
     return CardSettingsParagraph(
@@ -187,7 +164,6 @@ class AccountSettingPageState extends State<AccountSettingPage> {
         setState(() {
           user.aboutme = value;
         });
-        _showSnackBar('About Me', value);
       },
     );
   }
@@ -209,7 +185,6 @@ class AccountSettingPageState extends State<AccountSettingPage> {
         setState(() {
           user.age = value;
         });
-        _showSnackBar('Age', value);
       },
     );
   }
@@ -231,7 +206,6 @@ class AccountSettingPageState extends State<AccountSettingPage> {
         setState(() {
           user.gender = value;
         });
-        _showSnackBar('Gender', value);
       },
     );
   }
@@ -247,14 +221,11 @@ class AccountSettingPageState extends State<AccountSettingPage> {
         if (value == null || value.isEmpty) return 'User name is required.';
         return null;
       },
-      showErrorIOS:
-          user.username == null || user.username.isEmpty,
       onSaved: (value) => user.username = value,
       onChanged: (value) {
         setState(() {
           user.username = value;
         });
-        _showSnackBar('User Name', value);
       },
     );
   }
@@ -262,7 +233,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
   /* EVENT HANDLERS */
 
   Future _savePressed() async {
-    final form = _formKey.currentState;
+    final form = formKey.currentState;
     if (form.validate()) {
       form.save();
     } else {
@@ -272,14 +243,4 @@ class AccountSettingPageState extends State<AccountSettingPage> {
 
   void _logoutPressed() {}
   void _inactivePressed() {}
-
-  void _showSnackBar(String label, dynamic value) {
-    _scaffoldKey.currentState.removeCurrentSnackBar();
-    _scaffoldKey.currentState.showSnackBar(
-      SnackBar(
-        duration: Duration(seconds: 1),
-        content: Text(label + ' = ' + value.toString()),
-      ),
-    );
-  }
 }
