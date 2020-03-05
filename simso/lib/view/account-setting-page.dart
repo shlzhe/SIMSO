@@ -3,41 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:card_settings/card_settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:simso/model/entities/user-model.dart';
-import '../model/entities/fake-user-model.dart';
 import 'package:simso/view/design-constants.dart';
 import 'mydialog.dart';
+import '../service-locator.dart';
+import 'package:simso/model/services/iuser-service.dart';
 import '../controller/account-setting-controller.dart';
 
-// void main() => runApp(MyApp());
-
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Account Setting Page',
-//       home: AccountSettingPage(),
-//       theme: ThemeData(
-//         accentColor: DesignConstants.blue, // background color of card headers
-//         cardColor: Colors.white, // background color of fields
-//         backgroundColor: Colors.white, // color outside the card
-//         primaryColor: Colors.white, // color of page header
-//         buttonColor: Colors.white, // background color of buttons
-//         textTheme: TextTheme(
-//           button: TextStyle(
-//               color: DesignConstants.blueGreyish), // style of button text
-//           subhead: TextStyle(color: Colors.grey[800]), // style of input text
-//         ),
-//         primaryTextTheme: TextTheme(
-//           title: TextStyle(color: Colors.lightBlue[50]), // style for headers
-//         ),
-//         inputDecorationTheme: InputDecorationTheme(
-//           labelStyle: TextStyle(color: Colors.indigo[400]), // style for labels
-//         ),
-//       ),
-//       darkTheme: ThemeData.dark(),
-//     );
-//   }
-// }
 
 class AccountSettingPage extends StatefulWidget {
   final UserModel user;
@@ -49,42 +20,39 @@ class AccountSettingPage extends StatefulWidget {
 }
 
 class AccountSettingPageState extends State<AccountSettingPage> {
+  IUserService userService = locator<IUserService>();
   BuildContext context;
   AccountSettingController controller;
+  UserModel user;
   // once the form submits, this is flipped to true, and fields can then go into autovalidate mode.
   bool _autoValidate = true;
+  var formKey = GlobalKey<FormState>();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  // control state only works if the field order never changes.
-  // to support orientation changes, we assign a unique key to each field
-  // if you only have one orientation, the _formKey is sufficient
-  final GlobalKey<FormState> _uidKey = GlobalKey<FormState>();
-  final GlobalKey<FormState> _usernameKey = GlobalKey<FormState>();
-  final GlobalKey<FormState> _emailKey = GlobalKey<FormState>();
-  final GlobalKey<FormState> _aboutmeKey = GlobalKey<FormState>();
-  final GlobalKey<FormState> _cityKey = GlobalKey<FormState>();
-  final GlobalKey<FormState> _passwordKey = GlobalKey<FormState>();
-  final GlobalKey<FormState> _dateKey = GlobalKey<FormState>();
-  final GlobalKey<FormState> _ageKey = GlobalKey<FormState>();
-  final GlobalKey<FormState> _genderKey = GlobalKey<FormState>();
+    AccountSettingPageState(this.user) {
+    controller = AccountSettingController(this);
+  }
+
+  void stateChanged(Function f) {
+    setState(f);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: Theme.of(context).backgroundColor,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text("Account Settings"),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.save),
-            onPressed: _savePressed,
+            onPressed: controller.save,
           ),
         ],
       ),
-      body: Form(key: _formKey, child: _buildPortraitLayout()),
+      body: Form(key: formKey, child: _buildPortraitLayout()),
     );
   }
 
@@ -150,19 +118,18 @@ class AccountSettingPageState extends State<AccountSettingPage> {
   CardSettingsPassword _buildCardSettingsPassword() {
     return CardSettingsPassword(
       labelWidth: 150.0,
-      key: _passwordKey,
       icon: Icon(Icons.lock),
-      initialValue: _fakeUserModel.password,
+      initialValue: user.password,
       autovalidate: _autoValidate,
       validator: (value) {
         if (value == null) return 'Password is required.';
         if (value.length < 6) return 'Must be no less than 6 characters.';
         return null;
       },
-      onSaved: (value) => _fakeUserModel.password = value,
+      onSaved: (value) => user.password = value,
       onChanged: (value) {
         setState(() {
-          _fakeUserModel.password = value;
+          user.password = value;
         });
         _showSnackBar('Password', value);
       },
@@ -172,9 +139,8 @@ class AccountSettingPageState extends State<AccountSettingPage> {
   CardSettingsEmail _buildCardSettingsEmail() {
     return CardSettingsEmail(
       labelWidth: 150.0,
-      key: _emailKey,
       icon: Icon(Icons.person),
-      initialValue: _fakeUserModel.email,
+      initialValue: user.email,
       autovalidate: _autoValidate,
       validator: (value) {
         if (value == null || value.isEmpty) return 'Email is required.';
@@ -182,45 +148,44 @@ class AccountSettingPageState extends State<AccountSettingPage> {
           return "Email not formatted correctly."; // use regex in real application
         return null;
       },
-      onSaved: (value) => _fakeUserModel.email = value,
+      onSaved: (value) => user.email = value,
       onChanged: (value) {
         setState(() {
-          _fakeUserModel.email = value;
+          user.email = value;
         });
         _showSnackBar('Email', value);
       },
     );
   }
 
-  CardSettingsDatePicker _buildCardSettingsDatePicker() {
-    return CardSettingsDatePicker(
-      key: _dateKey,
-      justDate: true,
-      icon: Icon(Icons.calendar_today),
-      label: 'Birthday',
-      initialValue: _fakeUserModel.showDateTime,
-      onSaved: (value) => _fakeUserModel.showDateTime =
-          updateJustDate(value, _fakeUserModel.showDateTime),
-      onChanged: (value) {
-        setState(() {
-          _fakeUserModel.showDateTime = value;
-        });
-        _showSnackBar(
-            'Show Date', updateJustDate(value, _fakeUserModel.showDateTime));
-      },
-    );
-  }
+  // CardSettingsDatePicker _buildCardSettingsDatePicker() {
+  //   return CardSettingsDatePicker(
+  //     key: _dateKey,
+  //     justDate: true,
+  //     icon: Icon(Icons.calendar_today),
+  //     label: 'Birthday',
+  //     initialValue: user.showDateTime,
+  //     onSaved: (value) => user.showDateTime =
+  //         updateJustDate(value, user.showDateTime),
+  //     onChanged: (value) {
+  //       setState(() {
+  //         user.showDateTime = value;
+  //       });
+  //       _showSnackBar(
+  //           'Show Date', updateJustDate(value, user.showDateTime));
+  //     },
+  //   );
+  // }
 
   CardSettingsParagraph _buildCardSettingsParagraph(int lines) {
     return CardSettingsParagraph(
-      key: _aboutmeKey,
       label: 'About Me',
-      initialValue: _fakeUserModel.aboutme,
+      initialValue: user.aboutme,
       numberOfLines: lines,
-      onSaved: (value) => _fakeUserModel.aboutme = value,
+      onSaved: (value) => user.aboutme = value,
       onChanged: (value) {
         setState(() {
-          _fakeUserModel.aboutme = value;
+          user.aboutme = value;
         });
         _showSnackBar('About Me', value);
       },
@@ -230,20 +195,19 @@ class AccountSettingPageState extends State<AccountSettingPage> {
   CardSettingsNumberPicker _buildCardSettingsNumberPicker(
       {TextAlign labelAlign}) {
     return CardSettingsNumberPicker(
-      key: _ageKey,
       label: 'Age',
       labelAlign: labelAlign,
-      initialValue: _fakeUserModel.age,
+      initialValue: user.age,
       min: 1,
       max: 100,
       validator: (value) {
         if (value == null) return 'Age is required.';
         return null;
       },
-      onSaved: (value) => _fakeUserModel.age = value,
+      onSaved: (value) => user.age = value,
       onChanged: (value) {
         setState(() {
-          _fakeUserModel.age = value;
+          user.age = value;
         });
         _showSnackBar('Age', value);
       },
@@ -252,9 +216,8 @@ class AccountSettingPageState extends State<AccountSettingPage> {
 
   CardSettingsListPicker _buildCardSettingsListPicker_Gender() {
     return CardSettingsListPicker(
-      key: _genderKey,
       label: 'Gender',
-      initialValue: _fakeUserModel.gender,
+      initialValue: user.gender,
       hintText: 'Gender',
       autovalidate: _autoValidate,
       options: <String>['Male', 'Female', 'Secrete'],
@@ -263,10 +226,10 @@ class AccountSettingPageState extends State<AccountSettingPage> {
         if (value == null || value.isEmpty) return 'Please select your gender';
         return null;
       },
-      onSaved: (value) => _fakeUserModel.gender = value,
+      onSaved: (value) => user.gender = value,
       onChanged: (value) {
         setState(() {
-          _fakeUserModel.gender = value;
+          user.gender = value;
         });
         _showSnackBar('Gender', value);
       },
@@ -275,10 +238,9 @@ class AccountSettingPageState extends State<AccountSettingPage> {
 
   CardSettingsText _buildCardSettingsText_Name() {
     return CardSettingsText(
-      key: _usernameKey,
       label: 'User Name',
       //hintText: 'User Name',
-      initialValue: _fakeUserModel.username,
+      initialValue: user.username,
       requiredIndicator: Text('*', style: TextStyle(color: Colors.red)),
       autovalidate: _autoValidate,
       validator: (value) {
@@ -286,11 +248,11 @@ class AccountSettingPageState extends State<AccountSettingPage> {
         return null;
       },
       showErrorIOS:
-          _fakeUserModel.username == null || _fakeUserModel.username.isEmpty,
-      onSaved: (value) => _fakeUserModel.username = value,
+          user.username == null || user.username.isEmpty,
+      onSaved: (value) => user.username = value,
       onChanged: (value) {
         setState(() {
-          _fakeUserModel.username = value;
+          user.username = value;
         });
         _showSnackBar('User Name', value);
       },
