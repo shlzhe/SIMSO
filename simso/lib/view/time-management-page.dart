@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:simso/controller/time-management-controller.dart';
 import 'package:simso/model/entities/user-model.dart';
+import 'package:simso/model/services/itimer-service.dart';
+import 'package:simso/model/services/itouch-service.dart';
 import '../model/entities/globals.dart' as globals;
 
+import '../service-locator.dart';
 import 'design-constants.dart';
 
 class TimeManagementPage extends StatefulWidget {
@@ -19,9 +22,11 @@ class TimeManagementPage extends StatefulWidget {
 class TimeManagementPageState extends State<TimeManagementPage> {
   UserModel user;
   TimeManagementController controller;
+  ITimerService timerService = locator<ITimerService>();
+  ITouchService touchService = locator<ITouchService>();
 
   TimeManagementPageState(this.user) {
-    controller = TimeManagementController(this);
+    controller = TimeManagementController(this, timerService, touchService);
   }
 
   void stateChanged(Function f) {
