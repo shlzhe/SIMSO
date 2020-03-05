@@ -40,12 +40,7 @@ class MainChatPageState extends State<MainChatPage> {
   void stateChanged(Function f) {
     setState(f);
   }
-  //--------------------
-  //Retrieve all Simso users in DB
-  
-
-  //--------------------
-
+ 
   @override
   Widget build(BuildContext context) {
     this.context = context;
@@ -61,7 +56,7 @@ class MainChatPageState extends State<MainChatPage> {
           padding: const EdgeInsets.all(8.0),   //Top center raise buttin
           child: Column(     
           children: <Widget>[  
-            
+          
           publicFlag==false?  new RaisedButton.icon(    
             icon: Icon(Icons.public), 
             label: Text('Public'),
@@ -74,7 +69,9 @@ class MainChatPageState extends State<MainChatPage> {
                  itemBuilder: (BuildContext context, int index){
                    return Container(
                      padding: EdgeInsets.all(5.0),
-                    child: ListTile(
+                    
+                    child: 
+                    ListTile(
                           leading: CachedNetworkImage(
                             imageUrl: userList[index].profilePic == null ? '':userList[index].profilePic,
                             placeholder: (context, url)=>CircularProgressIndicator(),
@@ -87,9 +84,12 @@ class MainChatPageState extends State<MainChatPage> {
                                 Text(userList[index].email),
                                 Text(userList[index].city == null ? '': userList[index].city),
                                 //Text('Memo: ' +userList[index].memo),         
-                  ],
-                            )
-                          ));
+                              ],
+                            ),
+                            onTap: ()=>controller.onTap(index),
+                          )
+                          
+                          );
                  }
                  ))  
           ],

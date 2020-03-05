@@ -6,8 +6,8 @@ import 'package:simso/model/services/itouch-service.dart';
 import 'package:simso/view/mainChat-page.dart';
 import 'package:simso/view/personalChatPage.dart';
 
-class MainChatPageController {
-  MainChatPageState state;
+class PersonalChatPageController {
+  PersonalChatPageState state;
   ITimerService timerService;
   ITouchService touchService;
   UserModel user;
@@ -15,27 +15,16 @@ class MainChatPageController {
   bool publicFlag;
   String userID;
   //Constructor
-  MainChatPageController (this.state);
+  PersonalChatPageController (this.state);
 
 
-  Future<void> showUsers() async {
-    print('showUsers() called');
-    publicFlag = true;
-    try{
-      print('${state.userList.length.toString()}');
-      state.stateChanged((){
-        state.publicFlag = true;
-      });
-    }catch(e){
-      throw e.toString();
-    }
-  }
+  
   onTap(int index) async {
     print('tapped SimSo $index');
     //Retrieve selected SimSo user
-    List<UserModel> allUsers;
+    List<UserModel> userList;
      try{
-      userList  = await MyFirebase.getUsers(); 
+      userList = await MyFirebase.getUsers(); 
     }catch(e){
       throw e.toString();
     }
@@ -44,7 +33,7 @@ class MainChatPageController {
      Navigator.push(
         state.context,
         MaterialPageRoute(
-          builder: (context) => PersonalChatPage(state.user, index, userList),   //Pass current user info + index of selected SimSo
+          builder: (context) => PersonalChatPage(state.user,index,userList),   //Pass current user info + index of selected SimSo
         ));
   
   }
