@@ -12,15 +12,18 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   var localUser;
   //readLocalUser reads in files from android;
-  // readLocalUser(localUser).then((value) => localUser = value);
+  readLocalUser(localUser).then((value) => null);
   setupServiceLocator();
+  String path = "/data/user/0/edu.uco.crobinson51.simso/app_flutter";
   //need to get non-null values from readLocalUser();
-  print(localUser);
+  String contents = File('$path/user.txt').readAsString().toString();
+  print(contents);
   runApp(SimsoApp(localUser));
 }
 Future<String> readLocalUser(localUser)async{
   var directory = await getApplicationDocumentsDirectory();
   var path = directory.path;
+  // print(path);
   var contents;
   contents = File('$path/user.txt').readAsString();
   return contents;
