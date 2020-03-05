@@ -2,49 +2,55 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:card_settings/card_settings.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:simso/model/entities/user-model.dart';
 import '../model/entities/fake-user-model.dart';
 import 'package:simso/view/design-constants.dart';
 import 'mydialog.dart';
+import '../controller/account-setting-controller.dart';
 
-void main() => runApp(MyApp());
+// void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Account Setting Page',
+//       home: AccountSettingPage(),
+//       theme: ThemeData(
+//         accentColor: DesignConstants.blue, // background color of card headers
+//         cardColor: Colors.white, // background color of fields
+//         backgroundColor: Colors.white, // color outside the card
+//         primaryColor: Colors.white, // color of page header
+//         buttonColor: Colors.white, // background color of buttons
+//         textTheme: TextTheme(
+//           button: TextStyle(
+//               color: DesignConstants.blueGreyish), // style of button text
+//           subhead: TextStyle(color: Colors.grey[800]), // style of input text
+//         ),
+//         primaryTextTheme: TextTheme(
+//           title: TextStyle(color: Colors.lightBlue[50]), // style for headers
+//         ),
+//         inputDecorationTheme: InputDecorationTheme(
+//           labelStyle: TextStyle(color: Colors.indigo[400]), // style for labels
+//         ),
+//       ),
+//       darkTheme: ThemeData.dark(),
+//     );
+//   }
+// }
+
+class AccountSettingPage extends StatefulWidget {
+  final UserModel user;
+  AccountSettingPage(this.user);
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Account Setting Page',
-      home: AccountSettingPage(),
-      theme: ThemeData(
-        accentColor: DesignConstants.blue, // background color of card headers
-        cardColor: Colors.white, // background color of fields
-        backgroundColor: Colors.white, // color outside the card
-        primaryColor: Colors.white, // color of page header
-        buttonColor: Colors.white, // background color of buttons
-        textTheme: TextTheme(
-          button: TextStyle(
-              color: DesignConstants.blueGreyish), // style of button text
-          subhead: TextStyle(color: Colors.grey[800]), // style of input text
-        ),
-        primaryTextTheme: TextTheme(
-          title: TextStyle(color: Colors.lightBlue[50]), // style for headers
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          labelStyle: TextStyle(color: Colors.indigo[400]), // style for labels
-        ),
-      ),
-      darkTheme: ThemeData.dark(),
-    );
+  State<StatefulWidget> createState() {
+    return AccountSettingPageState(user);
   }
 }
 
-class AccountSettingPage extends StatefulWidget {
-  @override
-  _AccountSettingPageState createState() => _AccountSettingPageState();
-}
-
-class _AccountSettingPageState extends State<AccountSettingPage> {
-  final _fakeUserModel = FakeUserModel();
-
+class AccountSettingPageState extends State<AccountSettingPage> {
+  BuildContext context;
+  AccountSettingController controller;
   // once the form submits, this is flipped to true, and fields can then go into autovalidate mode.
   bool _autoValidate = true;
 
