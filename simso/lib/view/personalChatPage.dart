@@ -55,8 +55,14 @@ class PersonalChatPageState extends State<PersonalChatPage> {
         title: new Column(
             children: <Widget>[
               //Display profile picture
-              
+              userList[index].profilePic == '' ? Icon(Icons.tag_faces)
+              :CachedNetworkImage(imageUrl: userList[index].profilePic, height:30),
+          
               //Display username
+          
+              Text('${userList[index].username}',style: TextStyle(fontSize: 15),),
+              
+             
             ],
             //Text('${userList[index].username} '),
         ),

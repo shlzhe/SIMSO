@@ -49,8 +49,11 @@ class MainChatPageState extends State<MainChatPage> {
       appBar: AppBar(
         title: Text('SimSo Together'),
         backgroundColor: DesignConstants.blue,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back), 
+          onPressed: controller.backButton,
+          ),
       ),
-      drawer: MyDrawer(context, user),
       body: new Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),   //Top center raise buttin
