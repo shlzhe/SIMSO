@@ -83,33 +83,13 @@ class LoginPageState extends State<LoginPage> {
                   children: <Widget>[
                     Column(
                       children: <Widget>[
-                        CachedNetworkImage(imageUrl: DesignConstants.logo),
+                        Image.network(
+                          DesignConstants.logo,
+                        ),
                         Container(
                           padding: EdgeInsets.only(left: 30, right: 30),
                           child: Column(
                             children: <Widget>[
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Checkbox(
-                                    onChanged: controller.setTouchID, 
-                                    value: setTouchID,
-                                    checkColor: DesignConstants.red,
-                                  ),
-                                  Text('Set TouchID after Login', style: TextStyle(color: DesignConstants.yellow),),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Checkbox(
-                                    onChanged: controller.setCredential, 
-                                    value: setCredential,
-                                    checkColor: DesignConstants.red,
-                                  ),
-                                  Text('Save login credentials', style: TextStyle(color: DesignConstants.yellow),),
-                                ],
-                              ),
                               TextFormField(
                                 initialValue: credential=='true'? email:null,
                                 decoration: InputDecoration(
@@ -167,6 +147,21 @@ class LoginPageState extends State<LoginPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      Text('Remember me', style: TextStyle(color: DesignConstants.yellow),),
+                                      Theme(
+                                        data: ThemeData(
+                                          unselectedWidgetColor: DesignConstants.blueLight,
+                                        ),
+                                        child: Checkbox(
+                                          onChanged: controller.setCredential,
+                                          value: setCredential,
+                                          checkColor: DesignConstants.red,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                             (entry == true || credential =='true')
                                 ? FlatButton(
                                     onPressed: controller.goToHomepage,
@@ -184,13 +179,29 @@ class LoginPageState extends State<LoginPage> {
                                     textColor: DesignConstants.yellow,
                                     color: DesignConstants.blueLight,
                                   ),
-                                  IconButton(
-                                onPressed: controller.loginBiometric,
-                                icon: Image.network('https://firebasestorage.googleapis.com/v0/b/capstone-16d44.appspot.com/o/ApplicationImages%2Ffingerprint.png.jpg?alt=media&token=88b15f2e-269c-484b-9a43-1690f067180e'),
-                                color: DesignConstants.yellow, 
-                              )
                           ],
                         ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text('Set TouchID after Login', style: TextStyle(color: DesignConstants.yellow),),
+                              Theme(
+                                data: ThemeData(
+                                  unselectedWidgetColor: DesignConstants.blueLight,
+                                ),
+                                child: Checkbox(
+                                  onChanged: controller.setTouchID, 
+                                  value: setTouchID,
+                                  checkColor: DesignConstants.red,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: controller.loginBiometric,
+                                icon: Image.network('https://firebasestorage.googleapis.com/v0/b/capstone-16d44.appspot.com/o/ApplicationImages%2Ffingerprint.png.jpg?alt=media&token=88b15f2e-269c-484b-9a43-1690f067180e'),
+                                color: DesignConstants.yellow,
+                              ),
+                            ],
+                          ),
                                //----------------------------------------------------
                           //GOOGLE SIGN IN BUTTON
                           OutlineButton(
@@ -199,15 +210,15 @@ class LoginPageState extends State<LoginPage> {
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
                             highlightElevation: 0,
                             borderSide: BorderSide(color: DesignConstants.yellow),
-                            child: Padding(padding:const EdgeInsets.fromLTRB(0, 10, 0, 10), 
+                            child: Padding(padding:const EdgeInsets.fromLTRB(0, 5, 0, 5), 
                               child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: <Widget>[
-                                        CachedNetworkImage(imageUrl: DesignConstants.google_logo, height: 35.0),
+                                        CachedNetworkImage(imageUrl: DesignConstants.google_logo, height: 15.0),
                                         Padding(
                                           padding: const EdgeInsets.only(left: 10),
-                                          child: Text('Sign In with Google Account',style:TextStyle(color:DesignConstants.yellow,fontSize: 15),
+                                          child: Text('Google sign-in',style:TextStyle(color:DesignConstants.yellow,fontSize: 15),
                                           )
                                         )
                                       ],
