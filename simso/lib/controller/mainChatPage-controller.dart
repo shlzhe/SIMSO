@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:simso/model/entities/myfirebase.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/model/services/itimer-service.dart';
 import 'package:simso/model/services/itouch-service.dart';
+import 'package:simso/view/design-constants.dart';
 import 'package:simso/view/homepage.dart';
 import 'package:simso/view/mainChat-page.dart';
 import 'package:simso/view/personalChatPage.dart';
@@ -30,6 +32,17 @@ class MainChatPageController {
     }catch(e){
       throw e.toString();
     }
+    //Showing toast message
+    Fluttertoast.showToast(
+               msg: "Public Mode",
+               toastLength: Toast.LENGTH_SHORT,
+               gravity: ToastGravity.CENTER,
+               timeInSecForIos: 1,
+               backgroundColor: DesignConstants.red,
+               textColor: DesignConstants.yellow,
+               fontSize: 16,
+    
+             );
   }
   onTap(int index) async {
     print('tapped SimSo $index');

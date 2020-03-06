@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:simso/controller/mainChatPage-controller.dart';
 import 'package:simso/model/services/itouch-service.dart';
 import 'package:simso/view/navigation-drawer.dart';
@@ -53,21 +54,36 @@ class MainChatPageState extends State<MainChatPage> {
           icon: Icon(Icons.arrow_back), 
           onPressed: controller.backButton,
           ),
+          
       ),
       body: new Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),   //Top center raise buttin
-          child: Column(     
+          child: Column(  
           children: <Widget>[  
           
-          publicFlag==false?  new RaisedButton.icon(    
+          publicFlag==false?  new RaisedButton.icon(        //if...
             icon: Icon(Icons.public), 
             label: Text('Public'),
             textColor: DesignConstants.blue,
             onPressed: controller.showUsers, 
-             )  :
+             )  
+             :   //else...
+             /*
+             Fluttertoast.showToast(
+               msg: "Public Mode",
+               toastLength: Toast.LENGTH_SHORT,
+               gravity: ToastGravity.CENTER,
+               timeInSecForIos: 1,
+               backgroundColor: DesignConstants.yellow,
+               textColor: DesignConstants.blue,
+               fontSize: 16,
+          
+             ),
+             */
              Expanded(
-               child: ListView.builder(
+               child: 
+               ListView.builder(
                  itemCount: userList.length,
                  itemBuilder: (BuildContext context, int index){
                    return Container(
@@ -93,10 +109,12 @@ class MainChatPageState extends State<MainChatPage> {
                           
                           );
                  }
-                 ))  
+                 )) 
           ],
+          
       ),
         ),
+        
       )
      
      
