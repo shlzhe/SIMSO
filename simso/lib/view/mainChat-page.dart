@@ -32,7 +32,8 @@ class MainChatPageState extends State<MainChatPage> {
   String returnedID;
   var idController = TextEditingController();
   var formKey = GlobalKey<FormState>();
-  bool publicFlag = false;
+  bool publicFlag = false;      //True when public button is clicked
+  bool friendFlag = false;      //True when friends button is clicked
   MainChatPageState(this.user,this.userList) {
     controller = MainChatPageController(this);
   
@@ -61,26 +62,16 @@ class MainChatPageState extends State<MainChatPage> {
           padding: const EdgeInsets.all(8.0),   //Top center raise buttin
           child: Column(  
           children: <Widget>[  
-          
-          publicFlag==false?  new RaisedButton.icon(        //if...
+      
+          //PUBLIC MODE
+       publicFlag==false?  new RaisedButton.icon(        //if...
             icon: Icon(Icons.public), 
             label: Text('Public'),
             textColor: DesignConstants.blue,
             onPressed: controller.showUsers, 
              )  
              :   //else...
-             /*
-             Fluttertoast.showToast(
-               msg: "Public Mode",
-               toastLength: Toast.LENGTH_SHORT,
-               gravity: ToastGravity.CENTER,
-               timeInSecForIos: 1,
-               backgroundColor: DesignConstants.yellow,
-               textColor: DesignConstants.blue,
-               fontSize: 16,
-          
-             ),
-             */
+             
              Expanded(
                child: 
                ListView.builder(
@@ -109,9 +100,52 @@ class MainChatPageState extends State<MainChatPage> {
                           
                           );
                  }
-                 )) 
-          ],
+                 )),
+           //-----------------------------------------------------------------------
+          //FRIEND MODE
+            friendFlag == false ? 
+            RaisedButton.icon(
+            icon: Icon(Icons.local_florist), 
+            label: Text('Friends'),
+            textColor: DesignConstants.blue,
+            onPressed: controller.showFriends,
+            )
+            :
+            //else
+            Expanded(
+               child: 
+               ListView.builder(
+                 itemCount: userList.length,
+                 itemBuilder: (BuildContext context, int index){
+                   return Container(
+                     padding: EdgeInsets.all(5.0),
+                     height: 100,
+                    child: 
+                    ListTile(
+                          leading: CachedNetworkImage(
+                            imageUrl: userList[index].profilePic == null ? '':userList[index].profilePic,
+                            placeholder: (context, url)=>CircularProgressIndicator(),
+                            errorWidget: (context, url, error)=> Icon(Icons.tag_faces),
+                            ),
+                            title: Text(userList[index].username,), 
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                               children: <Widget>[
+                                //Text(userList[index].email),
+                                //Text(userList[index].city == null ? '': userList[index].city),        
+                              ],
+                            ),
+                            onTap: ()=>controller.onTap(index),
+                          )
+                          
+                          );
+                 }
+                 )),
+          //-----------------------------------------------------------------------
           
+          
+          ],
+      
       ),
         ),
         

@@ -16,6 +16,7 @@ class MainChatPageController {
   UserModel user;
   List<UserModel>userList;
   bool publicFlag;
+  bool friendFlag;
   String userID;
   //Constructor
   MainChatPageController (this.state);
@@ -24,6 +25,7 @@ class MainChatPageController {
   Future<void> showUsers() async {
     print('showUsers() called');
     publicFlag = true;
+    state.friendFlag=false;
     try{
       print('${state.userList.length.toString()}');
       state.stateChanged((){
@@ -44,6 +46,33 @@ class MainChatPageController {
     
              );
   }
+
+  Future<void> showFriends() async {
+    print('showUsers() called');
+    friendFlag = true;
+    state.publicFlag=false;
+    try{
+      print('${state.userList.length.toString()}');
+      state.stateChanged((){
+        state.friendFlag = true;
+      });
+    }catch(e){
+      throw e.toString();
+    }
+    //Showing toast message
+    Fluttertoast.showToast(
+               msg: "Friend Mode",
+               toastLength: Toast.LENGTH_SHORT,
+               gravity: ToastGravity.CENTER,
+               timeInSecForIos: 1,
+               backgroundColor: DesignConstants.red,
+               textColor: DesignConstants.yellow,
+               fontSize: 16,
+    
+             );
+  }
+
+
   onTap(int index) async {
     print('tapped SimSo $index');
     //Retrieve selected SimSo user
