@@ -13,51 +13,55 @@ import 'package:simso/model/entities/local-user.dart';
 
 class LoginPage extends StatefulWidget {
   final LocalUser localUserFunction;
-  LoginPage({Key key, @required this.localUserFunction}) : super(key: key);
+  final email;
+  final password;
+  final credential;
+  LoginPage({Key key, @required this.localUserFunction, this.email, this.password, this.credential, }) : super(key: key);
   @override
   State<StatefulWidget> createState() {
-    return LoginPageState();
+    return LoginPageState(localUserFunction,email, password, credential);
   }
 }
 
 class LoginPageState extends State<LoginPage> {
+  String email;
+  String password;
+  String credential;
+  String readInData;
   BuildContext context;
   LoginPageController controller;
   VideoPlayerController controller1;
   UserModel user;
-  String readInData;
   LocalUser localUserFunction;
   LocalAuthentication bioAuth = LocalAuthentication();
   bool checkBiometric = false;
   bool setTouchID = false;
+  bool setCredential = false;
   String authBio = "Not Authorized";
   List<BiometricType> biometricList = List<BiometricType>();
   IUserService userService = locator<IUserService>();
   bool entry = false;
   var formKey = GlobalKey<FormState>();
-  LoginPageState() {
-    controller = LoginPageController(this, this.userService, this.localUserFunction);
+  LoginPageState(this.localUserFunction, this.email, this.password, this.credential) {
+    controller = LoginPageController(this, this.userService);
     user = UserModel.isEmpty();
+    credential == 'true'? setCredential = true : setCredential = false;
   }
 
   void stateChanged(Function f) {
     setState(f);
   }
-  // implement this in user profile
-  // void setUserLogin(UserModel user){
-  //   widget.localUserFunction.writeLocalUser(
-  //     user.email + ' ' + user.password
-  //   );
-  // }
-  void readLocalUser(){
-    widget.localUserFunction.readLocalUser().then((value) => 
-    value != null? readInData = value.toString() : this.readInData=null
-    );
+
+  void writeCredential(){
+    var data = 'true';
+    widget.localUserFunction.writeCredential(data);
   }
+
   void writeLocalUser(UserModel localuser){
     var data = localuser.email+" "+localuser.password;
     widget.localUserFunction.writeLocalUser(data);
   }
+
   //----------------------------------------------------
   //CREATE INSTANCES FOR GOOGLE SIGN IN 
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -95,7 +99,19 @@ class LoginPageState extends State<LoginPage> {
                                   Text('Set TouchID after Login', style: TextStyle(color: DesignConstants.yellow),),
                                 ],
                               ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Checkbox(
+                                    onChanged: controller.setCredential, 
+                                    value: setCredential,
+                                    checkColor: DesignConstants.red,
+                                  ),
+                                  Text('Save login credentials', style: TextStyle(color: DesignConstants.yellow),),
+                                ],
+                              ),
                               TextFormField(
+                                initialValue: credential=='true'? email:null,
                                 decoration: InputDecoration(
                                   enabledBorder: UnderlineInputBorder(
                                     borderSide:
@@ -124,6 +140,7 @@ class LoginPageState extends State<LoginPage> {
                         Container(
                           padding: EdgeInsets.only(left: 30, right: 30),
                           child: TextFormField(
+                            initialValue: credential=='true'?password:null,
                             obscureText: true,
                             decoration: InputDecoration(
                               enabledBorder: UnderlineInputBorder(
@@ -150,7 +167,7 @@ class LoginPageState extends State<LoginPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            entry == true
+                            (entry == true || credential =='true')
                                 ? FlatButton(
                                     onPressed: controller.goToHomepage,
                                     child: Text(

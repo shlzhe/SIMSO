@@ -27,10 +27,25 @@ class LocalUser {
       return null;
     }
   }
-
-  Future<File> writeLocalUser(String localUser) async {
+  Future<File> writeLocalUser(String value) async {
     final file = await localFile;
     // Write the file
-    return file.writeAsString('$localUser');
+    return file.writeAsString('$value');
+  }
+  Future<File> get credential async {
+    final path = await localPath;
+    return File('$path/credential.txt');
+  }
+  Future<File> writeCredential(String value) async {
+    final file = await credential;
+    // Write the file
+    return file.writeAsString('$value');
+  }
+  Future<String> readCredential()async{
+    var directory = await getApplicationDocumentsDirectory();
+    var path = directory.path;
+    var contents;
+    contents = File('$path/credential.txt').readAsString();
+    return contents;
   }
 }
