@@ -69,7 +69,7 @@ class MainChatPageState extends State<MainChatPage> {
                  itemBuilder: (BuildContext context, int index){
                    return Container(
                      padding: EdgeInsets.all(5.0),
-                    
+                     height: 100,
                     child: 
                     ListTile(
                           leading: CachedNetworkImage(
@@ -82,8 +82,7 @@ class MainChatPageState extends State<MainChatPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                                children: <Widget>[
                                 Text(userList[index].email),
-                                Text(userList[index].city == null ? '': userList[index].city),
-                                //Text('Memo: ' +userList[index].memo),         
+                                Text(userList[index].city == null ? '': userList[index].city),        
                               ],
                             ),
                             onTap: ()=>controller.onTap(index),

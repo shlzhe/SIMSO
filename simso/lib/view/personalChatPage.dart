@@ -52,15 +52,17 @@ class PersonalChatPageState extends State<PersonalChatPage> {
     
       appBar: AppBar(
         centerTitle: true,
-        title: Text('${userList[index].username} '),
-        
+        title: new Column(
+            children: <Widget>[
+              //Display profile picture
+              
+              //Display username
+            ],
+            //Text('${userList[index].username} '),
+        ),
         backgroundColor: DesignConstants.blue,
       ),
-      drawer: MyDrawer(context, user),
       body: Text('Personal Chat Screen with SimSo index $index'),
-     
-     
-      
     );
 }
 }
