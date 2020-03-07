@@ -29,13 +29,19 @@ class FriendService extends IFriendService {
 
   @override
   void addFriendRequest(UserModel currentUser, UserModel friendUser) async {
+    var emptyList = <String>[];
     try {
       await Firestore.instance
-          .collection(FriendRequest)
-          .document(currentUser.uid)
-          .collection(friendUser.uid)
-          .document(friendUser.email)
-          .setData(friendUser.serialize());
+          .collection(UserModel.USERCOLLECTION)
+          .document(currentUser.uid).get().then((value) async {
+            if(!value.data.containsValue(UserModel.FRIENDREQUESTSENT)){
+              // await Firestore.instance.collection(UserModel.USERCOLLECTION).document(currentUser.uid).updateData({
+              //   UserModel.FRIENDREQUESTSENT: emptyList
+              // });
+              print("got you");
+            } 
+
+          });
     } catch (e) {
       print(e);
     }

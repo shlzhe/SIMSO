@@ -1,7 +1,7 @@
 class UserModel {
   UserModel({
-    this.uid, 
-    this.username, 
+    this.uid,
+    this.username,
     this.email,
     this.aboutme,
     this.city,
@@ -10,11 +10,13 @@ class UserModel {
     this.profilePic,
     this.favorites,
     this.password,
-    this.friends
-    });
-  UserModel.isEmpty(){
+    this.friendRequestSent,
+    this.friendRequestRecieved,
+    this.friends,
+  });
+  UserModel.isEmpty() {
     this.uid = '';
-    this.username = ''; 
+    this.username = '';
     this.email = '';
     this.aboutme = '';
     this.city = '';
@@ -22,6 +24,8 @@ class UserModel {
     this.memo = '';
     this.profilePic = '';
     this.favorites = '';
+    this.friendRequestSent = [];
+    this.friendRequestRecieved = [];
     this.friends = [];
   }
   String uid;
@@ -34,6 +38,8 @@ class UserModel {
   String profilePic;
   String favorites;
   String password;
+  List<dynamic> friendRequestSent;
+  List<dynamic> friendRequestRecieved;
   List<dynamic> friends;
 
   static const UID = 'UID';
@@ -46,9 +52,11 @@ class UserModel {
   static const PROFILEPIC = 'profilepic';
   static const FAVORITES = 'favorites';
   static const USERCOLLECTION = 'users';
+  static const FRIENDREQUESTSENT = 'friendRequestSent';
+  static const FRIENDREQUESTRECIEVED = 'friendRequestRecieved';
   static const FRIENDS = 'friends';
 
-  Map<String, dynamic> serialize(){
+  Map<String, dynamic> serialize() {
     return <String, dynamic>{
       UID: uid,
       USERNAME: username,
@@ -59,19 +67,23 @@ class UserModel {
       MEMO: memo,
       PROFILEPIC: profilePic,
       FAVORITES: favorites,
-      FRIENDS: friends
+      FRIENDREQUESTSENT: friendRequestSent,
+      FRIENDREQUESTRECIEVED: friendRequestRecieved,
+      FRIENDS: friends,
     };
   }
 
-  UserModel.deserialize(Map<String, dynamic> doc):
-      uid = doc[UID],
-      username = doc[USERNAME],
-      email = doc[EMAIL],
-      aboutme = doc[ABOUTME],
-      city = doc[CITY],
-      relationship = doc[RELATIONSHIP],
-      memo = doc[MEMO],
-      profilePic = doc[PROFILEPIC],
-      favorites = doc[FAVORITES],
-      friends =  doc[FRIENDS];
+  UserModel.deserialize(Map<String, dynamic> doc)
+      : uid = doc[UID],
+        username = doc[USERNAME],
+        email = doc[EMAIL],
+        aboutme = doc[ABOUTME],
+        city = doc[CITY],
+        relationship = doc[RELATIONSHIP],
+        memo = doc[MEMO],
+        profilePic = doc[PROFILEPIC],
+        favorites = doc[FAVORITES],
+        friendRequestSent = doc[FRIENDREQUESTSENT],
+        friendRequestRecieved = doc[FRIENDREQUESTRECIEVED],
+        friends = doc[FRIENDS];
 }
