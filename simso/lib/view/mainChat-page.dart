@@ -1,8 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:simso/controller/mainChatPage-controller.dart';
 import 'package:simso/model/services/itouch-service.dart';
-import 'package:simso/view/navigation-drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:simso/model/services/itimer-service.dart';
 import 'package:simso/model/services/iuser-service.dart';
@@ -13,11 +11,12 @@ import 'design-constants.dart';
 class MainChatPage extends StatefulWidget {
   final UserModel user;
   final List<UserModel>userList;
-  MainChatPage(this.user,this.userList);
+  int currentIndex;
+  MainChatPage(this.user,this.userList,this.currentIndex);
   
   @override
   State<StatefulWidget> createState() {
-    return MainChatPageState(user,userList);
+    return MainChatPageState(user,userList,currentIndex);
   }
 }
 
@@ -29,12 +28,14 @@ class MainChatPageState extends State<MainChatPage> {
   MainChatPageController controller;
   UserModel user;
   List<UserModel>userList;                                //To hold all SimSO users, initialized null
+  List<UserModel>friendList;
   String returnedID;
   var idController = TextEditingController();
   var formKey = GlobalKey<FormState>();
   bool publicFlag = false;      //True when public button is clicked
   bool friendFlag = false;      //True when friends button is clicked
-  MainChatPageState(this.user,this.userList) {
+  int currentIndex;         //Hold index on users collection in DB of current user
+  MainChatPageState(this.user,this.userList,this.currentIndex) {
     controller = MainChatPageController(this);
   
   }
@@ -92,7 +93,8 @@ class MainChatPageState extends State<MainChatPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                                children: <Widget>[
                                 Text(userList[index].email),
-                                Text(userList[index].city == null ? '': userList[index].city),        
+                                Text(userList[index].city == null ? '': userList[index].city),
+                                        
                               ],
                             ),
                             onTap: ()=>controller.onTap(index),
@@ -115,12 +117,13 @@ class MainChatPageState extends State<MainChatPage> {
             Expanded(
                child: 
                ListView.builder(
-                 itemCount: userList.length,
+                 itemCount: userList[currentIndex].friends.length, 
                  itemBuilder: (BuildContext context, int index){
                    return Container(
                      padding: EdgeInsets.all(5.0),
-                     height: 100,
+                     height: 100, 
                     child: 
+                     
                     ListTile(
                           leading: CachedNetworkImage(
                             imageUrl: userList[index].profilePic == null ? '':userList[index].profilePic,
@@ -131,8 +134,8 @@ class MainChatPageState extends State<MainChatPage> {
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                                children: <Widget>[
-                                //Text(userList[index].email),
-                                //Text(userList[index].city == null ? '': userList[index].city),        
+                                Text(userList[index].email),
+                                Text(userList[index].city == null ? '': userList[index].city),        
                               ],
                             ),
                             onTap: ()=>controller.onTap(index),
