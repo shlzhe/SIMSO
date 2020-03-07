@@ -4,28 +4,37 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:simso/model/entities/local-user.dart';
 import 'package:simso/model/entities/friend-model.dart';
+
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:simso/model/entities/user-model.dart';
-import 'package:simso/model/services/ifriend-service.dart';
-import 'package:simso/view/friends-page.dart';
-import 'package:simso/view/homepage.dart';
-import 'package:simso/view/my-thoughts-page.dart';
-import 'package:simso/view/login-page.dart';
-import 'package:simso/view/recommend-friends-page.dart';
-import 'package:simso/view/time-management-page.dart';
-import '../model/entities/globals.dart' as globals;
-
 import '../service-locator.dart';
-import 'design-constants.dart';
-
+//model imports
+import '../model/entities/globals.dart' as globals;
+import '../model/entities/local-user.dart';
+import '../model/entities/friend-model.dart';
+import '../model/entities/user-model.dart';
+import '../model/entities/thought-model.dart';
+import '../model/services/ifriend-service.dart';
+import '../model/services/thought-service.dart';
+import '../model/services/ithought-service.dart';
+//view imports
+import '../view/friends-page.dart';
+import '../view/homepage.dart';
+import '../view/my-thoughts-page.dart';
+import '../view/login-page.dart';
+import '../view/recommend-friends-page.dart';
+import '../view/time-management-page.dart';
+import '../view/design-constants.dart';
 import '../view/snapshot-page.dart';
 import '../view/meme-page.dart';
 import '../view/account-setting-page.dart';
+//controller import
+import '../controller/homepage-controller.dart';
 
 class MyDrawer extends StatelessWidget {
   final UserModel user;
   final BuildContext context;
   final IFriendService friendService = locator<IFriendService>();
+  final IThoughtService ThoughtService = locator<IThoughtService>();
 
   MyDrawer(this.context, this.user);
 
@@ -50,9 +59,10 @@ class MyDrawer extends StatelessWidget {
         context, MaterialPageRoute(builder: (context) => AccountSettingPage()));
   }
 
-  void navigateMyThoughts() {
+  void navigateMyThoughts() async {
+    List<Thought> myThoughtsList = await ThoughtService.getThoughts(user.uid.toString());
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => MyThoughtsPage(user)));
+        context, MaterialPageRoute(builder: (context) => MyThoughtsPage(user, myThoughtsList)));
   }
 
   void signOut() {
@@ -82,6 +92,7 @@ class MyDrawer extends StatelessWidget {
               onPressed: () {
                 //Dialog box pop up to confirm signing out
                 FirebaseAuth.instance.signOut();
+                globals.timer.stopTimer();
                 globals.timer = null;
                 globals.touchCounter = null;
                 globals.limit = null;
