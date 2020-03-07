@@ -74,4 +74,5 @@ class UserModel {
       profilePic = doc[PROFILEPIC],
       favorites = doc[FAVORITES],
       friends =  doc[FRIENDS];
+
 }
