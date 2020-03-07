@@ -29,7 +29,6 @@ class LoginPageController{
         if (state.setTouchID) state.localUserFunction.writeLocalUser(state.user.email+ " "+ state.user.password);
         if (state.setCredential) {
           state.localUserFunction.writeCredential('true');
-          state.writeLocalUser(state.user);
         }
         state.user = await userService.readUser(state.user.uid);
         state.stateChanged((){});
@@ -249,14 +248,16 @@ class LoginPageController{
           state.user.password = state.password;
           if (state.setCredential) {
             state.localUserFunction.writeCredential('true');
+            state.localUserFunction.writeUserCredential(state.user.email+' '+state.user.password);
             state.stateChanged((){});
             }
           if (state.user.email != null && state.user.email!='' && state.user.password!=''){
-            userService.login(state.user)
-              .then((value) => 
+            state.user.uid = await userService.login(state.user);
+            if (state.user.uid!=null||state.user.uid!=''){
+              state.user = await userService.readUser(state.user.uid);
                 Navigator.push(state.context, MaterialPageRoute(
-                  builder: (context)=>Homepage(state.user))),
-            );
+                builder: (context)=>Homepage(state.user)));
+                }
           }
         }
       }
