@@ -31,17 +31,39 @@ class FriendService extends IFriendService {
   void addFriendRequest(UserModel currentUser, UserModel friendUser) async {
     var emptyList = <String>[];
     try {
+      //This section is to make UserModel compatible with new added elements
+      // begin of compatibility
       await Firestore.instance
           .collection(UserModel.USERCOLLECTION)
           .document(currentUser.uid).get().then((value) async {
             if(!value.data.containsValue(UserModel.FRIENDREQUESTSENT)){
-              // await Firestore.instance.collection(UserModel.USERCOLLECTION).document(currentUser.uid).updateData({
-              //   UserModel.FRIENDREQUESTSENT: emptyList
-              // });
-              print("got you");
+              await Firestore.instance.collection(UserModel.USERCOLLECTION).document(currentUser.uid).updateData({
+                UserModel.FRIENDREQUESTSENT: emptyList
+              });
             } 
-
+            if(!value.data.containsValue(UserModel.FRIENDREQUESTRECIEVED)){
+              await Firestore.instance.collection(UserModel.USERCOLLECTION).document(currentUser.uid).updateData({
+                UserModel.FRIENDREQUESTRECIEVED: emptyList
+              });
+            }
           });
+      await Firestore.instance
+          .collection(UserModel.USERCOLLECTION)
+          .document(friendUser.uid).get().then((value) async {
+            if(!value.data.containsValue(UserModel.FRIENDREQUESTSENT)){
+              await Firestore.instance.collection(UserModel.USERCOLLECTION).document(friendUser.uid).updateData({
+                UserModel.FRIENDREQUESTSENT: emptyList
+              });
+            } 
+            if(!value.data.containsValue(UserModel.FRIENDREQUESTRECIEVED)){
+              await Firestore.instance.collection(UserModel.USERCOLLECTION).document(friendUser.uid).updateData({
+                UserModel.FRIENDREQUESTRECIEVED: emptyList
+              });
+            }
+          });
+      // end of compatibility
+
+      
     } catch (e) {
       print(e);
     }
