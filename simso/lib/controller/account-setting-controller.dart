@@ -13,8 +13,6 @@ import 'package:simso/model/services/iuser-service.dart';
 
 class AccountSettingController {
   AccountSettingPageState state;
-  UserModel newUser = UserModel();
-  String userID;
   IUserService userService = locator<IUserService>();
   AccountSettingController(this.state);
 
@@ -51,7 +49,7 @@ class AccountSettingController {
     try {
       await userService.updateUserDB(state.userCopy);
 
-      Navigator.pop(state.context, state.user);
+      Navigator.pop(state.context, state.userCopy);
     } catch (e) {
       MyDialog.info(
           context: state.context,

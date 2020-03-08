@@ -10,8 +10,6 @@ import 'package:simso/model/services/iuser-service.dart';
 import '../controller/account-setting-controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
-
 class AccountSettingPage extends StatefulWidget {
   final UserModel user;
   AccountSettingPage(this.user);
@@ -32,6 +30,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
 
   AccountSettingPageState(this.user) {
     controller = AccountSettingController(this);
+    userCopy = UserModel.clone(user);
   }
 
   void stateChanged(Function f) {
@@ -46,9 +45,9 @@ class AccountSettingPageState extends State<AccountSettingPage> {
         title: Text("Account Settings"),
         actions: <Widget>[
           IconButton(
-              icon: Icon(Icons.save),
-              onPressed: controller.save,
-              ),
+            icon: Icon(Icons.save),
+            onPressed: controller.save,
+          ),
         ],
       ),
       body: Form(key: formKey, child: _buildPortraitLayout()),
@@ -73,15 +72,15 @@ class AccountSettingPageState extends State<AccountSettingPage> {
             _buildCardSettingsParagraph(3),
           ],
         ),
-        CardSettingsSection(
-          header: CardSettingsHeader(
-            label: 'Security',
-          ),
-          children: <Widget>[
-            _buildCardSettingsEmail(),
-            _buildCardSettingsPassword(),
-          ],
-        ),
+        // CardSettingsSection(
+        //   header: CardSettingsHeader(
+        //     label: 'Security',
+        //   ),
+        //   children: <Widget>[
+        //     _buildCardSettingsEmail(),
+        //     _buildCardSettingsPassword(),
+        //   ],
+        // ),
         CardSettingsSection(
           header: CardSettingsHeader(
             label: 'Actions',
@@ -109,7 +108,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
   CardSettingsButton _buildCardSettingsButton_Logout() {
     return CardSettingsButton(
       label: 'LOGOUT',
-      onPressed: ()=>FirebaseAuth.instance.signOut(),
+      onPressed: () => FirebaseAuth.instance.signOut(),
     );
   }
 
@@ -117,17 +116,17 @@ class AccountSettingPageState extends State<AccountSettingPage> {
     return CardSettingsPassword(
       labelWidth: 150.0,
       icon: Icon(Icons.lock),
-      initialValue: user.password,
+      initialValue: userCopy.password,
       autovalidate: _autoValidate,
       validator: (value) {
         if (value == null) return 'Password is required.';
         if (value.length < 6) return 'Must be no less than 6 characters.';
         return null;
       },
-      onSaved: (value) => user.password = value,
+      onSaved: (value) => userCopy.password = value,
       onChanged: (value) {
         setState(() {
-          user.password = value;
+          userCopy.password = value;
         });
       },
     );
@@ -145,10 +144,10 @@ class AccountSettingPageState extends State<AccountSettingPage> {
           return "Email not formatted correctly."; // use regex in real application
         return null;
       },
-      onSaved: (value) => user.email = value,
+      onSaved: (value) => userCopy.email = value,
       onChanged: (value) {
         setState(() {
-          user.email = value;
+          userCopy.email = value;
         });
       },
     );
@@ -157,12 +156,12 @@ class AccountSettingPageState extends State<AccountSettingPage> {
   CardSettingsParagraph _buildCardSettingsParagraph(int lines) {
     return CardSettingsParagraph(
       label: 'About Me',
-      initialValue: user.aboutme,
+      initialValue: userCopy.aboutme,
       numberOfLines: lines,
-      onSaved: (value) => user.aboutme = value,
+      onSaved: (value) => userCopy.aboutme = value,
       onChanged: (value) {
         setState(() {
-          user.aboutme = value;
+          userCopy.aboutme = value;
         });
       },
     );
@@ -173,17 +172,17 @@ class AccountSettingPageState extends State<AccountSettingPage> {
     return CardSettingsNumberPicker(
       label: 'Age',
       labelAlign: labelAlign,
-      initialValue: user.age,
+      initialValue: userCopy.age,
       min: 1,
       max: 100,
       validator: (value) {
         if (value == null) return 'Age is required.';
         return null;
       },
-      onSaved: (value) => user.age = value,
+      onSaved: (value) => userCopy.age = value,
       onChanged: (value) {
         setState(() {
-          user.age = value;
+          userCopy.age = value;
         });
       },
     );
@@ -192,7 +191,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
   CardSettingsListPicker _buildCardSettingsListPicker_Gender() {
     return CardSettingsListPicker(
       label: 'Gender',
-      initialValue: user.gender,
+      initialValue: userCopy.gender,
       hintText: 'Gender',
       autovalidate: _autoValidate,
       options: <String>['Male', 'Female', 'Secrete'],
@@ -201,10 +200,10 @@ class AccountSettingPageState extends State<AccountSettingPage> {
         if (value == null || value.isEmpty) return 'Please select your gender';
         return null;
       },
-      onSaved: (value) => user.gender = value,
+      onSaved: (value) => userCopy.gender = value,
       onChanged: (value) {
         setState(() {
-          user.gender = value;
+          userCopy.gender = value;
         });
       },
     );
@@ -214,17 +213,17 @@ class AccountSettingPageState extends State<AccountSettingPage> {
     return CardSettingsText(
       label: 'User Name',
       //hintText: 'User Name',
-      initialValue: user.username,
+      initialValue: userCopy.username,
       requiredIndicator: Text('*', style: TextStyle(color: Colors.red)),
       autovalidate: _autoValidate,
       validator: (value) {
         if (value == null || value.isEmpty) return 'User name is required.';
         return null;
       },
-      onSaved: (value) => user.username = value,
+      onSaved: (value) => userCopy.username = value,
       onChanged: (value) {
         setState(() {
-          user.username = value;
+          userCopy.username = value;
         });
       },
     );

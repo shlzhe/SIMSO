@@ -28,6 +28,20 @@ class UserModel {
     this.gender = '';
     this.age = 0;
   }
+  UserModel.clone(UserModel b) {
+    this.uid = b.uid;
+    this.username = b.username;
+    this.email = b.email;
+    this.aboutme = b.aboutme;
+    this.city = b.city;
+    this.relationship = b.relationship;
+    this.memo = b.memo;
+    this.profilePic = b.profilePic;
+    this.favorites = b.favorites;
+    this.friends = b.friends;
+    this.gender = b.gender;
+    this.age = b.age;
+  }
   String uid;
   String username;
   String email;
