@@ -6,9 +6,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class FriendService extends IFriendService {
   static const FriendRequest = "friendrequest";
 
-  List<UserModel> userList = new List<UserModel>();
   @override
   Future<List<UserModel>> getUsers() async {
+    List<UserModel> userList = new List<UserModel>();
     try {
       var query = await Firestore.instance
           .collection(UserModel.USERCOLLECTION)
@@ -36,12 +36,12 @@ class FriendService extends IFriendService {
       await Firestore.instance
           .collection(UserModel.USERCOLLECTION)
           .document(currentUser.uid).get().then((value) async {
-            if(!value.data.containsValue(UserModel.FRIENDREQUESTSENT)){
+            if(!value.data.containsKey(UserModel.FRIENDREQUESTSENT)){
               await Firestore.instance.collection(UserModel.USERCOLLECTION).document(currentUser.uid).updateData({
                 UserModel.FRIENDREQUESTSENT: emptyList
               });
             } 
-            if(!value.data.containsValue(UserModel.FRIENDREQUESTRECIEVED)){
+            if(!value.data.containsKey(UserModel.FRIENDREQUESTRECIEVED)){
               await Firestore.instance.collection(UserModel.USERCOLLECTION).document(currentUser.uid).updateData({
                 UserModel.FRIENDREQUESTRECIEVED: emptyList
               });
@@ -50,12 +50,12 @@ class FriendService extends IFriendService {
       await Firestore.instance
           .collection(UserModel.USERCOLLECTION)
           .document(friendUser.uid).get().then((value) async {
-            if(!value.data.containsValue(UserModel.FRIENDREQUESTSENT)){
+            if(!value.data.containsKey(UserModel.FRIENDREQUESTSENT)){
               await Firestore.instance.collection(UserModel.USERCOLLECTION).document(friendUser.uid).updateData({
                 UserModel.FRIENDREQUESTSENT: emptyList
               });
             } 
-            if(!value.data.containsValue(UserModel.FRIENDREQUESTRECIEVED)){
+            if(!value.data.containsKey(UserModel.FRIENDREQUESTRECIEVED)){
               await Firestore.instance.collection(UserModel.USERCOLLECTION).document(friendUser.uid).updateData({
                 UserModel.FRIENDREQUESTRECIEVED: emptyList
               });
@@ -63,7 +63,16 @@ class FriendService extends IFriendService {
           });
       // end of compatibility
 
-      
+      //user sent friend request
+      await Firestore.instance.collection(UserModel.USERCOLLECTION).document(currentUser.uid).updateData({
+        UserModel.FRIENDREQUESTSENT: FieldValue.arrayUnion([friendUser.uid])
+      });
+
+      //user recieve friend request
+      await Firestore.instance.collection(UserModel.USERCOLLECTION).document(friendUser.uid).updateData({
+        UserModel.FRIENDREQUESTRECIEVED: FieldValue.arrayUnion([currentUser.uid])
+      });
+        
     } catch (e) {
       print(e);
     }
