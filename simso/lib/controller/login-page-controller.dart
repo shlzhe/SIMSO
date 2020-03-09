@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:simso/model/entities/user-model.dart';
-import 'package:simso/model/entities/local-user.dart';
 import 'package:simso/model/services/iuser-service.dart';
 import 'package:simso/view/create-account.dart';
 import 'package:simso/view/homepage.dart';
@@ -14,9 +13,9 @@ import 'package:simso/view/mydialog.dart';
 class LoginPageController{
   LoginPageState state;
   IUserService userService;
-  final LocalUser localUser;
+  // final LocalUser localUser;
   
-  LoginPageController(this.state, this.userService, this.localUser);
+  LoginPageController(this.state, this.userService);
 
   void goToHomepage() async{
     if(!state.formKey.currentState.validate()){
@@ -27,7 +26,10 @@ class LoginPageController{
     try{
       state.user.uid = await userService.login(state.user);
       if (state.user.uid!=''||state.user.uid!=null){
-        if (state.setTouchID) state.writeLocalUser(state.user);
+        if (state.setTouchID) state.localUserFunction.writeLocalUser(state.user.email+ " "+ state.user.password);
+        if (state.setCredential) {
+          state.localUserFunction.writeCredential('true');
+        }
         state.user = await userService.readUser(state.user.uid);
         state.stateChanged((){});
       }
@@ -211,13 +213,14 @@ class LoginPageController{
 
   print("Google User Sign Out");
   }
+  void setEmailPass(String readInData){
+    int i = state.readInData.indexOf(' ');
+    state.email = state.readInData.substring(0,i);
+    state.password= state.readInData.substring(i+1);
+  }
   Future<void> loginBiometric() async {
-      state.stateChanged((){
-        state.readLocalUser();
-      });
-      state.biometricList = await state.bioAuth.getAvailableBiometrics();
-      print(state.biometricList);
-      print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+    state.localUserFunction.readLocalUser().then((value) => state.readInData=value);
+    state.biometricList = await state.bioAuth.getAvailableBiometrics();
     try{
       if(state.biometricList.length<1) {
         MyDialog.info(
@@ -240,16 +243,21 @@ class LoginPageController{
           action: (){Navigator.pop(state.context);});
         }
         else if (state.checkBiometric) {
-          state.readLocalUser();
-          int i = state.readInData.indexOf(' ');
-          state.user.email = state.readInData.substring(0,i);
-          state.user.password=state.readInData.substring(i+1);
-          if (state.user.email != null && state.user.email!=''&&state.user.password!=''){
-            userService.login(state.user)
-              .then((value) => 
+          setEmailPass(state.readInData);
+          state.user.email = state.email;
+          state.user.password = state.password;
+          if (state.setCredential) {
+            state.localUserFunction.writeCredential('true');
+            state.localUserFunction.writeUserCredential(state.user.email+' '+state.user.password);
+            state.stateChanged((){});
+            }
+          if (state.user.email != null && state.user.email!='' && state.user.password!=''){
+            state.user.uid = await userService.login(state.user);
+            if (state.user.uid!=null||state.user.uid!=''){
+              state.user = await userService.readUser(state.user.uid);
                 Navigator.push(state.context, MaterialPageRoute(
-                  builder: (context)=>Homepage(state.user))),
-            );
+                builder: (context)=>Homepage(state.user)));
+                }
           }
         }
       }
@@ -266,6 +274,18 @@ class LoginPageController{
     else state.setTouchID = false;
     state.stateChanged((){});
   }
+
+  void setCredential(bool value) {
+    if (state.setCredential==false) {
+      state.setCredential=true;
+    }
+    else {
+      state.setCredential = false;
+      if (!state.setCredential) state.localUserFunction.writeCredential('false');
+    }
+    state.stateChanged((){});
+  }
+  
 }
 
   
