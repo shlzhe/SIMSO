@@ -39,6 +39,8 @@ class AccountSettingPageState extends State<AccountSettingPage> {
 
   @override
   Widget build(BuildContext context) {
+    this.context = context;
+    
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(

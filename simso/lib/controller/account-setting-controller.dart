@@ -66,6 +66,7 @@ class AccountSettingController {
         message: 'Your profile is successfully updated!',
         action: () {
           Navigator.pop(state.context);
+          Navigator.pop(state.context, null);
         });
   }
 }
