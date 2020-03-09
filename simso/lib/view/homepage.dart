@@ -1,3 +1,4 @@
+import 'package:simso/model/services/ilimit-service.dart';
 import 'package:simso/model/services/itouch-service.dart';
 import 'package:simso/view/navigation-drawer.dart';
 import 'package:unicorndial/unicorndial.dart';
@@ -25,6 +26,7 @@ class HomepageState extends State<Homepage> {
   IUserService userService = locator<IUserService>();
   ITimerService timerService = locator<ITimerService>();
   ITouchService touchService = locator<ITouchService>();
+  ILimitService limitService = locator<ILimitService>();
   HomepageController controller;
   UserModel user;
   String returnedID;
@@ -32,13 +34,15 @@ class HomepageState extends State<Homepage> {
   var formKey = GlobalKey<FormState>();
 
   HomepageState(this.user) {
-    controller = HomepageController(this, this.timerService, this.touchService);
+    controller = HomepageController(this, this.timerService, this.touchService, this.limitService);
     controller.setupTimer();
     controller.setupTouchCounter();
+    controller.getLimits();
   }
 
   void stateChanged(Function f) {
     setState(f);
+    print('made it');
   }
 
   @override
@@ -118,6 +122,24 @@ class HomepageState extends State<Homepage> {
       ),
     );
 
+     childButtons.add(
+      UnicornButton(
+        hasLabel: true,
+        labelText: "Messenger",
+        labelFontSize: 10,
+        currentButton: FloatingActionButton(
+          heroTag: "Messenger",
+          backgroundColor: Colors.white,
+          mini: true,
+          child: Icon(
+            Icons.textsms,
+            color: Colors.black,
+          ),
+          onPressed: controller.mainChatScreen,
+        ),
+      ),
+    );
+
     return Scaffold(
       floatingActionButton: UnicornDialer(
         backgroundColor: Colors.transparent,
@@ -128,7 +150,10 @@ class HomepageState extends State<Homepage> {
         ),
         childButtons: childButtons,
       ),
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text('Home Page'),
+        backgroundColor: DesignConstants.blue,
+      ),
       drawer: MyDrawer(context, user),
       body: Container(
           child: Form(

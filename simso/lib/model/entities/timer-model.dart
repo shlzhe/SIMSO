@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:simso/model/services/itimer-service.dart';
-
+import './globals.dart' as globals;
 import '../../service-locator.dart';
 
 
