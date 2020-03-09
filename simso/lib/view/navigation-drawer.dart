@@ -2,12 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:simso/controller/homepage-controller.dart';
 import 'package:simso/model/entities/local-user.dart';
 import 'package:simso/model/entities/friend-model.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:simso/model/entities/song-model.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/model/services/ifriend-service.dart';
+import 'package:simso/model/services/isong-service.dart';
 import 'package:simso/view/friends-page.dart';
 import 'package:simso/view/homepage.dart';
 import 'package:simso/view/my-thoughts-page.dart';
@@ -15,25 +16,30 @@ import 'package:simso/view/login-page.dart';
 import 'package:simso/view/recommend-friends-page.dart';
 import 'package:simso/view/time-management-page.dart';
 import '../model/entities/globals.dart' as globals;
-
 import '../service-locator.dart';
 import 'design-constants.dart';
-
 import '../view/snapshot-page.dart';
 import '../view/meme-page.dart';
 import '../view/account-setting-page.dart';
+import 'my-music-page.dart';
 
 class MyDrawer extends StatelessWidget {
   final UserModel user;
   final BuildContext context;
   final IFriendService friendService = locator<IFriendService>();
+  final ISongService _songService = locator<ISongService>();
 
   MyDrawer(this.context, this.user);
 
   void navigateHomepage() {
-    Navigator.push(context, MaterialPageRoute(
-      builder: (context) => Homepage(user)
-    ));
+    List<SongModel> songlist;
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Homepage(
+                  user,
+                  songlist,
+                )));
   }
 
   void navigateSnapshotPage() {
@@ -58,8 +64,8 @@ class MyDrawer extends StatelessWidget {
 
   void signOut() {
     //print('${state.user.email}');
-    
-    FirebaseAuth.instance.signOut();    //Email/pass sign out
+
+    FirebaseAuth.instance.signOut(); //Email/pass sign out
     GoogleSignIn().signOut();
     //Display confirmation dialog box after user clicking on "Sign Out" button
     showDialog(
@@ -87,12 +93,16 @@ class MyDrawer extends StatelessWidget {
                 globals.touchCounter = null;
                 globals.limit = null;
                 //Close Drawer, then go back to Front Page
-                Navigator.pop(context);  //Close Dialog box
-                Navigator.pop(context);  //Close Drawer
-                //Navigator.pop(state.context);  //Close Home Page 
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (context)=> LoginPage(localUserFunction: LocalUser(),),
-                ));
+                Navigator.pop(context); //Close Dialog box
+                Navigator.pop(context); //Close Drawer
+                //Navigator.pop(state.context);  //Close Home Page
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginPage(
+                        localUserFunction: LocalUser(),
+                      ),
+                    ));
               },
             ),
             RaisedButton(
@@ -111,10 +121,8 @@ class MyDrawer extends StatelessWidget {
 
   void myFriendsMenu() async {
     List<Friend> friends = await friendService.getFriends(user.friends);
-     Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => FriendPage(user, friends)));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => FriendPage(user, friends)));
   }
 
   void recommendFriends() async {
@@ -130,6 +138,23 @@ class MyDrawer extends StatelessWidget {
         MaterialPageRoute(builder: (context) => TimeManagementPage(user)));
   }
 
+  void navigateMyMusic() async {
+    List<SongModel> songlist;
+    try {
+      print("GET SONGS");
+      songlist = await _songService.getSong(user.email);
+    } catch (e) {
+      songlist = <SongModel>[];
+      print("SONGLIST LENGTH: " + songlist.length.toString());
+    }
+    print("SUCCEED IN GETTING SONGS");
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MyMusic(user, songlist),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,12 +166,10 @@ class MyDrawer extends StatelessWidget {
             currentAccountPicture: CircleAvatar(
               child: ClipOval(
                 child: CachedNetworkImage(
-                  imageUrl: user.profilePic != null &&
-                            user.profilePic != ''
+                  imageUrl: user.profilePic != null && user.profilePic != ''
                       ? user.profilePic
                       : DesignConstants.profile,
-                  placeholder: (context, url) =>
-                      CircularProgressIndicator(),
+                  placeholder: (context, url) => CircularProgressIndicator(),
                   errorWidget: (context, url, error) =>
                       Icon(Icons.account_circle),
                 ),
@@ -166,14 +189,19 @@ class MyDrawer extends StatelessWidget {
             onTap: navigateTimeManagement,
           ),
           ListTile(
-              leading: Icon(Icons.group),
-              title: Text('Friends'),
-              onTap: myFriendsMenu,
-            ),
+            leading: Icon(Icons.group),
+            title: Text('Friends'),
+            onTap: myFriendsMenu,
+          ),
           ListTile(
             leading: Icon(Icons.group_add),
             title: Text('Recommended Friends'),
             onTap: recommendFriends,
+          ),
+          ListTile(
+            leading: Icon(Icons.music_note),
+            title: Text('My Music'),
+            onTap: navigateMyMusic,
           ),
           ListTile(
             leading: Icon(Icons.camera),

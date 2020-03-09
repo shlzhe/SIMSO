@@ -1,28 +1,19 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-
+import 'package:simso/model/entities/song-model.dart';
 import '../service-locator.dart';
-import '../model/entities/globals.dart' as globals;
 import '../model/entities/user-model.dart';
-import '../model/services/itimer-service.dart';
-import '../model/services/iuser-service.dart';
-import '../model/services/thought-service.dart';
 import '../model/services/ithought-service.dart';
-
 import '../view/mydialog.dart';
 import '../view/homepage.dart';
 import '../view/add-thought-page.dart';
 
-
-class AddThoughtController{
-
+class AddThoughtController {
   AddThoughtPageState state;
   UserModel newUser = UserModel();
   String userID;
   IThoughtService _thoughtService = locator<IThoughtService>();
+  List<SongModel> songlist;
 
   AddThoughtController(this.state);
 
@@ -31,6 +22,7 @@ class AddThoughtController{
     print(state.user.username);
     print("Last");
   }
+
 /*
   void getUserName() async{
     state.user.uid = await _userService.getUserDataByID(userID);
@@ -49,23 +41,22 @@ class AddThoughtController{
   void saveText(String value) {
     state.thoughtCopy.text = value;
   }
-  
 
-    void save() async {
-
-    print('saving thought: '+ state.thoughtCopy.text);
+  void save() async {
+    print('saving thought: ' + state.thoughtCopy.text);
     print('for ' + state.user.username);
-    if(!state.formKey.currentState.validate()){
+    if (!state.formKey.currentState.validate()) {
       return;
     }
     state.formKey.currentState.save();
     state.thoughtCopy.uid = state.user.uid;
     state.thoughtCopy.timestamp = DateTime.now();
-    
-    try{
-      if(state.thought == null){
+
+    try {
+      if (state.thought == null) {
         //from add button
-        state.thoughtCopy.documentID = await _thoughtService.addThought(state.thoughtCopy);
+        state.thoughtCopy.documentID =
+            await _thoughtService.addThought(state.thoughtCopy);
       } else {
         //for next sprint if not this one
         //await _thoughtService.updateThought(state.thoughtCopy);
@@ -74,25 +65,21 @@ class AddThoughtController{
       await Navigator.push(
           state.context,
           MaterialPageRoute(
-            builder: (context) => Homepage(state.user),
+            builder: (context) => Homepage(state.user, songlist),
           ));
-          Navigator.pop(state.context); 
-      //Navigator.pop(state.context, state.courseCopy); 
+      Navigator.pop(state.context);
+      //Navigator.pop(state.context, state.courseCopy);
     } catch (e) {
       MyDialog.info(
-        context: state.context,
-        title: 'Firestore Save Error',
-        message: 'Firestore is unavailable now. Try adding thought later.',
-        action: () {
-          Navigator.pop(state.context);
-          Navigator.pop(state.context, null);
-        }
-      );
+          context: state.context,
+          title: 'Firestore Save Error',
+          message: 'Firestore is unavailable now. Try adding thought later.',
+          action: () {
+            Navigator.pop(state.context);
+            Navigator.pop(state.context, null);
+          });
     }
-    
-
   }
-  
 
   //keep void entry function below, I liked this snippet of code but can't remember why right now
   /*
@@ -105,7 +92,5 @@ class AddThoughtController{
     state.stateChanged((){});
   }
   */
-
-
 
 }

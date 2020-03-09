@@ -1,3 +1,4 @@
+import 'package:simso/model/entities/song-model.dart';
 import 'package:simso/model/services/ilimit-service.dart';
 import 'package:simso/model/services/itouch-service.dart';
 import 'package:simso/view/navigation-drawer.dart';
@@ -12,8 +13,9 @@ import 'design-constants.dart';
 
 class Homepage extends StatefulWidget {
   final UserModel user;
+  final List<SongModel> songlist;
 
-  Homepage(this.user);
+  Homepage(this.user, this.songlist);
 
   @override
   State<StatefulWidget> createState() {
@@ -29,12 +31,14 @@ class HomepageState extends State<Homepage> {
   ILimitService limitService = locator<ILimitService>();
   HomepageController controller;
   UserModel user;
+  List<SongModel> songlist;
   String returnedID;
   var idController = TextEditingController();
   var formKey = GlobalKey<FormState>();
 
   HomepageState(this.user) {
-    controller = HomepageController(this, this.timerService, this.touchService, this.limitService);
+    controller = HomepageController(this, this.timerService, this.touchService,
+        this.limitService, this.songlist);
     controller.setupTimer();
     controller.setupTouchCounter();
     controller.getLimits();
@@ -122,7 +126,7 @@ class HomepageState extends State<Homepage> {
       ),
     );
 
-     childButtons.add(
+    childButtons.add(
       UnicornButton(
         hasLabel: true,
         labelText: "Messenger",
@@ -159,8 +163,7 @@ class HomepageState extends State<Homepage> {
           child: Form(
         key: formKey,
         child: Column(
-          children: <Widget>[
-          ],
+          children: <Widget>[],
         ),
       )),
     );

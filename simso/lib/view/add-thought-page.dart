@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:unicorndial/unicorndial.dart';
-
-import '../model/entities/globals.dart' as globals;
-import '../model/services/iuser-service.dart';
 import '../model/entities/user-model.dart';
 import '../model/entities/thought-model.dart';
 import '../view/design-constants.dart';
 import '../view/navigation-drawer.dart';
 import '../controller/add-thought-controller.dart';
 
-
 class AddThoughtPage extends StatefulWidget {
   final UserModel user;
-  
 
   AddThoughtPage(this.user);
 
@@ -29,15 +23,15 @@ class AddThoughtPageState extends State<AddThoughtPage> {
 
   UserModel user;
   Thought thought;
-  Thought thoughtCopy; //will eventually add deep copy, but for now just new thoughts
-  
+  Thought
+      thoughtCopy; //will eventually add deep copy, but for now just new thoughts
+
   //bool entry = false; //keep, there was something I liked about this snippet of code from Hiep
 
   var formKey = GlobalKey<FormState>();
 
   AddThoughtPageState(this.user) {
-    controller =
-        AddThoughtController(this);
+    controller = AddThoughtController(this);
 
     print("yes");
     thoughtCopy = Thought.empty();
@@ -105,7 +99,6 @@ class AddThoughtPageState extends State<AddThoughtPage> {
         ),
       ),
     );
-
 
     childButtons.add(
       UnicornButton(
