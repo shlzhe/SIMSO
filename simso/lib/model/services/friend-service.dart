@@ -82,12 +82,10 @@ class FriendService extends IFriendService {
   Future<bool> checkFriendRequest(UserModel currentUser, UserModel friendUser) async {
     try {
       var document =  await Firestore.instance
-          .collection(FriendRequest)
-          .document(currentUser.uid)
-          .collection(friendUser.uid)
-          .document(friendUser.email)
-          .get();
-      if(document.exists){
+          .collection(UserModel.USERCOLLECTION + currentUser.uid)
+          .where(UserModel.FRIENDREQUESTSENT, isEqualTo: friendUser.uid)
+          .getDocuments();
+      if(document.documents.isEmpty){
         return true;
       } else {
         return false;

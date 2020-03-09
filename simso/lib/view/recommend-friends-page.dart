@@ -61,7 +61,8 @@ class RecommendFriendsState extends State<RecommendFriends> {
                 return new ListTile(
                   leading: CircleAvatar(
                     child: CachedNetworkImage(
-                      imageUrl: friendUser.profilePic != null && friendUser.profilePic != ''
+                      imageUrl: friendUser.profilePic != null &&
+                              friendUser.profilePic != ''
                           ? friendUser.profilePic
                           : DesignConstants.profile,
                       placeholder: (context, url) =>
