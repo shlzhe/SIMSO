@@ -104,12 +104,23 @@ class HomepageController {
     } catch (e) {
       throw e.toString();
     }
+
+  //Find current index
+  int currentIndex=0;
+   for(int i = 0; i<userList.length; i++){
+      if(userList[i].uid == state.user.uid)   //Found index of current user
+         {
+          break;                                
+         }else currentIndex++;
+    }   
+
+    print('CURRENT INDEX: $currentIndex');
     //Navigate MainChatScreen Page
     //Passing the userList array to MainChatScreen Page
     Navigator.push(
         state.context,
         MaterialPageRoute(
-          builder: (context) => MainChatPage(state.user, userList),
+          builder: (context) => MainChatPage(state.user,userList,currentIndex),
         ));
   }
 }

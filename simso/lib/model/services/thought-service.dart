@@ -4,8 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'ithought-service.dart';
 
 class ThoughtService extends IThoughtService {
-
-
   @override
   Future<String> addThought(Thought thought) async {
     DocumentReference ref = await Firestore.instance
@@ -14,29 +12,33 @@ class ThoughtService extends IThoughtService {
     return ref.documentID;
   }
 
-
   @override
   Future<List<Thought>> getThoughts(String uid) async {
     try {
       QuerySnapshot querySnapshot = await Firestore.instance
           .collection(Thought.THOUGHTS_COLLECTION)
           .where(Thought.UID, isEqualTo: uid)
-          //.orderBy(Course.STARTDATE) //preindexing since using multiple indexes
           .orderBy(Thought.TIMESTAMP)
           .getDocuments();
-      var thoughts = <Thought>[];
-      print("Firebase getThoughts called");
+      var myThoughtsList = <Thought>[];
+      print("Firebase thought-service.dart getThoughts() called");
 
       if (querySnapshot == null || querySnapshot.documents.length == 0) {
-        return thoughts;
+        var newThought = Thought(
+            tags: ['Welcome'],
+            text: 'Welcome, add a new thought!',
+            timestamp: DateTime.now(),
+            uid: uid);
+        myThoughtsList.add(newThought);
+
+        return myThoughtsList;
       }
       for (DocumentSnapshot doc in querySnapshot.documents) {
-        thoughts.add(Thought.deserialize(doc.data, doc.documentID));
+        myThoughtsList.add(Thought.deserialize(doc.data, doc.documentID));
       }
-      return thoughts;
+      return myThoughtsList;
     } catch (e) {
       throw e;
     }
   }
-
 }

@@ -11,11 +11,11 @@ class MyThoughtsPage extends StatefulWidget {
   final UserModel user;
   List<Thought> myThoughtsList;
 
-  MyThoughtsPage(this.user);
+  MyThoughtsPage(this.user, this.myThoughtsList);
 
   @override
   State<StatefulWidget> createState() {
-    return MyThoughtsPageState(user);
+    return MyThoughtsPageState(user, myThoughtsList);
   }
 }
 
@@ -25,15 +25,15 @@ class MyThoughtsPageState extends State<MyThoughtsPage> {
 
   UserModel user;
   List<Thought> myThoughtsList;
-
+  
   //bool entry = false; //keep, there was something I liked about this snippet of code from Hiep
 
   var formKey = GlobalKey<FormState>();
 
-  MyThoughtsPageState(this.user) {
+  MyThoughtsPageState(this.user, this.myThoughtsList) {
     controller = MyThoughtsController(this);
 
-    controller.getMyThoughtsList(this.user.uid);
+    
   }
 
   void stateChanged(Function f) {
@@ -149,7 +149,9 @@ class MyThoughtsPageState extends State<MyThoughtsPage> {
                   //color: Colors.grey[200],
                   padding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   decoration: BoxDecoration(
-                    color: const Color(0xff7c94b6),
+                    color: const Color(0xFFFFFFFF),
+
+        
                     border: Border.all(
                       color: DesignConstants.blue,
                       width: 4,

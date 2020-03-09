@@ -24,21 +24,7 @@ class MyThoughtsController {
         ));
   }
 
-  void getMyThoughtsList(String email) async {
-    try {
-      myThoughtsList = await _thoughtService.getThoughts(state.user.uid);
-    } catch (e) {
-      myThoughtsList = <Thought>[];
-    }
 
-    if (myThoughtsList == null || myThoughtsList.isEmpty) {
-      var newThought = Thought(
-          tags: ['Welcome'],
-          text: 'Welcome, add a new thought!',
-          timestamp: DateTime.now(),
-          uid: state.user.uid);
-      myThoughtsList.add(newThought);
-    }
-    state.myThoughtsList = myThoughtsList;
-  }
+    
+
 }

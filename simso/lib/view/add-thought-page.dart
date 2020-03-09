@@ -31,9 +31,8 @@ class AddThoughtPageState extends State<AddThoughtPage> {
   var formKey = GlobalKey<FormState>();
 
   AddThoughtPageState(this.user) {
-    controller = AddThoughtController(this);
-
-    print("yes");
+    controller =
+        AddThoughtController(this);
     thoughtCopy = Thought.empty();
   }
 
