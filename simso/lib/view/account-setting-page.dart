@@ -4,7 +4,7 @@ import 'package:card_settings/card_settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/view/design-constants.dart';
-import 'package:simso/view/navigation-drawer.dart';
+import 'package:simso/view/navigation-drawer.dart' as drawer;
 import 'mydialog.dart';
 import '../service-locator.dart';
 import 'package:simso/model/services/iuser-service.dart';
@@ -14,10 +14,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 class AccountSettingPage extends StatefulWidget {
   final UserModel user;
   AccountSettingPage(this.user);
+
   @override
   State<StatefulWidget> createState() {
     return AccountSettingPageState(user);
-    
   }
 }
 
@@ -28,8 +28,10 @@ class AccountSettingPageState extends State<AccountSettingPage> {
   UserModel user;
   UserModel userCopy;
   bool _autoValidate = true;
+  bool changing = false;
+
   var formKey = GlobalKey<FormState>();
-  MyDrawer drawer;
+  var scaffoldKey = GlobalKey<ScaffoldState>();
 
   AccountSettingPageState(this.user) {
     controller = AccountSettingController(this);
@@ -45,15 +47,15 @@ class AccountSettingPageState extends State<AccountSettingPage> {
     this.context = context;
 
     return Scaffold(
+      key: scaffoldKey,
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text("Account Settings"),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.save),
-            onPressed: controller.save,
-          ),
-        ],
+        actions: changing == false
+            ? null
+            : <Widget>[
+                IconButton(icon: Icon(Icons.save), onPressed: controller.save),
+              ],
       ),
       body: Form(key: formKey, child: _buildPortraitLayout()),
     );
@@ -112,10 +114,8 @@ class AccountSettingPageState extends State<AccountSettingPage> {
 
   CardSettingsButton _buildCardSettingsButton_Logout() {
     return CardSettingsButton(
-      label: 'LOGOUT',
-      //onPressed:drawer.signOut
-      // () => FirebaseAuth.instance.signOut(),
-    );
+        label: 'SignOut',
+        onPressed: () => drawer.MyDrawer(this.context, this.user).signOut());
   }
 
   CardSettingsPassword _buildCardSettingsPassword() {
@@ -131,6 +131,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       },
       onSaved: (value) => userCopy.password = value,
       onChanged: (value) {
+        changing = true;
         setState(() {
           userCopy.password = value;
         });
@@ -152,6 +153,8 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       },
       onSaved: (value) => userCopy.email = value,
       onChanged: (value) {
+        changing = true;
+
         setState(() {
           userCopy.email = value;
         });
@@ -167,6 +170,8 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       onSaved: controller.saveAboutMe,
       onChanged: (value) {
         setState(() {
+          changing = true;
+
           userCopy.aboutme = value;
           user.aboutme = value;
         });
@@ -189,6 +194,8 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       onSaved: (value) => userCopy.age = value,
       onChanged: (value) {
         setState(() {
+          changing = true;
+
           userCopy.age = value;
           user.age = value;
         });
@@ -210,6 +217,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       },
       onSaved: (value) => userCopy.gender = value,
       onChanged: (value) {
+        changing = true;
         setState(() {
           userCopy.gender = value;
           user.gender = value;
@@ -232,6 +240,8 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       onSaved: (value) => userCopy.username = value,
       onChanged: (value) {
         setState(() {
+          changing = true;
+
           userCopy.username = value;
           user.username = value;
         });
