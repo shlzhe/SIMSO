@@ -2,16 +2,16 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:simso/model/entities/user-model.dart';
 import '../model/services/ipicture-service.dart';
-import '../view/add-photo-page.dart';
 import '../view/mydialog.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import '../view/add-photo-page.dart';
 import '../service-locator.dart';
 
 class AddPhotoController {
   AddPhotoState state;
-  UserModel newUser = UserModel();
+  //UserModel newUser = UserModel();
   String _extension;
   FileType _fileType = FileType.IMAGE;
   dynamic imagePath;
@@ -23,7 +23,7 @@ class AddPhotoController {
 
   String validateSummary(String value) {
     if (value == null || value.length < 5) {
-      return 'Please enter a summary';
+      return 'Please enter a summary (5 or more chars)';
     }
     return null;
   }
@@ -38,7 +38,7 @@ class AddPhotoController {
     _extension = fileName.toString().split('.').last;
     StorageReference storageRef = FirebaseStorage.instance
         .ref()
-        .child('Songs/${state.user.username}Songs/$fileName');
+        .child('Images/${state.user.username}Images/$fileName');
     StorageUploadTask uploadTask = storageRef.putFile(
       File(filePath),
       StorageMetadata(
@@ -60,7 +60,7 @@ class AddPhotoController {
         MyDialog.info(
           context: state.context,
           title: 'No Image Chosen',
-          message: 'Please select a song to load',
+          message: 'Please take a picture',
           action: () {
             Navigator.pop(state.context);
             // b null, storing failed
@@ -71,10 +71,11 @@ class AddPhotoController {
       
       else {
         if (!state.formKey.currentState.validate()) {
-          return 'not validated';
+          return ;
         }
 
         state.formKey.currentState.save();
+        print('saved');
         state.imageCopy.createdBy = state.user.email;
         state.imageCopy.lastUpdatedAt = DateTime.now();
 
@@ -84,7 +85,7 @@ class AddPhotoController {
             // addButton to add song if empty
             state.imageCopy.imageId = await imageService.addImage(state.imageCopy);
           } else {
-            // from homepage to edit a song
+            // from homepage to edit a picture
             await imageService.updateImage(state.imageCopy);
           }
 
@@ -102,7 +103,8 @@ class AddPhotoController {
             action: () {
               Navigator.pop(state.context);
               // b null, storing failed
-              Navigator.pop(state.context, null);
+              //Navigator.pop(state.context, null);
+              print(e);
             },
           );
         }
@@ -116,7 +118,8 @@ class AddPhotoController {
         action: () {
           Navigator.pop(state.context);
           // b null, storing failed
-          Navigator.pop(state.context, null);
+          //Navigator.pop(state.context, null);
+          print(e);
         },
       );
     }
