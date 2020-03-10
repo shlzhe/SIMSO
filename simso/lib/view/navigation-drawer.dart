@@ -32,6 +32,7 @@ import '../view/my-music-page.dart';
 class MyDrawer extends StatelessWidget {
   final UserModel user;
   final BuildContext context;
+  final LocalUser localUserFunction = LocalUser();
   final IFriendService friendService = locator<IFriendService>();
   final ISongService _songService = locator<ISongService>();
   final IThoughtService ThoughtService = locator<IThoughtService>();
@@ -73,10 +74,13 @@ class MyDrawer extends StatelessWidget {
             builder: (context) => MyThoughtsPage(user, myThoughtsList)));
   }
 
-  void signOut() {
-    //print('${state.user.email}');
-
-    FirebaseAuth.instance.signOut(); //Email/pass sign out
+  void signOut() async {
+    String readInData = await localUserFunction.readLocalUser();
+    String credential = await localUserFunction.readCredential();
+    int i = readInData.indexOf(' ');
+    user.email = readInData.substring(0,i);
+    user.password= readInData.substring(i+1);
+    FirebaseAuth.instance.signOut();    //Email/pass sign out
     GoogleSignIn().signOut();
     //Display confirmation dialog box after user clicking on "Sign Out" button
     showDialog(
@@ -105,16 +109,17 @@ class MyDrawer extends StatelessWidget {
                 globals.touchCounter = null;
                 globals.limit = null;
                 //Close Drawer, then go back to Front Page
-                Navigator.pop(context); //Close Dialog box
-                Navigator.pop(context); //Close Drawer
-                //Navigator.pop(state.context);  //Close Home Page
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LoginPage(
-                        localUserFunction: LocalUser(),
-                      ),
-                    ));
+                Navigator.pop(context);  //Close Dialog box
+                Navigator.pop(context);  //Close Drawer
+                //Navigator.pop(state.context);  //Close Home Page 
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (context)=> LoginPage(
+                    localUserFunction: localUserFunction, 
+                    credential: credential=='true'? credential: null,
+                    email: credential=='true'? user.email: null,
+                    password: credential=="true"? user.password: null,
+                    ),
+                ));
               },
             ),
             RaisedButton(
