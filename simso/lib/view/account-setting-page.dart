@@ -27,8 +27,9 @@ class AccountSettingPageState extends State<AccountSettingPage> {
   AccountSettingController controller;
   UserModel user;
   UserModel userCopy;
-  bool _autoValidate = true;
+  bool autoValidate = true;
   bool changing = false;
+  bool changing_p = false;
 
   var formKey = GlobalKey<FormState>();
   var scaffoldKey = GlobalKey<ScaffoldState>();
@@ -86,6 +87,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
           children: <Widget>[
             _buildCardSettingsEmail(),
             _buildCardSettingsPassword(),
+            _buildCardSettingsSwitch(),
           ],
         ),
         CardSettingsSection(
@@ -118,22 +120,48 @@ class AccountSettingPageState extends State<AccountSettingPage> {
         onPressed: () => drawer.MyDrawer(this.context, this.user).signOut());
   }
 
+  CardSettingsSwitch _buildCardSettingsSwitch() {
+    return CardSettingsSwitch(
+      label: 'Want to change password?',
+      labelWidth: 250.0,
+      initialValue: changing_p,
+      //onSaved: (value) => changing_p = value,
+      onChanged: (value) {
+        setState(() {
+          changing_p = value;
+          //autoValidate = false;
+        });
+      },
+    );
+  }
+
   CardSettingsPassword _buildCardSettingsPassword() {
     return CardSettingsPassword(
+      visible: changing_p,
+      hintText: 'Enter new password',
       labelWidth: 150.0,
       icon: Icon(Icons.lock),
-      initialValue: userCopy.password,
-      autovalidate: _autoValidate,
+      initialValue: null,
+      autovalidate: autoValidate,
       validator: (value) {
-        if (value == null) return 'Password is required.';
-        if (value.length < 6) return 'Must be no less than 6 characters.';
-        return null;
+        if (changing_p == true) {
+          if (value == null) return 'Password is required';
+          if (value.length < 6) return 'Must be no less than 6 characters.';
+          return null;
+        } else
+          return null;
       },
-      onSaved: (value)=>userService.changePassword(user, value),
+      onSaved: (value) {
+        if (changing_p == true) {
+          userService.changePassword(user, value);
+        } else {
+          return null;
+        }
+      },
       onChanged: (value) {
-        changing = true;
         setState(() {
           userCopy.password = value;
+          changing = true;
         });
       },
     );
@@ -144,7 +172,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       labelWidth: 150.0,
       icon: Icon(Icons.person),
       initialValue: user.email,
-      autovalidate: _autoValidate,
+      autovalidate: autoValidate,
       validator: (value) {
         if (value == null || value.isEmpty) return 'Email is required.';
         if (!value.contains('@'))
@@ -154,7 +182,6 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       onSaved: (value) => userCopy.email = value,
       onChanged: (value) {
         changing = true;
-
         setState(() {
           userCopy.email = value;
         });
@@ -171,7 +198,6 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       onChanged: (value) {
         setState(() {
           changing = true;
-
           userCopy.aboutme = value;
           user.aboutme = value;
         });
@@ -195,7 +221,6 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       onChanged: (value) {
         setState(() {
           changing = true;
-
           userCopy.age = value;
           user.age = value;
         });
@@ -208,7 +233,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       label: 'Gender',
       initialValue: userCopy.gender,
       hintText: 'Gender',
-      autovalidate: _autoValidate,
+      autovalidate: autoValidate,
       options: <String>['Male', 'Female', 'Secrete'],
       values: <String>['M', 'F', 'S'],
       validator: (String value) {
@@ -232,7 +257,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       //hintText: 'User Name',
       initialValue: userCopy.username,
       requiredIndicator: Text('*', style: TextStyle(color: Colors.red)),
-      autovalidate: _autoValidate,
+      autovalidate: autoValidate,
       validator: (value) {
         if (value == null || value.isEmpty) return 'User name is required.';
         return null;
@@ -241,7 +266,6 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       onChanged: (value) {
         setState(() {
           changing = true;
-
           userCopy.username = value;
           user.username = value;
         });
@@ -251,8 +275,5 @@ class AccountSettingPageState extends State<AccountSettingPage> {
 
   /* EVENT HANDLERS */
 
-  void _logoutPressed() {}
-  void _inactivePressed() {
-    
-  }
+  void _inactivePressed() {}
 }

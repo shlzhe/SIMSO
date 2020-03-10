@@ -44,6 +44,8 @@ class AccountSettingController {
       showSnackBar();
       state.stateChanged(() {
         state.changing = false;
+        state.autoValidate = false;
+        state.changing_p = false;
       });
     } catch (e) {
       MyDialog.info(
