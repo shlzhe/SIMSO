@@ -1,22 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../model/entities/user-model.dart';
 import '../view/mydialog.dart';
 import '../view/account-setting-page.dart';
 import '../service-locator.dart';
 import 'package:simso/model/services/iuser-service.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:simso/model/entities/user-model.dart';
-import '../service-locator.dart';
-import 'package:simso/model/services/iuser-service.dart';
-import '../view/homepage.dart';
-import 'package:flutter/cupertino.dart';
-import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:card_settings/card_settings.dart';
-import 'dart:io';
-import 'package:flutter/cupertino.dart';
 
 class AccountSettingController {
   AccountSettingPageState state;
@@ -55,9 +42,9 @@ class AccountSettingController {
     try {
       await userService.updateUserDB(state.userCopy);
       showSnackBar();
-          state.stateChanged(() {
-      state.changing = false;
-    });
+      state.stateChanged(() {
+        state.changing = false;
+      });
     } catch (e) {
       MyDialog.info(
           context: state.context,

@@ -79,15 +79,15 @@ class AccountSettingPageState extends State<AccountSettingPage> {
             _buildCardSettingsParagraph(3),
           ],
         ),
-        // CardSettingsSection(
-        //   header: CardSettingsHeader(
-        //     label: 'Security',
-        //   ),
-        //   children: <Widget>[
-        //     _buildCardSettingsEmail(),
-        //     _buildCardSettingsPassword(),
-        //   ],
-        // ),
+        CardSettingsSection(
+          header: CardSettingsHeader(
+            label: 'Security',
+          ),
+          children: <Widget>[
+            _buildCardSettingsEmail(),
+            _buildCardSettingsPassword(),
+          ],
+        ),
         CardSettingsSection(
           header: CardSettingsHeader(
             label: 'Actions',
@@ -129,7 +129,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
         if (value.length < 6) return 'Must be no less than 6 characters.';
         return null;
       },
-      onSaved: (value) => userCopy.password = value,
+      onSaved: (value)=>userService.changePassword(user, value),
       onChanged: (value) {
         changing = true;
         setState(() {
@@ -252,5 +252,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
   /* EVENT HANDLERS */
 
   void _logoutPressed() {}
-  void _inactivePressed() {}
+  void _inactivePressed() {
+    
+  }
 }

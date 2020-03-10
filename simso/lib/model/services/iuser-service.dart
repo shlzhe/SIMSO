@@ -8,4 +8,5 @@ abstract class IUserService {
   Future<void> updateUserDB(UserModel user);
   Future<String> login(UserModel user);
   Future<UserModel> readUser(String uid);
+  void changePassword(UserModel user, String password);
 }
