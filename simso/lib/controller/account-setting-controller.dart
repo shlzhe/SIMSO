@@ -51,13 +51,13 @@ class AccountSettingController {
       await userService.updateUserDB(state.userCopy);
 
       Navigator.pop(state.context, state.userCopy);
-      
-            await Navigator.push(
+
+      await Navigator.push(
           state.context,
           MaterialPageRoute(
             builder: (context) => Homepage(state.user),
           ));
-          Navigator.pop(state.context); 
+      Navigator.pop(state.context);
     } catch (e) {
       MyDialog.info(
           context: state.context,

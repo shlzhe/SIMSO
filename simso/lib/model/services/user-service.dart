@@ -59,7 +59,7 @@ class UserService extends IUserService {
   }
 
     @override
-  void updateUserDB(UserModel user) async{
+  Future<void> updateUserDB(UserModel user) async{
     await Firestore.instance.collection(UserModel.USERCOLLECTION)
       .document(user.uid)
       .setData(user.serialize());

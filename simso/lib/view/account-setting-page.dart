@@ -4,6 +4,7 @@ import 'package:card_settings/card_settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/view/design-constants.dart';
+import 'package:simso/view/navigation-drawer.dart';
 import 'mydialog.dart';
 import '../service-locator.dart';
 import 'package:simso/model/services/iuser-service.dart';
@@ -16,6 +17,7 @@ class AccountSettingPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return AccountSettingPageState(user);
+    
   }
 }
 
@@ -27,6 +29,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
   UserModel userCopy;
   bool _autoValidate = true;
   var formKey = GlobalKey<FormState>();
+  MyDrawer drawer;
 
   AccountSettingPageState(this.user) {
     controller = AccountSettingController(this);
@@ -40,7 +43,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
   @override
   Widget build(BuildContext context) {
     this.context = context;
-    
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -110,7 +113,8 @@ class AccountSettingPageState extends State<AccountSettingPage> {
   CardSettingsButton _buildCardSettingsButton_Logout() {
     return CardSettingsButton(
       label: 'LOGOUT',
-      onPressed: () => FirebaseAuth.instance.signOut(),
+      //onPressed:drawer.signOut
+      // () => FirebaseAuth.instance.signOut(),
     );
   }
 
@@ -160,10 +164,11 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       label: 'About Me',
       initialValue: userCopy.aboutme,
       numberOfLines: lines,
-      onSaved: (value) => userCopy.aboutme = value,
+      onSaved: controller.saveAboutMe,
       onChanged: (value) {
         setState(() {
           userCopy.aboutme = value;
+          user.aboutme = value;
         });
       },
     );
@@ -185,6 +190,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       onChanged: (value) {
         setState(() {
           userCopy.age = value;
+          user.age = value;
         });
       },
     );
@@ -206,6 +212,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       onChanged: (value) {
         setState(() {
           userCopy.gender = value;
+          user.gender = value;
         });
       },
     );
@@ -226,21 +233,13 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       onChanged: (value) {
         setState(() {
           userCopy.username = value;
+          user.username = value;
         });
       },
     );
   }
 
   /* EVENT HANDLERS */
-
-  Future _savePressed() async {
-    final form = formKey.currentState;
-    if (form.validate()) {
-      form.save();
-    } else {
-      setState(() => _autoValidate = true);
-    }
-  }
 
   void _logoutPressed() {}
   void _inactivePressed() {}
