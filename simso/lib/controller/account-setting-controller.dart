@@ -10,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:simso/model/entities/user-model.dart';
 import '../service-locator.dart';
 import 'package:simso/model/services/iuser-service.dart';
+import '../view/homepage.dart';
 
 class AccountSettingController {
   AccountSettingPageState state;
@@ -50,6 +51,13 @@ class AccountSettingController {
       await userService.updateUserDB(state.userCopy);
 
       Navigator.pop(state.context, state.userCopy);
+      
+            await Navigator.push(
+          state.context,
+          MaterialPageRoute(
+            builder: (context) => Homepage(state.user),
+          ));
+          Navigator.pop(state.context); 
     } catch (e) {
       MyDialog.info(
           context: state.context,
@@ -60,13 +68,5 @@ class AccountSettingController {
             Navigator.pop(state.context, null);
           });
     }
-    MyDialog.info(
-        context: state.context,
-        title: 'Successful',
-        message: 'Your profile is successfully updated!',
-        action: () {
-          Navigator.pop(state.context);
-          Navigator.pop(state.context, null);
-        });
   }
 }

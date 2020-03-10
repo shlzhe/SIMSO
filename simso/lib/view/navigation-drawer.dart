@@ -19,7 +19,7 @@ import 'design-constants.dart';
 
 import '../view/snapshot-page.dart';
 import '../view/meme-page.dart';
-import '../view/account-settings-page.dart';
+import '../view/account-setting-page.dart';
 
 class MyDrawer extends StatelessWidget {
   final UserModel user;
@@ -46,7 +46,7 @@ class MyDrawer extends StatelessWidget {
 
   void navigateAccountSettingPage() {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => AccountSettingsPage(user)));
+        context, MaterialPageRoute(builder: (context) => AccountSettingPage(user)));
   }
 
   void navigateMyThoughts() {
