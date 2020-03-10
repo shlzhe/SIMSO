@@ -30,6 +30,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
   bool autoValidate = true;
   bool changing = false;
   bool changing_p = false;
+  bool changing_s = false;
 
   var formKey = GlobalKey<FormState>();
   var scaffoldKey = GlobalKey<ScaffoldState>();
@@ -52,18 +53,17 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text("Account Settings"),
-        actions: changing == false
-            ? null
-            : <Widget>[
+        actions: (changing || changing_p) == true
+            ? <Widget>[
                 IconButton(icon: Icon(Icons.save), onPressed: controller.save),
-              ],
+              ]
+            : null,
       ),
       body: Form(key: formKey, child: _buildPortraitLayout()),
     );
   }
 
   /* CARDSETTINGS FOR EACH LAYOUT */
-
   CardSettings _buildPortraitLayout() {
     return CardSettings.sectioned(
       labelWidth: 100,
@@ -124,12 +124,11 @@ class AccountSettingPageState extends State<AccountSettingPage> {
     return CardSettingsSwitch(
       label: 'Want to change password?',
       labelWidth: 250.0,
-      initialValue: changing_p,
-      //onSaved: (value) => changing_p = value,
+      initialValue: changing_s,
+      onSaved: (value) => changing_s = value,
       onChanged: (value) {
         setState(() {
-          changing_p = value;
-          //autoValidate = false;
+          changing_s = value;
         });
       },
     );
@@ -137,7 +136,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
 
   CardSettingsPassword _buildCardSettingsPassword() {
     return CardSettingsPassword(
-      visible: changing_p,
+      visible: changing_s,
       hintText: 'Enter new password',
       labelWidth: 150.0,
       icon: Icon(Icons.lock),
@@ -161,7 +160,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       onChanged: (value) {
         setState(() {
           userCopy.password = value;
-          changing = true;
+          changing_p = true;
         });
       },
     );
@@ -175,8 +174,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       autovalidate: autoValidate,
       validator: (value) {
         if (value == null || value.isEmpty) return 'Email is required.';
-        if (!value.contains('@'))
-          return "Email not formatted correctly."; // use regex in real application
+        if (!value.contains('@')) return "Email not formatted correctly.";
         return null;
       },
       onSaved: (value) => userCopy.email = value,
