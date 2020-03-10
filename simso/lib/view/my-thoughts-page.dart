@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:unicorndial/unicorndial.dart';
-
-import '../model/entities/globals.dart' as globals;
-import '../model/services/iuser-service.dart';
 import '../model/entities/user-model.dart';
 import '../model/entities/thought-model.dart';
 import '../view/design-constants.dart';
@@ -48,7 +44,7 @@ class MyThoughtsPageState extends State<MyThoughtsPage> {
   Widget build(BuildContext context) {
     this.context = context;
     var childButtons = List<UnicornButton>();
-    
+
     childButtons.add(
       UnicornButton(
         hasLabel: true,

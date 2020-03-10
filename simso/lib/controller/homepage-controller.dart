@@ -1,6 +1,6 @@
-import 'package:camera/new/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:simso/model/entities/myfirebase.dart';
+import 'package:simso/model/entities/song-model.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/model/services/ilimit-service.dart';
 import 'package:simso/model/services/itimer-service.dart';
@@ -18,23 +18,25 @@ class HomepageController {
   ITouchService touchService;
   ILimitService limitService;
   UserModel newUser = UserModel();
-  List<UserModel>userList;
+  List<UserModel> userList;
+  List<SongModel> songList = new List<SongModel>();
   String userID;
 
-  HomepageController(this.state, this.timerService, this.touchService, this.limitService);
+  HomepageController(this.state, this.timerService, this.touchService,
+      this.limitService, this.songList);
 
   Future addMusic() async {
-    //SongModel s =
-    await Navigator.push(
+    SongModel s = await Navigator.push(
         state.context,
         MaterialPageRoute(
           builder: (context) => AddMusic(state.user, null),
         ));
-    // if (s != null) {
-    //   state.songlist.add(s);
-    // } else {
-
-    // }
+    if (s != null) {
+      print("ADD SONG TO LOCAL LIST");
+      state.songlist.add(s);
+    } else {
+      print("ERROR ADDING SONG TO LOCAL LIST");
+    }
   }
 
   Future addMemes() async {
@@ -88,19 +90,18 @@ class HomepageController {
   void getLimits() async {
     if (globals.limit == null) {
       var limit = await limitService.getLimit(state.user.uid);
-      if (limit == null) 
-        limit = await limitService.createLimit(state.user.uid);
+      if (limit == null) limit = await limitService.createLimit(state.user.uid);
 
       globals.limit = limit;
-    } 
+    }
   }
-  
+
   void mainChatScreen() async {
     print('mainChatPage() called');
     //Retrieve all SimSo users
-    try{
-      userList  = await MyFirebase.getUsers(); 
-    }catch(e){
+    try {
+      userList = await MyFirebase.getUsers();
+    } catch (e) {
       throw e.toString();
     }
 
@@ -116,7 +117,7 @@ class HomepageController {
     print('CURRENT INDEX: $currentIndex');
     //Navigate MainChatScreen Page
     //Passing the userList array to MainChatScreen Page
-     Navigator.push(
+    Navigator.push(
         state.context,
         MaterialPageRoute(
           builder: (context) => MainChatPage(state.user,userList,currentIndex),

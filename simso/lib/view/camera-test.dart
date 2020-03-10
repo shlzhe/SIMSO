@@ -5,7 +5,6 @@ import 'package:simso/model/entities/user-model.dart';
 import '../model/entities/image-model.dart';
 import 'package:simso/view/design-constants.dart';
 import '../controller/add-photo-controller.dart';
-import '../view/mydialog.dart';
 
 class AddPhoto extends StatefulWidget {
 

@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'isong-service.dart';
 
+int songNum = 0;
+
 class SongService extends ISongService {
   @override
   Future<String> addSong(SongModel song) async {
@@ -30,7 +32,35 @@ class SongService extends ISongService {
     for (DocumentSnapshot doc in querySnapshot.documents) {
       songlist.add(SongModel.deserialize(doc.data, doc.documentID));
     }
+
     return songlist;
+  }
+
+  @override
+  Future<List<SongModel>> getSongList(String email) async {
+    try {
+      // get song
+      // 1st where the array contains, then order by the below
+      // each uses a key and firebase will throw a precondition indexing issue
+      // have to build index for each query in FireStore
+      QuerySnapshot querySnapshot = await Firestore.instance
+          .collection(SongModel.SONG_COLLECTION)
+          .where(SongModel.CREATEDBY, isEqualTo: email) // access request
+          .orderBy(SongModel.LASTUPDATEDAT)
+          .getDocuments();
+      var songlist = <SongModel>[];
+      if (querySnapshot == null || querySnapshot.documents.length == 0) {
+        return songlist;
+      }
+      for (DocumentSnapshot doc in querySnapshot.documents) {
+        songlist.add(SongModel.deserialize(doc.data, doc.documentID));
+      }
+
+      songNum = querySnapshot.documents.length;
+      return songlist.reversed.toList();
+    } catch (e) {
+      throw e;
+    }
   }
 
   @override

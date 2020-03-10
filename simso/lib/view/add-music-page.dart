@@ -1,13 +1,10 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../model/entities/user-model.dart';
 import '../model/entities/song-model.dart';
 import '../controller/add-music-controller.dart';
-import 'package:simso/model/services/isong-service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../service-locator.dart';
 import 'package:simso/view/design-constants.dart';
 
 class AddMusic extends StatefulWidget {
@@ -37,8 +34,8 @@ class AddMusicState extends State<AddMusic> {
   SongModel song;
   SongModel songCopy;
   AddMusicController controller;
-  var formKey = GlobalKey<FormState>();
-  ISongService songService = locator<ISongService>();
+  var formKey = new GlobalKey<FormState>();
+  //ISongService _songService = locator<ISongService>();
   String audio;
   dynamic uploadedFileURL;
   bool songLoaded = false;
@@ -299,7 +296,7 @@ class AddMusicState extends State<AddMusic> {
                           focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
                           ),
-                          labelText: 'Song featuring Artist (leave empty)',
+                          labelText: 'Song featuring Artist (if avai.)',
                           labelStyle:
                               TextStyle(color: Colors.white, fontSize: 20),
                         ),
@@ -362,7 +359,7 @@ class AddMusicState extends State<AddMusic> {
                             }
                           });
                         },
-                        initialValue: songCopy.sharedWith.join(',').toString(),
+                        initialValue: songCopy.songPost.join(',').toString(),
                         decoration: InputDecoration(
                           enabledBorder: UnderlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),

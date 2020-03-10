@@ -1,33 +1,28 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-
+import 'package:simso/model/entities/song-model.dart';
 import '../service-locator.dart';
-import '../model/entities/globals.dart' as globals;
 import '../model/entities/user-model.dart';
 import '../model/entities/thought-model.dart';
 import '../model/services/ithought-service.dart';
-
 import '../view/mydialog.dart';
 import '../view/homepage.dart';
 import '../view/add-thought-page.dart';
 import '../view/my-thoughts-page.dart';
 
-
-class AddThoughtController{
-
+class AddThoughtController {
   AddThoughtPageState state;
   UserModel newUser = UserModel();
   String userID;
   IThoughtService _thoughtService = locator<IThoughtService>();
+  List<SongModel> songlist;
 
   AddThoughtController(this.state);
 
   void getUserInfo() {
     print(state.user.username);
   }
+
 /*
   void getUserName() async{
     state.user.uid = await _userService.getUserDataByID(userID);
@@ -55,11 +50,12 @@ class AddThoughtController{
     state.formKey.currentState.save();
     state.thoughtCopy.uid = state.user.uid;
     state.thoughtCopy.timestamp = DateTime.now();
-    
-    try{
-      if(state.thought == null){
+
+    try {
+      if (state.thought == null) {
         //from add button
-        state.thoughtCopy.documentID = await _thoughtService.addThought(state.thoughtCopy);
+        state.thoughtCopy.documentID =
+            await _thoughtService.addThought(state.thoughtCopy);
       } else {
         //for next sprint if not this one
         //await _thoughtService.updateThought(state.thoughtCopy);
@@ -74,19 +70,15 @@ class AddThoughtController{
           Navigator.pop(state.context); 
     } catch (e) {
       MyDialog.info(
-        context: state.context,
-        title: 'Firestore Save Error',
-        message: 'Firestore is unavailable now. Try adding thought later.',
-        action: () {
-          Navigator.pop(state.context);
-          Navigator.pop(state.context, null);
-        }
-      );
+          context: state.context,
+          title: 'Firestore Save Error',
+          message: 'Firestore is unavailable now. Try adding thought later.',
+          action: () {
+            Navigator.pop(state.context);
+            Navigator.pop(state.context, null);
+          });
     }
-    
-
   }
-  
 
   //keep void entry function below, I liked this snippet of code but can't remember why right now
   /*
@@ -99,7 +91,5 @@ class AddThoughtController{
     state.stateChanged((){});
   }
   */
-
-
 
 }
