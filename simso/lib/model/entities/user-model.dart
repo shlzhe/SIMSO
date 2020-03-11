@@ -25,7 +25,7 @@ class UserModel {
     this.profilePic = '';
     this.favorites = '';
     this.friends = [];
-    this.gender = '';
+    this.gender = 'S';
     this.age = 0;
   }
   UserModel.clone(UserModel b) {

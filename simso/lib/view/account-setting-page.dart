@@ -1,15 +1,12 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:card_settings/card_settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/view/design-constants.dart';
 import 'package:simso/view/navigation-drawer.dart' as drawer;
-import 'mydialog.dart';
 import '../service-locator.dart';
 import 'package:simso/model/services/iuser-service.dart';
 import '../controller/account-setting-controller.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class AccountSettingPage extends StatefulWidget {
   final UserModel user;
@@ -48,18 +45,22 @@ class AccountSettingPageState extends State<AccountSettingPage> {
   Widget build(BuildContext context) {
     this.context = context;
 
-    return Scaffold(
-      key: scaffoldKey,
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text("Account Settings"),
-        actions: (changing || (changing_p && changing_s)) == true
-            ? <Widget>[
-                IconButton(icon: Icon(Icons.save), onPressed: controller.save),
-              ]
-            : null,
+    return WillPopScope(
+      onWillPop: controller.onBackPressed,
+          child: Scaffold(
+        key: scaffoldKey,
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: Text("Account Settings"),
+          actions:
+           (changing || (changing_p && changing_s)) == true
+              ? <Widget>[
+                  IconButton(icon: Icon(Icons.save), onPressed: controller.save),
+                ]
+              : null,
+        ),
+        body: Form(key: formKey, child: _buildPortraitLayout()),
       ),
-      body: Form(key: formKey, child: _buildPortraitLayout()),
     );
   }
 
@@ -74,9 +75,9 @@ class AccountSettingPageState extends State<AccountSettingPage> {
           ),
           children: <Widget>[
             _buildCardSettingsText_Name(),
+            _buildCardSettingsText_City(),
             _buildCardSettingsListPicker_Gender(),
             _buildCardSettingsNumberPicker(),
-            // _buildCardSettingsDatePicker(),
             _buildCardSettingsParagraph(3),
           ],
         ),
@@ -85,18 +86,11 @@ class AccountSettingPageState extends State<AccountSettingPage> {
             label: 'Security',
           ),
           children: <Widget>[
-            _buildCardSettingsEmail(),
-            _buildCardSettingsPassword(),
+            //_buildCardSettingsEmail(),
             _buildCardSettingsSwitch(),
-          ],
-        ),
-        CardSettingsSection(
-          header: CardSettingsHeader(
-            label: 'Actions',
-          ),
-          children: <Widget>[
+            _buildCardSettingsPassword(),
             _buildCardSettingsButton_Logout(),
-            _buildCardSettingsButton_Inactive(),
+            _buildCardSettingsButton_Delete(),
           ],
         ),
       ],
@@ -104,11 +98,11 @@ class AccountSettingPageState extends State<AccountSettingPage> {
   }
 
   /* BUILDERS FOR EACH FIELD */
-  CardSettingsButton _buildCardSettingsButton_Inactive() {
+  CardSettingsButton _buildCardSettingsButton_Delete() {
     return CardSettingsButton(
-      label: 'INACTIVE',
+      label: 'Delete Account',
       isDestructive: true,
-      onPressed: _inactivePressed,
+      onPressed: controller.deleteUser,
       backgroundColor: Colors.redAccent,
       textColor: Colors.white,
     );
@@ -167,18 +161,6 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       icon: Icon(Icons.person),
       initialValue: user.email,
       autovalidate: autoValidate,
-      validator: (value) {
-        if (value == null || value.isEmpty) return 'Email is required.';
-        if (!value.contains('@')) return "Email not formatted correctly.";
-        return null;
-      },
-      onSaved: (value) => userCopy.email = value,
-      onChanged: (value) {
-        changing = true;
-        setState(() {
-          userCopy.email = value;
-        });
-      },
     );
   }
 
@@ -204,10 +186,10 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       label: 'Age',
       labelAlign: labelAlign,
       initialValue: userCopy.age,
-      min: 1,
+      min: 0,
       max: 100,
       validator: (value) {
-        if (value == null) return 'Age is required.';
+        //if (value == null) return 'Age is required.';
         return null;
       },
       onSaved: (value) => userCopy.age = value,
@@ -230,7 +212,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       options: <String>['Male', 'Female', 'Secrete'],
       values: <String>['M', 'F', 'S'],
       validator: (String value) {
-        if (value == null || value.isEmpty) return 'Please select your gender';
+        //if (value == null || value.isEmpty) return 'Please select your gender';
         return null;
       },
       onSaved: (value) => userCopy.gender = value,
@@ -265,8 +247,20 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       },
     );
   }
-
-  /* EVENT HANDLERS */
-
-  void _inactivePressed() {}
+    CardSettingsText _buildCardSettingsText_City() {
+    return CardSettingsText(
+      label: 'City',
+      //hintText: 'User Name',
+      initialValue: userCopy.city,
+      autovalidate: autoValidate,
+      onSaved: (value) => userCopy.city = value,
+      onChanged: (value) {
+        setState(() {
+          changing = true;
+          userCopy.city = value;
+          user.city = value;
+        });
+      },
+    );
+  }
 }

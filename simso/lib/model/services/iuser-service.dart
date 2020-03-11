@@ -9,4 +9,5 @@ abstract class IUserService {
   Future<String> login(UserModel user);
   Future<UserModel> readUser(String uid);
   void changePassword(UserModel user, String password);
+  void deleteUser(UserModel user);
 }

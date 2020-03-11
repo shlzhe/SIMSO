@@ -4,7 +4,11 @@ import '../view/mydialog.dart';
 import '../view/account-setting-page.dart';
 import '../service-locator.dart';
 import 'package:simso/model/services/iuser-service.dart';
-import 'package:simso/view/navigation-drawer.dart' as drawer;
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import '../model/entities/globals.dart' as globals;
+import '../view/login-page.dart';
+import 'package:simso/view/design-constants.dart';
 
 class AccountSettingController {
   AccountSettingPageState state;
@@ -13,6 +17,10 @@ class AccountSettingController {
 
   void saveUserName(String value) {
     state.userCopy.username = value;
+  }
+
+  void saveCity(String value) {
+    state.userCopy.city = value;
   }
 
   void saveGender(String value) {
@@ -34,7 +42,56 @@ class AccountSettingController {
   void savePassword(String value) {
     if (state.changing_s == true) {
       userService.changePassword(state.user, value);
-    }
+    } else
+      return;
+  }
+
+  void deleteUser() {
+    //Display confirmation dialog box after user clicking on "Sign Out" button
+    showDialog(
+      context: state.context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Are You Sure?',
+            style: TextStyle(color: DesignConstants.yellow, fontSize: 30),
+          ),
+          content: Text(
+              'If you delete your account, there will be no way to get it back!',
+              style: TextStyle(color: DesignConstants.yellow)),
+          backgroundColor: DesignConstants.blue,
+          actions: <Widget>[
+            RaisedButton(
+              child: Text(
+                'YES',
+                style: TextStyle(color: DesignConstants.yellow, fontSize: 20),
+              ),
+              color: DesignConstants.blue,
+              onPressed: () {
+                userService.deleteUser(state.user);
+                //Close Drawer, then go back to Front Page
+                Navigator.pop(context); //Close Dialog box
+                Navigator.pop(context); //Close Drawer
+                //Navigator.pop(state.context);  //Close Home Page
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginPage(),
+                    ));
+              },
+            ),
+            RaisedButton(
+              child: Text(
+                'NO',
+                style: TextStyle(color: DesignConstants.yellow, fontSize: 20),
+              ),
+              color: DesignConstants.blue,
+              onPressed: () => Navigator.pop(context), //close dialog box
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void save() async {
@@ -44,13 +101,29 @@ class AccountSettingController {
     state.formKey.currentState.save();
     try {
       await userService.updateUserDB(state.userCopy);
-      showSnackBar();
+      showSnackBar('Saved!');
       if (state.changing_s == true) {
-        drawer.MyDrawer(this.state.context, this.state.user).signOut();
+        MyDialog.info(
+            context: state.context,
+            title: 'Please Sign In Again',
+            message:
+                'We find that you changed your password. For your safety, please sign in again with your new password!',
+            action: () {
+              FirebaseAuth.instance.signOut(); //Email/pass sign out
+              GoogleSignIn().signOut();
+              globals.timer = null;
+              globals.touchCounter = null;
+              Navigator.push(
+                  state.context,
+                  MaterialPageRoute(
+                    builder: (context) => LoginPage(),
+                  ));
+            });
       }
       state.stateChanged(() {
         state.changing = false;
         state.changing_p = false;
+        state.formKey.currentState.reset();
       });
     } catch (e) {
       MyDialog.info(
@@ -64,13 +137,38 @@ class AccountSettingController {
     }
   }
 
-  void showSnackBar() {
+  Future<bool> onBackPressed() {
+    return showDialog(
+          context: state.context,
+          builder: (context) => new AlertDialog(
+            title: new Text('Not Saving'),
+            content: new Text('Your editing is not saved'),
+            actions: <Widget>[
+              new GestureDetector(
+                onTap: () => Navigator.of(context).pop(false),
+                child: Text("Stay"),
+              ),
+              SizedBox(height: 16),
+              new GestureDetector(
+                onTap: () {
+                  save();
+                  Navigator.of(context).pop(true);
+                },
+                child: Text("Save&Leave"),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
+
+  void showSnackBar(String label) {
     state.scaffoldKey.currentState.removeCurrentSnackBar();
     state.scaffoldKey.currentState.showSnackBar(
       SnackBar(
         duration: Duration(seconds: 1),
         content: Text(
-          'Saved!',
+          label,
           textAlign: TextAlign.center,
         ),
       ),

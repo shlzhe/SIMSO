@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/rendering.dart';
-import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
 import '../entities/user-model.dart';
 import '../entities/api-constants.dart';
 import 'iuser-service.dart';
@@ -71,16 +70,25 @@ class UserService extends IUserService {
   }
 
   @override
-void changePassword(UserModel user, String password) async{
-   //Create an instance of the current user. 
+  void changePassword(UserModel user, String password) async {
+    //Create an instance of the current user.
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
-
     //Pass in the password to updatePassword.
-    user.updatePassword(password).then((_){
+    user.updatePassword(password).then((_) {
       print("Succesfull changed password");
-    }).catchError((error){
+    }).catchError((error) {
       print("Password can't be changed" + error.toString());
       //This might happen, when the wrong password is in, the user isn't found, or if the user hasn't logged in recently.
+    });
+  }
+
+  @override
+  void deleteUser(UserModel user) async {
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    user.delete().then((_) {
+      print("Succesfull deleted user");
+    }).catchError((error) {
+      print("User can't be deleted" + error.toString());
     });
   }
 }
