@@ -40,6 +40,10 @@ class ProfilePageState extends State<ProfilePage> {
         backgroundColor: DesignConstants.blue,
         actions: <Widget>[
                 IconButton(
+                  icon: Icon(Icons.notifications),
+                  onPressed: (){},
+                ),
+                IconButton(
                   icon: Icon(Icons.settings),
                   onPressed: controller.accountSettings,
                 ),
