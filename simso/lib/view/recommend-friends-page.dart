@@ -42,7 +42,9 @@ class RecommendFriendsState extends State<RecommendFriends> {
           future: getList(),
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
-              return new Text('Loading...');
+              return new Center(
+                child: new CircularProgressIndicator(),
+              );
             }
             if (snapshot.hasError) {
               return new Text(snapshot.error.toString());
@@ -98,7 +100,6 @@ class RecommendFriendsState extends State<RecommendFriends> {
       if (i.uid != currentUser.uid &&
           i.email != currentUser.email &&
           count > 0) {
-        print(i);
         holdList.add(i);
         count--;
       }
@@ -112,7 +113,19 @@ class RecommendFriendsState extends State<RecommendFriends> {
       builder: (context) {
         return new AlertDialog(
           title: new Text(friendUser.email),
-          content: Icon(Icons.account_box),
+          content: new Container(
+            child: CircleAvatar(
+              child: CachedNetworkImage(
+                imageUrl:
+                    friendUser.profilePic != null && friendUser.profilePic != ''
+                        ? friendUser.profilePic
+                        : DesignConstants.profile,
+                placeholder: (context, url) => CircularProgressIndicator(),
+                errorWidget: (context, url, error) =>
+                    Icon(Icons.account_circle),
+              ),
+            ),
+          ),
           actions: <Widget>[
             new FlatButton(
               onPressed: null,
@@ -131,7 +144,6 @@ class RecommendFriendsState extends State<RecommendFriends> {
     );
   }
 
-  Future<void> _sendRequest(UserModel friendUser) async {
-    friendService.addFriendRequest(currentUser, friendUser);
-  }
+  Future<void> _sendRequest(UserModel friendUser) async =>
+      friendService.addFriendRequest(currentUser, friendUser);
 }
