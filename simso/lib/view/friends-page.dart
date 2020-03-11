@@ -21,7 +21,7 @@ class FriendPage extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.map),
               onPressed: ()=>{
-                Navigator.push(context, MaterialPageRoute(builder:(context)=> _gooleMap()))
+                Navigator.push(context, MaterialPageRoute(builder:(context)=> _googleMap()))
               },
             ),
           ],
@@ -51,7 +51,7 @@ class FriendPage extends StatelessWidget {
   }
 }
 
-class _gooleMap extends StatelessWidget {
+class _googleMap extends StatelessWidget {
   GoogleMapController mapController;
 
   final LatLng _center = const LatLng(45.521563, -122.677433);
