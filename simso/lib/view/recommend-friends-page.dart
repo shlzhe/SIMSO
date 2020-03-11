@@ -53,9 +53,6 @@ class RecommendFriendsState extends State<RecommendFriends> {
             if (userList.isNotEmpty) {
               userList = _recommendFunction(userList);
             }
-            for (var i in userList) {
-              print(i.email);
-            }
             return ListView.builder(
               itemCount: userList.length,
               itemBuilder: (context, index) {
@@ -74,14 +71,16 @@ class RecommendFriendsState extends State<RecommendFriends> {
                     ),
                   ),
                   title: new Text(friendUser.email),
-                  onTap: () {
-                    _showDialog(context, friendUser).then(
-                      (value) {
-                        var mySnackbar =
-                            SnackBar(content: Text("Friend Request sent"));
-                        Scaffold.of(context).showSnackBar(mySnackbar);
-                      },
+                  onTap: () async {
+                    final result = await showDialog(
+                      context: this.context,
+                      child: _showDialog(context, friendUser),
                     );
+                    if (result != null) {
+                      Scaffold.of(context)
+                        ..removeCurrentSnackBar()
+                        ..showSnackBar(SnackBar(content: Text("$result")));
+                    }
                   },
                 );
               },
@@ -107,40 +106,34 @@ class RecommendFriendsState extends State<RecommendFriends> {
     return holdList;
   }
 
-  Future<String> _showDialog(BuildContext context, UserModel friendUser) {
-    return showDialog(
-      context: context,
-      builder: (context) {
-        return new AlertDialog(
-          title: new Text(friendUser.email),
-          content: new Container(
-            child: CircleAvatar(
-              child: CachedNetworkImage(
-                imageUrl:
-                    friendUser.profilePic != null && friendUser.profilePic != ''
-                        ? friendUser.profilePic
-                        : DesignConstants.profile,
-                placeholder: (context, url) => CircularProgressIndicator(),
-                errorWidget: (context, url, error) =>
-                    Icon(Icons.account_circle),
-              ),
-            ),
+  Widget _showDialog(BuildContext context, UserModel friendUser) {
+    return new AlertDialog(
+      title: new Text(friendUser.email),
+      content: new Container(
+        child: CircleAvatar(
+          child: CachedNetworkImage(
+            imageUrl:
+                friendUser.profilePic != null && friendUser.profilePic != ''
+                    ? friendUser.profilePic
+                    : DesignConstants.profile,
+            placeholder: (context, url) => CircularProgressIndicator(),
+            errorWidget: (context, url, error) => Icon(Icons.account_circle),
           ),
-          actions: <Widget>[
-            new FlatButton(
-              onPressed: null,
-              child: new Text('View Profile'),
-            ),
-            new FlatButton(
-              onPressed: () {
-                _sendRequest(friendUser);
-                Navigator.of(context).pop();
-              },
-              child: new Text('Send Friend Request'),
-            ),
-          ],
-        );
-      },
+        ),
+      ),
+      actions: <Widget>[
+        new FlatButton(
+          onPressed: null,
+          child: new Text('View Profile'),
+        ),
+        new FlatButton(
+          onPressed: () {
+            _sendRequest(friendUser);
+            Navigator.pop(context, "Friend Request sent");
+          },
+          child: new Text('Send Friend Request'),
+        ),
+      ],
     );
   }
 
