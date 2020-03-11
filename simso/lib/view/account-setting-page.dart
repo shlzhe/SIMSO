@@ -53,7 +53,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text("Account Settings"),
-        actions: (changing || changing_p) == true
+        actions: (changing || (changing_p && changing_s)) == true
             ? <Widget>[
                 IconButton(icon: Icon(Icons.save), onPressed: controller.save),
               ]
@@ -145,18 +145,13 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       validator: (value) {
         if (changing_p == true) {
           if (value == null) return 'Password is required';
-          if (value.length < 6) return 'Must be no less than 6 characters.';
+          if (value.length < 6)
+            return 'Must be no less than 6 characters';
           return null;
         } else
           return null;
       },
-      onSaved: (value) {
-        if (changing_p == true) {
-          userService.changePassword(user, value);
-        } else {
-          return null;
-        }
-      },
+      onSaved: controller.savePassword,
       onChanged: (value) {
         setState(() {
           userCopy.password = value;

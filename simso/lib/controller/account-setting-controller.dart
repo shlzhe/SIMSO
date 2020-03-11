@@ -4,6 +4,7 @@ import '../view/mydialog.dart';
 import '../view/account-setting-page.dart';
 import '../service-locator.dart';
 import 'package:simso/model/services/iuser-service.dart';
+import 'package:simso/view/navigation-drawer.dart' as drawer;
 
 class AccountSettingController {
   AccountSettingPageState state;
@@ -31,7 +32,9 @@ class AccountSettingController {
   }
 
   void savePassword(String value) {
-    state.userCopy.password = value;
+    if (state.changing_s == true) {
+      userService.changePassword(state.user, value);
+    }
   }
 
   void save() async {
@@ -42,9 +45,11 @@ class AccountSettingController {
     try {
       await userService.updateUserDB(state.userCopy);
       showSnackBar();
+      if (state.changing_s == true) {
+        drawer.MyDrawer(this.state.context, this.state.user).signOut();
+      }
       state.stateChanged(() {
         state.changing = false;
-        //state.changing_s = false;
         state.changing_p = false;
       });
     } catch (e) {
