@@ -49,7 +49,7 @@ class AddPhotoState extends State<AddPhoto> {
   var formKey = GlobalKey<FormState>();
   IImageService imageService = locator<IImageService>();
 
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  // final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   List<CameraDescription> cameras;
   CameraController controller;
   
@@ -107,34 +107,66 @@ class AddPhotoState extends State<AddPhoto> {
           title: Text("My Photos"),
           backgroundColor: DesignConstants.blue,
         ),
-        key: scaffoldKey,
-        body: Center(
-          child: SingleChildScrollView(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              Center(
-                child: showCamera
-                    ? Container(
-                        height: 290,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Center(child: cameraPreviewWidget()),
+        body: Form(
+            child: Center(
+            child: SingleChildScrollView(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: <Widget>[
+                Center(
+                  child: showCamera
+                      ? Container(
+                          height: 290,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Center(
+                              child: cameraPreviewWidget()),
+                          ),
+                        )
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                              imagePreviewWidget(),
+                              editCaptureControlRowWidget(),
+                            ]),
+                ),
+                showCamera ? captureControlRowWidget() : Container(),
+                cameraOptionsWidget(),
+                Form(
+                  key: formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        initialValue: imageCopy.summary,
+                        decoration: InputDecoration(
+                          labelText: 'Summary',
                         ),
-                      )
-                    : Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                            imagePreviewWidget(),
-                            editCaptureControlRowWidget(),
-                          ]),
-              ),
-              showCamera ? captureControlRowWidget() : Container(),
-              cameraOptionsWidget(),
-              infoInputsWidget()
-            ],
-          ),
-    ))));
+                        autocorrect: false,
+                        validator: controller2.validateSummary,
+                        onSaved: controller2.saveSummary,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Builder(
+                          builder: (context) {
+                            return RaisedButton(
+                              color: DesignConstants.blue,
+                              child: Text('Add Image',
+                                      style: TextStyle(color:Colors.white
+                                      ),
+                              ),
+                              onPressed: controller2.add,
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+    )),
+        )));
 
   }
 
@@ -147,14 +179,16 @@ class AddPhotoState extends State<AddPhoto> {
     controller.addListener(() {
       if (mounted) setState(() {});
       if (controller.value.hasError) {
-        showInSnackBar('Camera error ${controller.value.errorDescription}');
+        //showInSnackBar('Camera error ${controller.value.errorDescription}');
+        print(controller.value.errorDescription);
       }
     });
 
     try {
       await controller.initialize();
     } on CameraException catch (e) {
-      showInSnackBar('Camera error ${e}');
+      //showInSnackBar('Camera error ${e}');
+      print(e);
     }
 
     if (mounted) {
@@ -175,6 +209,7 @@ class AddPhotoState extends State<AddPhoto> {
     );
   }
 
+  //flip camera function
   Widget cameraTogglesRowWidget() {
     final List<Widget> toggles = <Widget>[];
 
@@ -201,6 +236,7 @@ class AddPhotoState extends State<AddPhoto> {
     return Row(children: toggles);
   }
 
+  //capture image function
   Widget captureControlRowWidget() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -217,64 +253,69 @@ class AddPhotoState extends State<AddPhoto> {
     );
   }
 
-  Widget infoInputsWidget() {
-    return Column(
-      children: [
-        // Padding(
-        //   padding: const EdgeInsets.only(left: 3, bottom: 4.0),
-        //   child: TextField(
-        //       controller: nameController,
-        //       onChanged: (v) => nameController.text = v,
-        //       decoration: InputDecoration(
-        //         labelText: 'Name',
-        //       )),
-        // ),
-        // Padding(
-        //   padding: const EdgeInsets.only(left: 3, bottom: 4.0),
-        //   child: TextField(
-        //       controller: summaryController,
-        //       onChanged: null,
-        //       decoration: InputDecoration(
-        //         labelText: "Summary",
-        //       )),
-        // ),
-        TextFormField(
-          initialValue: imageCopy.summary,
-          decoration: InputDecoration(
-            labelText: 'Summary',
-          ),
-          autocorrect: false,
-          validator: controller2.validateSummary,
-          onSaved: controller2.saveSummary,
-        ),
-        // Padding(
-        //   padding: const EdgeInsets.only(left: 3),
-        //   child: TextField(
-        //       controller: abvController,
-        //       onChanged: (v) => abvController.text = v,
-        //       decoration: InputDecoration(
-        //         labelText: 'ABV',
-        //       )),
-        // ),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Builder(
-            builder: (context) {
-              return RaisedButton(
-                color: DesignConstants.blue,
-                child: Text('Add Image',
-                        style: TextStyle(color:Colors.white
-                        ),
-                ),
-                onPressed: controller2.add,
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
+//BODY INFORMATION
 
+  // Widget infoInputsWidget() {
+  //   return Form(
+  //         child: Column(
+  //       children: [
+  //         // Padding(
+  //         //   padding: const EdgeInsets.only(left: 3, bottom: 4.0),
+  //         //   child: TextField(
+  //         //       controller: nameController,
+  //         //       onChanged: (v) => nameController.text = v,
+  //         //       decoration: InputDecoration(
+  //         //         labelText: 'Name',
+  //         //       )),
+  //         // ),
+  //         // Padding(
+  //         //   padding: const EdgeInsets.only(left: 3, bottom: 4.0),
+  //         //   child: TextField(
+  //         //       controller: summaryController,
+  //         //       onChanged: null,
+  //         //       decoration: InputDecoration(
+  //         //         labelText: "Summary",
+  //         //       )),
+  //         // ),
+  //         TextFormField(
+  //           initialValue: imageCopy.summary,
+  //           decoration: InputDecoration(
+  //             labelText: 'Summary',
+  //           ),
+  //           autocorrect: false,
+  //           validator: controller2.validateSummary,
+  //           onSaved: controller2.saveSummary,
+  //         ),
+  //         // Padding(
+  //         //   padding: const EdgeInsets.only(left: 3),
+  //         //   child: TextField(
+  //         //       controller: abvController,
+  //         //       onChanged: (v) => abvController.text = v,
+  //         //       decoration: InputDecoration(
+  //         //         labelText: 'ABV',
+  //         //       )),
+  //         // ),
+  //         Padding(
+  //           padding: const EdgeInsets.all(16.0),
+  //           child: Builder(
+  //             builder: (context) {
+  //               return RaisedButton(
+  //                 color: DesignConstants.blue,
+  //                 child: Text('Add Image',
+  //                         style: TextStyle(color:Colors.white
+  //                         ),
+  //                 ),
+  //                 onPressed: controller2.add,
+  //               );
+  //             },
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  //retake picture
   Widget editCaptureControlRowWidget() {
     return Padding(
       padding: const EdgeInsets.only(top: 5),
@@ -302,9 +343,9 @@ class AddPhotoState extends State<AddPhoto> {
     });
   }
 
-  void showInSnackBar(String message) {
-    scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
-  }
+  // void showInSnackBar(String message) {
+  //   scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
+  // }
 
   Future<String> takePicture() async {
     if (!controller.value.isInitialized) {

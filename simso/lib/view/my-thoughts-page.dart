@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:unicorndial/unicorndial.dart';
-
-import '../model/entities/globals.dart' as globals;
-import '../model/services/iuser-service.dart';
 import '../model/entities/user-model.dart';
 import '../model/entities/thought-model.dart';
 import '../view/design-constants.dart';
@@ -15,11 +11,11 @@ class MyThoughtsPage extends StatefulWidget {
   final UserModel user;
   List<Thought> myThoughtsList;
 
-  MyThoughtsPage(this.user);
+  MyThoughtsPage(this.user, this.myThoughtsList);
 
   @override
   State<StatefulWidget> createState() {
-    return MyThoughtsPageState(user);
+    return MyThoughtsPageState(user, myThoughtsList);
   }
 }
 
@@ -30,16 +26,14 @@ class MyThoughtsPageState extends State<MyThoughtsPage> {
   UserModel user;
   List<Thought> myThoughtsList;
   
-  
-
   //bool entry = false; //keep, there was something I liked about this snippet of code from Hiep
 
   var formKey = GlobalKey<FormState>();
 
-  MyThoughtsPageState(this.user) {
+  MyThoughtsPageState(this.user, this.myThoughtsList) {
     controller = MyThoughtsController(this);
 
-    controller.getMyThoughtsList(this.user.uid);
+    
   }
 
   void stateChanged(Function f) {
@@ -50,7 +44,7 @@ class MyThoughtsPageState extends State<MyThoughtsPage> {
   Widget build(BuildContext context) {
     this.context = context;
     var childButtons = List<UnicornButton>();
-    
+
     childButtons.add(
       UnicornButton(
         hasLabel: true,
@@ -155,7 +149,7 @@ class MyThoughtsPageState extends State<MyThoughtsPage> {
                   //color: Colors.grey[200],
                   padding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   decoration: BoxDecoration(
-                    color: const Color(0xff7c94b6),
+                    color: const Color(0xFFFFFFFF),
 
         
                     border: Border.all(

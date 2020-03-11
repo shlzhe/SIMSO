@@ -1,4 +1,6 @@
-class SongModel {
+import 'package:flutter/material.dart';
+
+class SongModel extends StatefulWidget {
   String songId; // firestore doc id
   String title;
   String artist;
@@ -10,9 +12,10 @@ class SongModel {
   String review;
   String createdBy;
   DateTime lastUpdatedAt; // created or revised
-  List<dynamic> sharedWith;
+  List<dynamic> songPost;
 
   SongModel({
+    this.songId,
     this.title,
     this.artist,
     this.genre,
@@ -23,11 +26,12 @@ class SongModel {
     this.review,
     this.createdBy,
     this.lastUpdatedAt,
-    this.sharedWith,
+    this.songPost,
   });
 
   // empty book obj
   SongModel.empty() {
+    this.songId = '';
     this.title = '';
     this.artist = '';
     this.genre = '';
@@ -37,7 +41,7 @@ class SongModel {
     this.songURL = '';
     this.review = '';
     this.createdBy = '';
-    this.sharedWith = <dynamic>[];
+    this.songPost = <dynamic>[];
   }
 
   SongModel.clone(SongModel b) {
@@ -57,7 +61,7 @@ class SongModel {
     // create empty list 1st, add all contents from b obj,
     // . operator wif dynamic obj cr8ed adding addAll method
     // begin wif blank list, add all the members of this list
-    this.sharedWith = <dynamic>[]..addAll(b.sharedWith);
+    this.songPost = <dynamic>[]..addAll(b.songPost);
   }
 
   Map<String, dynamic> serialize() {
@@ -74,7 +78,7 @@ class SongModel {
       // timestamp is allowed as well
       LASTUPDATEDAT: lastUpdatedAt,
       // list is array, acceptable by firestore
-      SHAREDWITH: sharedWith,
+      SONGPOST: songPost,
     };
   }
 
@@ -89,7 +93,7 @@ class SongModel {
       songURL: data[SongModel.SONGURL],
       review: data[SongModel.REVIEW],
       createdBy: data[SongModel.CREATEDBY],
-      sharedWith: data[SongModel.SHAREDWITH],
+      songPost: data[SongModel.SONGPOST],
     );
     if (data[SongModel.LASTUPDATEDAT] != null) {
       // convert timestamp type to DateTime obj
@@ -103,7 +107,7 @@ class SongModel {
 
   static const SONG_COLLECTION = 'songs';
   static const TITLE = 'title';
-  static const ARTIST = 'author';
+  static const ARTIST = 'artist';
   static const GENRE = 'genre';
   static const FEATARTIST = 'featArtist';
   static const PUBYEAR = 'pubyear';
@@ -112,5 +116,11 @@ class SongModel {
   static const REVIEW = 'review';
   static const CREATEDBY = 'createdBy';
   static const LASTUPDATEDAT = 'lastUpdatedAt';
-  static const SHAREDWITH = 'sharedWith';
+  static const SONGPOST = 'songpost';
+
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return null;
+  }
 }
