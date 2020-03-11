@@ -27,6 +27,7 @@ import '../view/design-constants.dart';
 import '../view/snapshot-page.dart';
 import '../view/meme-page.dart';
 import '../view/account-setting-page.dart';
+import '../view/profile-page.dart';
 //controller import
 import '../controller/homepage-controller.dart';
 
@@ -42,6 +43,12 @@ class MyDrawer extends StatelessWidget {
   void navigateHomepage() {
     Navigator.push(context, MaterialPageRoute(
       builder: (context) => Homepage(user)
+    ));
+  }
+
+    void navigateProfile() {
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) => ProfilePage(user)
     ));
   }
 
@@ -177,6 +184,11 @@ class MyDrawer extends StatelessWidget {
             leading: Icon(Icons.home),
             title: Text('Homepage'),
             onTap: navigateHomepage,
+          ),
+          ListTile(
+            leading: Icon(Icons.person),
+            title: Text('Profile'),
+            onTap: navigateProfile,
           ),
           ListTile(
             leading: Icon(Icons.timer),
