@@ -3,7 +3,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:simso/model/entities/user-model.dart';
 import '../model/services/ipicture-service.dart';
 import '../view/mydialog.dart';
 import '../view/add-photo-page.dart';
