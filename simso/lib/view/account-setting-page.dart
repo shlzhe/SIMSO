@@ -47,15 +47,15 @@ class AccountSettingPageState extends State<AccountSettingPage> {
 
     return WillPopScope(
       onWillPop: controller.onBackPressed,
-          child: Scaffold(
+      child: Scaffold(
         key: scaffoldKey,
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text("Account Settings"),
-          actions:
-           (changing || (changing_p && changing_s)) == true
+          actions: (changing || (changing_p && changing_s)) == true
               ? <Widget>[
-                  IconButton(icon: Icon(Icons.save), onPressed: controller.save),
+                  IconButton(
+                      icon: Icon(Icons.save), onPressed: controller.save),
                 ]
               : null,
         ),
@@ -109,9 +109,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
   }
 
   CardSettingsButton _buildCardSettingsButton_Logout() {
-    return CardSettingsButton(
-        label: 'SignOut',
-        onPressed: () => drawer.MyDrawer(this.context, this.user).signOut());
+    return CardSettingsButton(label: 'SignOut', onPressed: controller.signOut);
   }
 
   CardSettingsSwitch _buildCardSettingsSwitch() {
@@ -139,8 +137,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       validator: (value) {
         if (changing_p == true) {
           if (value == null) return 'Password is required';
-          if (value.length < 6)
-            return 'Must be no less than 6 characters';
+          if (value.length < 6) return 'Must be no less than 6 characters';
           return null;
         } else
           return null;
@@ -247,7 +244,8 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       },
     );
   }
-    CardSettingsText _buildCardSettingsText_City() {
+
+  CardSettingsText _buildCardSettingsText_City() {
     return CardSettingsText(
       label: 'City',
       //hintText: 'User Name',

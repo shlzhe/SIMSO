@@ -11,7 +11,7 @@ class ProfilePageController {
     Navigator.push(
         state.context,
         MaterialPageRoute(
-          builder: (context) => AccountSettingPage(),
+          builder: (context) => AccountSettingPage(state.user),
         ));
   }
 }

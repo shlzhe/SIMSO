@@ -45,7 +45,35 @@ class AccountSettingController {
     } else
       return;
   }
-
+void signOut(){
+        showDialog(
+            context: state.context,
+            builder: (context) => new AlertDialog(
+                  title: new Text('Are you sure?'),
+                  content: new Text(
+                      'Do you want to sign out?'),
+                  actions: <Widget>[
+                    new GestureDetector(
+                      onTap: () {
+                        FirebaseAuth.instance.signOut(); //Email/pass sign out
+                        GoogleSignIn().signOut();
+                        globals.timer = null;
+                        globals.touchCounter = null;
+                        Navigator.push(
+                            state.context,
+                            MaterialPageRoute(
+                              builder: (context) => LoginPage(),
+                            ));
+                      },
+                      child: Text("Yes"),
+                    ),
+                                        new GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Text("No"),)
+                  ],
+                ));
+      
+}
   void deleteUser() {
     //Display confirmation dialog box after user clicking on "Sign Out" button
     showDialog(
