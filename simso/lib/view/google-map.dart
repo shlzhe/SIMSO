@@ -1,15 +1,12 @@
-import 'dart:async';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:simso/model/entities/friend-model.dart';
 
-import 'design-constants.dart';
 
 class ViewGoogleMap extends StatefulWidget {
-  List<Friend> friends;
+  final List<Friend> friends;
   ViewGoogleMap(this.friends);
 
   @override
@@ -41,7 +38,7 @@ class _GoogleMapState extends State<ViewGoogleMap> {
     _getFriendLocation(_center);
     //test address
     // List<Placemark> placemark =
-    //     await Geolocator().placemarkFromAddress("Oklahoma City");
+    //     await Geolocator().placemarkFromAddress("Seattle");
     // print(placemark[0].country);
     // print(placemark[0].position);
     // print(placemark[0].locality);
@@ -70,7 +67,7 @@ class _GoogleMapState extends State<ViewGoogleMap> {
                 friendPlacemark[0].position.longitude),
             infoWindow: InfoWindow(
               title: i.username,
-              snippet: i.aboutme,
+              snippet: 'City: ${i.city}',
               onTap: () => {print("Inside infoWindow")},
             ),
             icon: BitmapDescriptor.defaultMarker,
