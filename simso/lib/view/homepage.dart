@@ -1,3 +1,5 @@
+import 'package:simso/model/entities/song-model.dart';
+import 'package:simso/model/services/ilimit-service.dart';
 import 'package:simso/model/services/itouch-service.dart';
 import 'package:simso/view/navigation-drawer.dart';
 import 'package:unicorndial/unicorndial.dart';
@@ -11,8 +13,9 @@ import 'design-constants.dart';
 
 class Homepage extends StatefulWidget {
   final UserModel user;
+  final List<SongModel> songlist;
 
-  Homepage(this.user);
+  Homepage(this.user, this.songlist);
 
   @override
   State<StatefulWidget> createState() {
@@ -25,20 +28,25 @@ class HomepageState extends State<Homepage> {
   IUserService userService = locator<IUserService>();
   ITimerService timerService = locator<ITimerService>();
   ITouchService touchService = locator<ITouchService>();
+  ILimitService limitService = locator<ILimitService>();
   HomepageController controller;
   UserModel user;
+  List<SongModel> songlist;
   String returnedID;
   var idController = TextEditingController();
   var formKey = GlobalKey<FormState>();
 
   HomepageState(this.user) {
-    controller = HomepageController(this, this.timerService, this.touchService);
+    controller = HomepageController(this, this.timerService, this.touchService,
+        this.limitService, this.songlist);
     controller.setupTimer();
     controller.setupTouchCounter();
+    controller.getLimits();
   }
 
   void stateChanged(Function f) {
     setState(f);
+    print('made it');
   }
 
   @override
@@ -118,6 +126,24 @@ class HomepageState extends State<Homepage> {
       ),
     );
 
+    childButtons.add(
+      UnicornButton(
+        hasLabel: true,
+        labelText: "Messenger",
+        labelFontSize: 10,
+        currentButton: FloatingActionButton(
+          heroTag: "Messenger",
+          backgroundColor: Colors.white,
+          mini: true,
+          child: Icon(
+            Icons.textsms,
+            color: Colors.black,
+          ),
+          onPressed: controller.mainChatScreen,
+        ),
+      ),
+    );
+
     return Scaffold(
       floatingActionButton: UnicornDialer(
         backgroundColor: Colors.transparent,
@@ -128,14 +154,16 @@ class HomepageState extends State<Homepage> {
         ),
         childButtons: childButtons,
       ),
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text('Home Page'),
+        backgroundColor: DesignConstants.blue,
+      ),
       drawer: MyDrawer(context, user),
       body: Container(
           child: Form(
         key: formKey,
         child: Column(
-          children: <Widget>[
-          ],
+          children: <Widget>[],
         ),
       )),
     );

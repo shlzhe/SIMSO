@@ -12,7 +12,7 @@ class TimerService extends ITimerService {
     try {
       var query = await Firestore.instance.collection(TIMERS_COLLECTION)
         .where(TimerModel.USER_ID, isEqualTo: userID)
-        .where(TimerModel.DAY, isEqualTo: _getDate(daysAgo))
+        .where(TimerModel.DAY, isEqualTo: getDate(daysAgo))
         .getDocuments();
 
       if (query.documents.isEmpty)
@@ -42,7 +42,7 @@ class TimerService extends ITimerService {
   // Create 
   @override
   Future<TimerModel> createTimer(String userID) async {
-    var date = _getDate(0);
+    var date = getDate(0);
     var timer = TimerModel(day: date, timeOnAppSec: 0, userID: userID);
     await Firestore.instance.collection(TIMERS_COLLECTION)
       .add(timer.serialize())
@@ -56,8 +56,8 @@ class TimerService extends ITimerService {
       return timer;
   }
 
-  // Custom, non-Firebase methond
-  String _getDate(int daysAgo) {
+  @override
+  String getDate(int daysAgo) {
     var today = DateTime.now();
     var ourDate = today.subtract(new Duration(days: daysAgo));
     var day = ourDate.day;

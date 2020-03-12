@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -58,19 +59,6 @@ class AddMusicController {
     if (value == null || value.trim().isEmpty) {
       return null; // not sharing
     }
-    // comma seperated list comes in, chk if its email
-    // use comma as token split long list
-    // for (var email in value.split(',')) {
-    //   if (!(email.contains('.') && email.contains('@'))) {
-    //     return 'Enter comma(,) seperated email list';
-    //   }
-    //   // if there is multiple @ signs, index from beginning
-    //   // and the last same, those are same, than only 1
-    //   // if diff theres more than 1 @
-    //   if (email.indexOf('@') != email.lastIndexOf('@')) {
-    //     return 'Enter comma(,) seperated email list';
-    //   }
-    // }
     return null;
   }
 
@@ -79,7 +67,7 @@ class AddMusicController {
       //value = "none";
       return; // dont do anything
     }
-    state.songCopy.featArtist = null;
+    //state.songCopy.featArtist = value;
     // value one long list, we split with func call
     // and generate a list of string type email list
     // one long string converted to list, and each element is an email
@@ -88,6 +76,7 @@ class AddMusicController {
       // trim the leading/trailing whitespaces in each email seperated by comma
       // add in sharewith list
       state.songCopy.featArtist.add(featArtist.trim());
+      print("FEAT ARTIST: " + state.songCopy.featArtist.toString());
     }
   }
 
@@ -147,7 +136,7 @@ class AddMusicController {
       return; // dont do anything
 
     }
-    state.songCopy.sharedWith = [];
+    state.songCopy.songPost = [];
     // value one long list, we split with func call
     // and generate a list of string type email list
     // one long string converted to list, and each element is an email
@@ -155,7 +144,7 @@ class AddMusicController {
     for (var email in emaillist) {
       // trim the leading/trailing whitespaces in each email seperated by comma
       // add in sharewith list
-      state.songCopy.sharedWith.add(email.trim());
+      state.songCopy.songPost.add(email.trim());
     }
   }
 
@@ -183,7 +172,6 @@ class AddMusicController {
           state.songLoaded = true;
         }
         print(state.audio);
-        
       });
     } on PlatformException catch (e) {
       print("Unsupported operation" + e.toString());
@@ -191,31 +179,37 @@ class AddMusicController {
   }
 
   Future uploadSong() async {
+    print("*****FORMATTING SONG PATH*****");
     String fileName = state.audio.split('/').last;
     String filePath = state.audio;
     _extension = fileName.toString().split('.').last;
+    print("*****CREATING FILE IN STORAGE*****");
     StorageReference storageRef = FirebaseStorage.instance
         .ref()
         .child('Songs/${state.user.username}Songs/$fileName');
+    print("*****PUT FILE IN STORAGE*****");
     StorageUploadTask uploadTask = storageRef.putFile(
       File(filePath),
       StorageMetadata(
         contentType: '$_fileType/$_extension',
       ),
     );
+    print("*****PROCESS COMPLETED*****");
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
-    print('complete ');
 
     storageRef.getDownloadURL().then((fileURL) async {
+      print("*****UPDATE URL ON DOC*****");
       await _songService.updateSongURL(fileURL, state.songCopy);
       //print("songURL: " + state.songCopy.songURL);
     });
   }
 
   Future add() async {
+    print("GOT HERE0");
     // fails return nothing
     // documentId comes from this call and saved
     try {
+      print("GOT HERE1");
       if (state.audio == null) {
         MyDialog.info(
           context: state.context,
@@ -232,17 +226,32 @@ class AddMusicController {
           return;
         }
 
-        state.formKey.currentState.save();
-        state.songCopy.createdBy = state.user.email;
-        state.songCopy.lastUpdatedAt = DateTime.now();
+        try {
+          print("POSSIBLE SAVE ERROR");
+          state.formKey.currentState.save();
+        } catch (e) {
+          print("***************************");
+          print("***************************");
+          print("SAVE ERROR: " + e.toString());
+          print("***************************");
+          print("***************************");
+        }
 
+        print("GOT HERE3");
+        state.songCopy.createdBy = state.user.email;
+        print("GOT HERE4");
+        state.songCopy.lastUpdatedAt = DateTime.now();
+        print("GOT HERE5");
         // check firebase addbook successful or not
         try {
+          print("GOT HERE6");
           if (state.song == null) {
             // addButton to add song if empty
+            print("*****READY TO ADD SONG*****");
             state.songCopy.songId = await _songService.addSong(state.songCopy);
           } else {
             // from homepage to edit a song
+            print("GOT HERE7");
             await _songService.updateSong(state.songCopy);
           }
 
@@ -264,6 +273,7 @@ class AddMusicController {
             },
           );
         }
+        print("READY TO UPLOAD SONG");
         await uploadSong();
       }
     } catch (e) {

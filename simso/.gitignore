@@ -27,6 +27,7 @@
 .packages
 .pub-cache/
 .pub/
+.lock
 /build/
 
 # Android related
@@ -37,6 +38,8 @@
 **/android/gradlew.bat
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
+.flutter-plugins-dependencies
+pubspec.lock
 
 # iOS/XCode related
 **/ios/**/*.mode1v3
