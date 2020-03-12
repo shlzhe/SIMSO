@@ -103,23 +103,31 @@ class AccountSettingController {
       await userService.updateUserDB(state.userCopy);
       showSnackBar('Saved!');
       if (state.changing_s == true) {
-        MyDialog.info(
+        showDialog(
             context: state.context,
-            title: 'Please Sign In Again',
-            message:
-                'We find that you changed your password. For your safety, please sign in again with your new password!',
-            action: () {
-              FirebaseAuth.instance.signOut(); //Email/pass sign out
-              GoogleSignIn().signOut();
-              globals.timer = null;
-              globals.touchCounter = null;
-              Navigator.push(
-                  state.context,
-                  MaterialPageRoute(
-                    builder: (context) => LoginPage(),
-                  ));
-            });
+            builder: (context) => new AlertDialog(
+                  title: new Text('Please Sign In Again'),
+                  content: new Text(
+                      'We find that you have changed your password. For your safety, please sign in again with your new password!'),
+                  actions: <Widget>[
+                    new GestureDetector(
+                      onTap: () {
+                        FirebaseAuth.instance.signOut(); //Email/pass sign out
+                        GoogleSignIn().signOut();
+                        globals.timer = null;
+                        globals.touchCounter = null;
+                        Navigator.push(
+                            state.context,
+                            MaterialPageRoute(
+                              builder: (context) => LoginPage(),
+                            ));
+                      },
+                      child: Text("OK"),
+                    ),
+                  ],
+                ));
       }
+
       state.stateChanged(() {
         state.changing = false;
         state.changing_p = false;
@@ -138,28 +146,30 @@ class AccountSettingController {
   }
 
   Future<bool> onBackPressed() {
-    return showDialog(
-          context: state.context,
-          builder: (context) => new AlertDialog(
-            title: new Text('Not Saving'),
-            content: new Text('Your editing is not saved'),
-            actions: <Widget>[
-              new GestureDetector(
-                onTap: () => Navigator.of(context).pop(false),
-                child: Text("Stay"),
-              ),
-              SizedBox(height: 16),
-              new GestureDetector(
-                onTap: () {
-                  save();
-                  Navigator.of(context).pop(true);
-                },
-                child: Text("Save&Leave"),
-              ),
-            ],
-          ),
-        ) ??
-        false;
+    if (state.changing || state.changing_p == true) {
+      return showDialog(
+        context: state.context,
+        builder: (context) => new AlertDialog(
+          title: new Text('Not Saving'),
+          content: new Text('Your editing is not saved'),
+          actions: <Widget>[
+            new GestureDetector(
+              onTap: () => Navigator.of(context).pop(false),
+              child: Text("Stay"),
+            ),
+            SizedBox(height: 16),
+            new GestureDetector(
+              onTap: () {
+                save();
+                Navigator.of(context).pop(true);
+              },
+              child: Text("Save&Leave"),
+            ),
+          ],
+        ),
+      );
+    } else
+      Navigator.of(state.context).pop(true); //??false;
   }
 
   void showSnackBar(String label) {
