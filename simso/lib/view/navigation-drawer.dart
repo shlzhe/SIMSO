@@ -26,6 +26,7 @@ import '../view/design-constants.dart';
 import '../view/snapshot-page.dart';
 import '../view/meme-page.dart';
 import '../view/account-setting-page.dart';
+import '../view/profile-page.dart';
 import '../view/my-music-page.dart';
 //controller import
 
@@ -48,6 +49,12 @@ class MyDrawer extends StatelessWidget {
                   user,
                   songlist,
                 )));
+  }
+
+    void navigateProfile() {
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) => ProfilePage(user)
+    ));
   }
 
   void navigateSnapshotPage() {
@@ -199,6 +206,11 @@ class MyDrawer extends StatelessWidget {
             leading: Icon(Icons.home),
             title: Text('Homepage'),
             onTap: navigateHomepage,
+          ),
+          ListTile(
+            leading: Icon(Icons.person),
+            title: Text('Profile'),
+            onTap: navigateProfile,
           ),
           ListTile(
             leading: Icon(Icons.timer),
