@@ -90,5 +90,9 @@ class UserService extends IUserService {
     }).catchError((error) {
       print("User can't be deleted" + error.toString());
     });
+    await Firestore.instance
+        .collection(UserModel.USERCOLLECTION)
+        .document(user.uid)
+        .delete();
   }
 }

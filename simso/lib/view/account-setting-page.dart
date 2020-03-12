@@ -89,7 +89,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
             //_buildCardSettingsEmail(),
             _buildCardSettingsSwitch(),
             _buildCardSettingsPassword(),
-            _buildCardSettingsButton_Logout(),
+            //_buildCardSettingsButton_Logout(),
             _buildCardSettingsButton_Delete(),
           ],
         ),

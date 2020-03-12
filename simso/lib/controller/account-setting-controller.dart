@@ -159,7 +159,7 @@ void signOut(){
       state.stateChanged(() {
         state.changing = false;
         state.changing_p = false;
-        state.formKey.currentState.reset();
+        //state.formKey.currentState.reset();
       });
     } catch (e) {
       MyDialog.info(
