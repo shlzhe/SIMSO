@@ -4,7 +4,6 @@ import 'package:card_settings/card_settings.dart';
 import 'package:flutter/cupertino.dart';
 import '../model/entities/fake-user-model.dart';
 import 'package:simso/view/design-constants.dart';
-import 'mydialog.dart';
 
 void main() => runApp(MyApp());
 

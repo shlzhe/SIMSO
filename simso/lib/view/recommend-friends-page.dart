@@ -1,8 +1,6 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:simso/model/entities/user-model.dart';
-import 'package:simso/model/services/friend-service.dart';
 import 'package:simso/model/services/ifriend-service.dart';
 
 import '../service-locator.dart';
@@ -65,7 +63,7 @@ class RecommendFriendsState extends State<RecommendFriends> {
                         Scaffold.of(context).showSnackBar(mySnackbar);
                       },
                     );
-                  print(text);
+                    print(text);
                   },
                 );
               },
