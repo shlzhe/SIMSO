@@ -21,7 +21,7 @@ class FriendPage extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.map),
               onPressed: ()=>{
-                Navigator.push(context, MaterialPageRoute(builder:(context)=> ViewGoogleMap()))
+                Navigator.push(context, MaterialPageRoute(builder:(context)=> ViewGoogleMap(friends)))
               },
             ),
           ],

@@ -1,18 +1,28 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:simso/model/entities/friend-model.dart';
+
+import 'design-constants.dart';
 
 class ViewGoogleMap extends StatefulWidget {
+  List<Friend> friends;
+  ViewGoogleMap(this.friends);
+
   @override
-  State<ViewGoogleMap> createState() => _GoogleMapState();
+  State<ViewGoogleMap> createState() => _GoogleMapState(friends);
 }
 
 class _GoogleMapState extends State<ViewGoogleMap> {
   GoogleMapController mapController;
-
   LatLng _center;
+  Set<Marker> _markers = {};
+  List<Friend> _friends;
+
+  _GoogleMapState(this._friends);
 
   _onMapCreated(GoogleMapController controller) {
     setState(() {
@@ -28,6 +38,46 @@ class _GoogleMapState extends State<ViewGoogleMap> {
     });
     print("Lat: " + position.latitude.toString());
     print("Lon: " + position.longitude.toString());
+    _getFriendLocation(_center);
+    //test address
+    // List<Placemark> placemark =
+    //     await Geolocator().placemarkFromAddress("Oklahoma City");
+    // print(placemark[0].country);
+    // print(placemark[0].position);
+    // print(placemark[0].locality);
+    // print(placemark[0].administrativeArea);
+    // print(placemark[0].postalCode);
+    // print(placemark[0].name);
+    // print(placemark[0].subAdministrativeArea);
+    // print(placemark[0].isoCountryCode);
+    // print(placemark[0].subLocality);
+    // print(placemark[0].subThoroughfare);
+    // print(placemark[0].thoroughfare);
+  }
+
+  void _getFriendLocation(LatLng userPosition) async {
+    List<Placemark> userPlacemark = await Geolocator().placemarkFromCoordinates(
+        userPosition.latitude, userPosition.longitude);
+    for (var i in _friends) {
+      List<Placemark> friendPlacemark =
+          await Geolocator().placemarkFromAddress(i.city);
+      if (userPlacemark[0].administrativeArea ==
+          friendPlacemark[0].administrativeArea) {
+        setState(() {
+          _markers.add(Marker(
+            markerId: MarkerId(friendPlacemark[0].position.toString()),
+            position: new LatLng(friendPlacemark[0].position.latitude,
+                friendPlacemark[0].position.longitude),
+            infoWindow: InfoWindow(
+              title: i.username,
+              snippet: i.aboutme,
+              onTap: () => {print("Inside infoWindow")},
+            ),
+            icon: BitmapDescriptor.defaultMarker,
+          ));
+        });
+      }
+    }
   }
 
   @override
@@ -44,7 +94,7 @@ class _GoogleMapState extends State<ViewGoogleMap> {
           leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () => {Navigator.pop(context)}),
-          title: Text('Maps Sample App'),
+          title: Text('Friends Near Me'),
           backgroundColor: Colors.green[700],
         ),
         body: _center == null
@@ -55,6 +105,8 @@ class _GoogleMapState extends State<ViewGoogleMap> {
                   target: _center,
                   zoom: 8.0,
                 ),
+                markers: _markers,
+                zoomGesturesEnabled: true,
               ),
       ),
     );
