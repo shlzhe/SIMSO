@@ -10,6 +10,8 @@ class UserModel {
     this.profilePic,
     this.favorites,
     this.password,
+    this.friendRequestSent,
+    this.friendRequestRecieved,
     this.friends,
     this.gender,
     this.age,
@@ -24,6 +26,8 @@ class UserModel {
     this.memo = '';
     this.profilePic = '';
     this.favorites = '';
+    this.friendRequestSent = [];
+    this.friendRequestRecieved = [];
     this.friends = [];
     this.gender = 'S';
     this.age = 0;
@@ -52,6 +56,8 @@ class UserModel {
   String profilePic;
   String favorites;
   String password;
+  List<dynamic> friendRequestSent;
+  List<dynamic> friendRequestRecieved;
   List<dynamic> friends;
   String gender;
   int age;
@@ -66,6 +72,8 @@ class UserModel {
   static const PROFILEPIC = 'profilepic';
   static const FAVORITES = 'favorites';
   static const USERCOLLECTION = 'users';
+  static const FRIENDREQUESTSENT = 'friendRequestSent';
+  static const FRIENDREQUESTRECIEVED = 'friendRequestRecieved';
   static const FRIENDS = 'friends';
   static const GENDER = 'gender';
   static const AGE = 'age';
@@ -81,6 +89,8 @@ class UserModel {
       MEMO: memo,
       PROFILEPIC: profilePic,
       FAVORITES: favorites,
+      FRIENDREQUESTSENT: friendRequestSent,
+      FRIENDREQUESTRECIEVED: friendRequestRecieved,
       FRIENDS: friends,
       GENDER: gender,
       AGE: age
@@ -97,6 +107,8 @@ class UserModel {
         memo = doc[MEMO],
         profilePic = doc[PROFILEPIC],
         favorites = doc[FAVORITES],
+        friendRequestSent = doc[FRIENDREQUESTSENT],
+        friendRequestRecieved = doc[FRIENDREQUESTRECIEVED],
         friends = doc[FRIENDS],
         gender = doc[GENDER],
         age = doc[AGE];

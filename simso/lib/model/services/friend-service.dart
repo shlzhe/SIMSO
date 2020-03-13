@@ -6,9 +6,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class FriendService extends IFriendService {
   static const FriendRequest = "friendrequest";
 
-  List<UserModel> userList = new List<UserModel>();
   @override
   Future<List<UserModel>> getUsers() async {
+    List<UserModel> userList = new List<UserModel>();
     try {
       var query = await Firestore.instance
           .collection(UserModel.USERCOLLECTION)
@@ -29,13 +29,50 @@ class FriendService extends IFriendService {
 
   @override
   void addFriendRequest(UserModel currentUser, UserModel friendUser) async {
+    var emptyList = <String>[];
     try {
+      //This section is to make UserModel compatible with new added elements
+      // begin of compatibility
       await Firestore.instance
-          .collection(FriendRequest)
-          .document(currentUser.uid)
-          .collection(friendUser.uid)
-          .document(friendUser.email)
-          .setData(friendUser.serialize());
+          .collection(UserModel.USERCOLLECTION)
+          .document(currentUser.uid).get().then((value) async {
+            if(!value.data.containsKey(UserModel.FRIENDREQUESTSENT)){
+              await Firestore.instance.collection(UserModel.USERCOLLECTION).document(currentUser.uid).updateData({
+                UserModel.FRIENDREQUESTSENT: emptyList
+              });
+            } 
+            if(!value.data.containsKey(UserModel.FRIENDREQUESTRECIEVED)){
+              await Firestore.instance.collection(UserModel.USERCOLLECTION).document(currentUser.uid).updateData({
+                UserModel.FRIENDREQUESTRECIEVED: emptyList
+              });
+            }
+          });
+      await Firestore.instance
+          .collection(UserModel.USERCOLLECTION)
+          .document(friendUser.uid).get().then((value) async {
+            if(!value.data.containsKey(UserModel.FRIENDREQUESTSENT)){
+              await Firestore.instance.collection(UserModel.USERCOLLECTION).document(friendUser.uid).updateData({
+                UserModel.FRIENDREQUESTSENT: emptyList
+              });
+            } 
+            if(!value.data.containsKey(UserModel.FRIENDREQUESTRECIEVED)){
+              await Firestore.instance.collection(UserModel.USERCOLLECTION).document(friendUser.uid).updateData({
+                UserModel.FRIENDREQUESTRECIEVED: emptyList
+              });
+            }
+          });
+      // end of compatibility
+
+      //user sent friend request
+      await Firestore.instance.collection(UserModel.USERCOLLECTION).document(currentUser.uid).updateData({
+        UserModel.FRIENDREQUESTSENT: FieldValue.arrayUnion([friendUser.uid])
+      });
+
+      //user recieve friend request
+      await Firestore.instance.collection(UserModel.USERCOLLECTION).document(friendUser.uid).updateData({
+        UserModel.FRIENDREQUESTRECIEVED: FieldValue.arrayUnion([currentUser.uid])
+      });
+        
     } catch (e) {
       print(e);
     }
@@ -45,12 +82,10 @@ class FriendService extends IFriendService {
   Future<bool> checkFriendRequest(UserModel currentUser, UserModel friendUser) async {
     try {
       var document =  await Firestore.instance
-          .collection(FriendRequest)
-          .document(currentUser.uid)
-          .collection(friendUser.uid)
-          .document(friendUser.email)
-          .get();
-      if(document.exists){
+          .collection(UserModel.USERCOLLECTION + currentUser.uid)
+          .where(UserModel.FRIENDREQUESTSENT, isEqualTo: friendUser.uid)
+          .getDocuments();
+      if(document.documents.isEmpty){
         return true;
       } else {
         return false;
