@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:simso/model/entities/local-user.dart';
 import '../view/mydialog.dart';
 import '../view/account-setting-page.dart';
 import '../service-locator.dart';
@@ -14,6 +15,7 @@ class AccountSettingController {
   AccountSettingPageState state;
   IUserService userService = locator<IUserService>();
   AccountSettingController(this.state);
+  final LocalUser localUserFunction = LocalUser();
 
   void saveUserName(String value) {
     state.userCopy.username = value;
@@ -54,16 +56,20 @@ void signOut(){
                       'Do you want to sign out?'),
                   actions: <Widget>[
                     new GestureDetector(
-                      onTap: () {
+                      onTap: () async {
+                        String credential = await localUserFunction.readCredential();
                         FirebaseAuth.instance.signOut(); //Email/pass sign out
                         GoogleSignIn().signOut();
                         globals.timer = null;
                         globals.touchCounter = null;
-                        Navigator.push(
-                            state.context,
-                            MaterialPageRoute(
-                              builder: (context) => LoginPage(),
-                            ));
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context)=> LoginPage(
+                            localUserFunction: localUserFunction, 
+                            credential: credential=='true'? credential: null,
+                            email: credential=='true'? state.user.email: null,
+                            password: credential=="true"? state.user.password: null,
+                            ),
+                        ));
                       },
                       child: Text("Yes"),
                     ),
@@ -95,17 +101,21 @@ void signOut(){
                 style: TextStyle(color: DesignConstants.yellow, fontSize: 20),
               ),
               color: DesignConstants.blue,
-              onPressed: () {
+              onPressed: () async {
+                String credential = await localUserFunction.readCredential();
                 userService.deleteUser(state.user);
                 //Close Drawer, then go back to Front Page
                 Navigator.pop(context); //Close Dialog box
                 Navigator.pop(context); //Close Drawer
                 //Navigator.pop(state.context);  //Close Home Page
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LoginPage(),
-                    ));
+                Navigator.push(context, MaterialPageRoute(
+                          builder: (context)=> LoginPage(
+                            localUserFunction: localUserFunction, 
+                            credential: credential=='true'? credential: null,
+                            email: credential=='true'? state.user.email: null,
+                            password: credential=="true"? state.user.password: null,
+                            ),
+                        ));
               },
             ),
             RaisedButton(
@@ -139,16 +149,20 @@ void signOut(){
                       'We find that you have changed your password. For your safety, please sign in again with your new password!'),
                   actions: <Widget>[
                     new GestureDetector(
-                      onTap: () {
+                      onTap: () async {
+                        String credential = await localUserFunction.readCredential();
                         FirebaseAuth.instance.signOut(); //Email/pass sign out
                         GoogleSignIn().signOut();
                         globals.timer = null;
                         globals.touchCounter = null;
-                        Navigator.push(
-                            state.context,
-                            MaterialPageRoute(
-                              builder: (context) => LoginPage(),
-                            ));
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context)=> LoginPage(
+                            localUserFunction: localUserFunction, 
+                            credential: credential=='true'? credential: null,
+                            email: credential=='true'? state.user.email: null,
+                            password: credential=="true"? state.user.password: null,
+                            ),
+                        ));
                       },
                       child: Text("OK"),
                     ),
