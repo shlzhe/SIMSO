@@ -5,6 +5,9 @@ import '../entities/user-model.dart';
 abstract class IUserService {
   Future<String> createAccount(UserModel user);
   void createUserDB(UserModel user);
+  Future<void> updateUserDB(UserModel user);
   Future<String> login(UserModel user);
   Future<UserModel> readUser(String uid);
+  void changePassword(UserModel user, String password);
+  void deleteUser(UserModel user);
 }

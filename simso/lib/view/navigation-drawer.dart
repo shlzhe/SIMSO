@@ -69,7 +69,7 @@ class MyDrawer extends StatelessWidget {
 
   void navigateAccountSettingPage() {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => AccountSettingPage()));
+        context, MaterialPageRoute(builder: (context) => AccountSettingPage(user)));
   }
 
   void navigateMyThoughts() async {

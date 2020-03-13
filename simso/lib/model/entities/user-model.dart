@@ -13,6 +13,9 @@ class UserModel {
     this.friendRequestSent,
     this.friendRequestRecieved,
     this.friends,
+    this.friends,
+    this.gender,
+    this.age,
   });
   UserModel.isEmpty() {
     this.uid = '';
@@ -27,6 +30,22 @@ class UserModel {
     this.friendRequestSent = [];
     this.friendRequestRecieved = [];
     this.friends = [];
+    this.gender = 'S';
+    this.age = 0;
+  }
+  UserModel.clone(UserModel b) {
+    this.uid = b.uid;
+    this.username = b.username;
+    this.email = b.email;
+    this.aboutme = b.aboutme;
+    this.city = b.city;
+    this.relationship = b.relationship;
+    this.memo = b.memo;
+    this.profilePic = b.profilePic;
+    this.favorites = b.favorites;
+    this.friends = b.friends;
+    this.gender = b.gender;
+    this.age = b.age;
   }
   String uid;
   String username;
@@ -41,6 +60,8 @@ class UserModel {
   List<dynamic> friendRequestSent;
   List<dynamic> friendRequestRecieved;
   List<dynamic> friends;
+  String gender;
+  int age;
 
   static const UID = 'UID';
   static const USERNAME = 'username';
@@ -55,6 +76,8 @@ class UserModel {
   static const FRIENDREQUESTSENT = 'friendRequestSent';
   static const FRIENDREQUESTRECIEVED = 'friendRequestRecieved';
   static const FRIENDS = 'friends';
+  static const GENDER = 'gender';
+  static const AGE = 'age';
 
   Map<String, dynamic> serialize() {
     return <String, dynamic>{
@@ -70,6 +93,9 @@ class UserModel {
       FRIENDREQUESTSENT: friendRequestSent,
       FRIENDREQUESTRECIEVED: friendRequestRecieved,
       FRIENDS: friends,
+      FRIENDS: friends,
+      GENDER: gender,
+      AGE: age
     };
   }
 
@@ -86,4 +112,7 @@ class UserModel {
         friendRequestSent = doc[FRIENDREQUESTSENT],
         friendRequestRecieved = doc[FRIENDREQUESTRECIEVED],
         friends = doc[FRIENDS];
+        friends = doc[FRIENDS],
+        gender = doc[GENDER],
+        age = doc[AGE];
 }
