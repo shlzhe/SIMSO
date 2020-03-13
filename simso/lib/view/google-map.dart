@@ -38,7 +38,7 @@ class _GoogleMapState extends State<ViewGoogleMap> {
     _getFriendLocation(_center);
     //test address
     // List<Placemark> placemark =
-    //     await Geolocator().placemarkFromAddress("Seattle");
+    //     await Geolocator().placemarkFromAddress("Edmond");
     // print(placemark[0].country);
     // print(placemark[0].position);
     // print(placemark[0].locality);
