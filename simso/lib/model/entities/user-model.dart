@@ -1,7 +1,7 @@
 class UserModel {
   UserModel({
-    this.uid, 
-    this.username, 
+    this.uid,
+    this.username,
     this.email,
     this.aboutme,
     this.city,
@@ -10,11 +10,13 @@ class UserModel {
     this.profilePic,
     this.favorites,
     this.password,
-    this.friends
-    });
-  UserModel.isEmpty(){
+    this.friends,
+    this.gender,
+    this.age,
+  });
+  UserModel.isEmpty() {
     this.uid = '';
-    this.username = ''; 
+    this.username = '';
     this.email = '';
     this.aboutme = '';
     this.city = '';
@@ -23,6 +25,22 @@ class UserModel {
     this.profilePic = '';
     this.favorites = '';
     this.friends = [];
+    this.gender = 'S';
+    this.age = 0;
+  }
+  UserModel.clone(UserModel b) {
+    this.uid = b.uid;
+    this.username = b.username;
+    this.email = b.email;
+    this.aboutme = b.aboutme;
+    this.city = b.city;
+    this.relationship = b.relationship;
+    this.memo = b.memo;
+    this.profilePic = b.profilePic;
+    this.favorites = b.favorites;
+    this.friends = b.friends;
+    this.gender = b.gender;
+    this.age = b.age;
   }
   String uid;
   String username;
@@ -35,6 +53,8 @@ class UserModel {
   String favorites;
   String password;
   List<dynamic> friends;
+  String gender;
+  int age;
 
   static const UID = 'UID';
   static const USERNAME = 'username';
@@ -47,8 +67,10 @@ class UserModel {
   static const FAVORITES = 'favorites';
   static const USERCOLLECTION = 'users';
   static const FRIENDS = 'friends';
+  static const GENDER = 'gender';
+  static const AGE = 'age';
 
-  Map<String, dynamic> serialize(){
+  Map<String, dynamic> serialize() {
     return <String, dynamic>{
       UID: uid,
       USERNAME: username,
@@ -59,20 +81,23 @@ class UserModel {
       MEMO: memo,
       PROFILEPIC: profilePic,
       FAVORITES: favorites,
-      FRIENDS: friends
+      FRIENDS: friends,
+      GENDER: gender,
+      AGE: age
     };
   }
 
-  UserModel.deserialize(Map<String, dynamic> doc):
-      uid = doc[UID],
-      username = doc[USERNAME],
-      email = doc[EMAIL],
-      aboutme = doc[ABOUTME],
-      city = doc[CITY],
-      relationship = doc[RELATIONSHIP],
-      memo = doc[MEMO],
-      profilePic = doc[PROFILEPIC],
-      favorites = doc[FAVORITES],
-      friends =  doc[FRIENDS];
-
+  UserModel.deserialize(Map<String, dynamic> doc)
+      : uid = doc[UID],
+        username = doc[USERNAME],
+        email = doc[EMAIL],
+        aboutme = doc[ABOUTME],
+        city = doc[CITY],
+        relationship = doc[RELATIONSHIP],
+        memo = doc[MEMO],
+        profilePic = doc[PROFILEPIC],
+        favorites = doc[FAVORITES],
+        friends = doc[FRIENDS],
+        gender = doc[GENDER],
+        age = doc[AGE];
 }
