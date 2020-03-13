@@ -20,7 +20,7 @@ class ThoughtService extends IThoughtService {
         print(onError);
         return null;
       });
-    print('adding thoughtId:' + thought.thoughtId);
+    
     _dictionaryService.updateDictionary(thought, null, null);
   }
 
