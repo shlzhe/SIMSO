@@ -21,17 +21,19 @@ class DictionaryService extends IDictionaryService {
           .toSet();
 
       //compare existing dictionary with thought text
-
+      print('updating dictionary for thoughtId: ' + thought.thoughtId);
       var matched = false;
       var newWordDocID;
       thoughtWordList.forEach((word) async => {
             word = word.toLowerCase(),
+            print('word: ' + word),
             matched = false,
             if (dictionaryWordList != null)
               {
                 dictionaryWordList.forEach((doc) async => {
                       if (word == doc.word.toLowerCase())
                         {
+                          print('matched ' + word),
                           matched = true,
                           updateDictionaryWord(doc, thought, null, null)
                         }
@@ -44,6 +46,7 @@ class DictionaryService extends IDictionaryService {
 
   Future<void> updateDictionaryWord(DictionaryWord word, Thought thought,
       SongModel song, ImageModel image) async {
+    print('updating dictionary word for ' + word.word);
     var duplicateThought = false;
     var duplicateSong = false;
     var duplicateImage = false;
@@ -105,10 +108,12 @@ class DictionaryService extends IDictionaryService {
 
   Future<void> addDictionaryWord(
       String text, Thought thought, SongModel song, ImageModel image) async {
+        print('adding dictionary word for ' + text);
     var newWord = DictionaryWord.empty();
-
+    
     newWord.word = text;
     newWord.useCount = 1;
+    newWord.isKeyword = true;
     newWord.usage.add(DateTime.now());
     if(thought != null) newWord.thoughtList.add(thought.thoughtId);
     if(song != null) newWord.songList.add(song.songId);

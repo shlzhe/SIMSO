@@ -44,13 +44,9 @@ class AddThoughtController {
 
     try {
       
-      if (state.thought == null) {
         //from add button, new thought
         await _thoughtService.addThought(state.thoughtCopy);
-      } else {
-        //for next sprint if not this one
-        //await _thoughtService.updateThought(state.thoughtCopy);
-      }
+      
       state.thought = state.thoughtCopy;
       //prep to exit page
       List<Thought> myThoughtsList =

@@ -10,12 +10,17 @@ class ThoughtService extends IThoughtService {
 
   @override
   Future<void> addThought(Thought thought) async {
-    DocumentReference ref = await Firestore.instance
-        .collection(Thought.THOUGHTS_COLLECTION)
-        .add(thought.serialize());
-    //return ref.documentID;
-    //get dictionary
 
+    await Firestore.instance.collection(Thought.THOUGHTS_COLLECTION)
+      .add(thought.serialize())
+      .then((docRef) {
+        thought.thoughtId = docRef.documentID;
+      })
+      .catchError((onError) {
+        print(onError);
+        return null;
+      });
+    print('adding thoughtId:' + thought.thoughtId);
     _dictionaryService.updateDictionary(thought, null, null);
   }
 
