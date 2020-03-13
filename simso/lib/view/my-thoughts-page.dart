@@ -167,7 +167,7 @@ class MyThoughtsPageState extends State<MyThoughtsPage> {
                         Text(myThoughtsList[index].text),
                       ],
                     ),
-                    onTap: () => null,
+                    onTap: () => controller.onTapThought(myThoughtsList, index),
                   ),
                 ),
               );

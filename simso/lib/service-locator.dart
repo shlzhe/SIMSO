@@ -14,6 +14,8 @@ import 'model/services/song-service.dart';
 import 'model/services/picture-service.dart';
 import 'model/services/thought-service.dart';
 import 'model/services/ithought-service.dart';
+import 'model/services/dictionary-service.dart';
+import 'model/services/idictionary-service.dart';
 import 'package:get_it/get_it.dart';
 
 // This is for dependancy injection. Register each new service here
@@ -28,4 +30,5 @@ setupServiceLocator() {
   locator.registerLazySingleton<IThoughtService>(() => ThoughtService());
   locator.registerLazySingleton<IFriendService>(() => FriendService());
   locator.registerLazySingleton<ILimitService>(() => LimitService());
+  locator.registerLazySingleton<IDictionaryService>(() => DictionaryService());
 }
