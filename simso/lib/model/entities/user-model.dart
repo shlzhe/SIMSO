@@ -13,7 +13,6 @@ class UserModel {
     this.friendRequestSent,
     this.friendRequestRecieved,
     this.friends,
-    this.friends,
     this.gender,
     this.age,
   });
@@ -93,7 +92,6 @@ class UserModel {
       FRIENDREQUESTSENT: friendRequestSent,
       FRIENDREQUESTRECIEVED: friendRequestRecieved,
       FRIENDS: friends,
-      FRIENDS: friends,
       GENDER: gender,
       AGE: age
     };
@@ -111,7 +109,6 @@ class UserModel {
         favorites = doc[FAVORITES],
         friendRequestSent = doc[FRIENDREQUESTSENT],
         friendRequestRecieved = doc[FRIENDREQUESTRECIEVED],
-        friends = doc[FRIENDS];
         friends = doc[FRIENDS],
         gender = doc[GENDER],
         age = doc[AGE];
