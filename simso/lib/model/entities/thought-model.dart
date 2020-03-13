@@ -1,5 +1,5 @@
 class Thought {
-  String documentID; //firestore doc id
+  String thoughtId; //firestore doc id
   String uid;
   String text;
   DateTime timestamp;
@@ -19,7 +19,7 @@ class Thought {
   }
 
   Thought.clone(Thought c) {
-    this.documentID = c.documentID;
+    this.thoughtId = c.thoughtId;
     this.uid = c.uid;
     this.text = c.text;
     this.timestamp = c.timestamp;
@@ -46,7 +46,7 @@ class Thought {
       thought.timestamp = DateTime.fromMillisecondsSinceEpoch(
         data[Thought.TIMESTAMP].millisecondsSinceEpoch);
     }
-    thought.documentID = docID;
+    thought.thoughtId = docID;
     return thought;
   }
 
