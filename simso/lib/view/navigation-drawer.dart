@@ -11,10 +11,12 @@ import '../model/entities/local-user.dart';
 import '../model/entities/friend-model.dart';
 import '../model/entities/user-model.dart';
 import '../model/entities/thought-model.dart';
+import '../model/entities/dictionary-word-model.dart';
 import '../model/services/ifriend-service.dart';
 import '../model/services/ithought-service.dart';
 import '../model/entities/song-model.dart';
 import '../model/services/isong-service.dart';
+import '../model/services/idictionary-service.dart';
 //view imports
 import '../view/friends-page.dart';
 import '../view/homepage.dart';
@@ -36,7 +38,8 @@ class MyDrawer extends StatelessWidget {
   final LocalUser localUserFunction = LocalUser();
   final IFriendService friendService = locator<IFriendService>();
   final ISongService _songService = locator<ISongService>();
-  final IThoughtService ThoughtService = locator<IThoughtService>();
+  final IThoughtService _thoughtService = locator<IThoughtService>();
+  final IDictionaryService _dictionaryService = locator<IDictionaryService>();
 
   MyDrawer(this.context, this.user);
 
@@ -74,7 +77,8 @@ class MyDrawer extends StatelessWidget {
 
   void navigateMyThoughts() async {
     List<Thought> myThoughtsList =
-        await ThoughtService.getThoughts(user.uid.toString());
+        await _thoughtService.getThoughts(user.uid.toString());
+    
     Navigator.push(
         context,
         MaterialPageRoute(

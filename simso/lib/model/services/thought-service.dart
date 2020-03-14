@@ -1,15 +1,39 @@
 import 'package:simso/model/entities/thought-model.dart';
+import 'package:simso/model/entities/dictionary-word-model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:simso/service-locator.dart';
 import 'ithought-service.dart';
+import 'idictionary-service.dart';
 
 class ThoughtService extends IThoughtService {
+  IDictionaryService _dictionaryService = locator<IDictionaryService>();
+
   @override
-  Future<String> addThought(Thought thought) async {
-    DocumentReference ref = await Firestore.instance
+  Future<void> addThought(Thought thought) async {
+
+    await Firestore.instance.collection(Thought.THOUGHTS_COLLECTION)
+      .add(thought.serialize())
+      .then((docRef) {
+        thought.thoughtId = docRef.documentID;
+      })
+      .catchError((onError) {
+        print(onError);
+        return null;
+      });
+    
+    _dictionaryService.updateDictionary(thought, null, null);
+  }
+
+  @override
+  Future<void> updateThought(Thought thought) async {
+    await Firestore.instance
         .collection(Thought.THOUGHTS_COLLECTION)
-        .add(thought.serialize());
-    return ref.documentID;
+        .document(thought.thoughtId)
+        .setData(thought.serialize());
+    //return ref.documentID;
+    //get dictionary
+
+    _dictionaryService.updateDictionary(thought, null, null);
   }
 
   @override
@@ -21,7 +45,7 @@ class ThoughtService extends IThoughtService {
           .orderBy(Thought.TIMESTAMP)
           .getDocuments();
       var myThoughtsList = <Thought>[];
-      print("Firebase thought-service.dart getThoughts() called");
+      
 
       if (querySnapshot == null || querySnapshot.documents.length == 0) {
         var newThought = Thought(
@@ -40,5 +64,17 @@ class ThoughtService extends IThoughtService {
     } catch (e) {
       throw e;
     }
+  }
+
+  Future<void> deleteThought(String docID) async {
+    try{
+    await Firestore.instance
+        .collection(Thought.THOUGHTS_COLLECTION)
+        .document(docID)
+        .delete();
+    } catch (e){
+      throw e;
+    }
+
   }
 }
