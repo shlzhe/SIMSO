@@ -67,11 +67,15 @@ class MyDrawer extends StatelessWidget {
   }
 
   void signOut() async {
-    String readInData = await localUserFunction.readLocalUser();
-    String credential = await localUserFunction.readCredential();
-    int i = readInData.indexOf(' ');
-    user.email = readInData.substring(0,i);
-    user.password= readInData.substring(i+1);
+    String readInData;
+    String credential;
+    try{
+      readInData = await localUserFunction.readLocalUser();
+      credential = await localUserFunction.readCredential();
+      int i = readInData.indexOf(' ');
+      user.email = readInData.substring(0,i);
+      user.password= readInData.substring(i+1);
+    }catch(error){}
     FirebaseAuth.instance.signOut();    //Email/pass sign out
     GoogleSignIn().signOut();
     //Display confirmation dialog box after user clicking on "Sign Out" button

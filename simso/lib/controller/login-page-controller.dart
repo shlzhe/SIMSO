@@ -26,7 +26,7 @@ class LoginPageController{
     try{
       state.user.uid = await userService.login(state.user);
       if (state.user.uid!=''||state.user.uid!=null){
-        if (state.setTouchID) state.localUserFunction.writeLocalUser(state.user.email+ " "+ state.user.password);
+        if (state.setTouchID||state.setCredential) state.localUserFunction.writeLocalUser(state.user.email+ " "+ state.user.password);
         if (state.setCredential) {
           state.localUserFunction.writeCredential('true');
         }
