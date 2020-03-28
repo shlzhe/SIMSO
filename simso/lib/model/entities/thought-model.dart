@@ -2,6 +2,7 @@ class Thought {
   String thoughtId; //firestore doc id
   String uid;
   String text;
+  String email;
   DateTime timestamp;
   List<dynamic> tags;
 
@@ -10,11 +11,13 @@ class Thought {
     this.text,
     this.timestamp,
     this.tags,
+    this.email,
   });
 
   Thought.empty() {
     this.uid = '';
     this.text = '';
+    this.email = '';
     this.tags = <dynamic>[];
   }
 
@@ -23,6 +26,7 @@ class Thought {
     this.uid = c.uid;
     this.text = c.text;
     this.timestamp = c.timestamp;
+    this.email = c.email;
     //.. iterates to create deep copy
     this.tags = <dynamic>[]..addAll(c.tags);
   }
@@ -33,6 +37,7 @@ class Thought {
       TEXT: text,
       TIMESTAMP: timestamp,
       TAGS: tags,
+      EMAIL: email,
     };
   }
 
@@ -41,6 +46,7 @@ class Thought {
       uid: data[Thought.UID],
       text: data[Thought.TEXT],
       tags: data[Thought.TAGS],
+      email: data[Thought.EMAIL],
     );
     if(data[Thought.TIMESTAMP] != null){
       thought.timestamp = DateTime.fromMillisecondsSinceEpoch(
@@ -55,4 +61,5 @@ class Thought {
   static const TEXT = 'text';
   static const TIMESTAMP = 'timestamp';
   static const TAGS = 'tags';
+  static const EMAIL = 'email';
 }

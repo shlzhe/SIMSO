@@ -3,11 +3,15 @@ import 'package:simso/model/entities/myfirebase.dart';
 import 'package:simso/model/entities/song-model.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/model/services/ilimit-service.dart';
+import 'package:simso/model/services/ithought-service.dart';
 import 'package:simso/model/services/itimer-service.dart';
 import 'package:simso/model/services/itouch-service.dart';
+import 'package:simso/model/services/iuser-service.dart';
+import 'package:simso/service-locator.dart';
 import 'package:simso/view/add-photo-page.dart';
 import 'package:simso/view/homepage.dart';
 import 'package:simso/view/mainChat-page.dart';
+import 'package:simso/view/new-content.dart';
 import '../view/add-music-page.dart';
 import '../view/add-thought-page.dart';
 import '../model/entities/globals.dart' as globals;
@@ -21,6 +25,8 @@ class HomepageController {
   List<UserModel> userList;
   List<SongModel> songList = new List<SongModel>();
   String userID;
+  IUserService userService = locator<IUserService>();
+  final IThoughtService thoughtService = locator<IThoughtService>();
 
   HomepageController(this.state, this.timerService, this.touchService,
       this.limitService, this.songList);
@@ -122,5 +128,53 @@ class HomepageController {
         MaterialPageRoute(
           builder: (context) => MainChatPage(state.user,userList,currentIndex),
         ));
+  }
+
+  void newContent() async {
+    Navigator.push(state.context, MaterialPageRoute(
+      builder: (context)=>NewContentPage(state.user)));
+  }
+
+  void snapshots() {
+    if (state.snapshots == false){
+      state.meme = false;
+      state.thoughts = false;
+      state.music = false;
+      state.snapshots = true;
+      state.stateChanged((){});
+    }
+  }
+
+  void music() {
+    if (state.music == false){
+      state.stateChanged((){
+        state.meme = false;
+        state.thoughts = false;
+        state.music = true;
+        state.snapshots = false;
+      });
+    }
+  }
+
+  void thoughts() async {
+    state.publicThoughtsList = await thoughtService.contentThoughtList(state.friends, state.user.friends);
+    if (state.thoughts == false){
+      state.meme = false;
+      state.thoughts = true;
+      state.music = false;
+      state.snapshots = false;
+      state.stateChanged((){});
+    }
+    state.stateChanged((){});
+  }
+
+  void meme() {
+    if (state.meme == false){
+      state.meme = true;
+      state.thoughts = false;
+      state.music = false;
+      state.snapshots = false;
+      state.stateChanged((){});
+    }
   }
 }
