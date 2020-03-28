@@ -61,7 +61,10 @@ class NewContentPage extends StatefulWidget{
                     borderRadius: BorderRadius.circular(30),
                   ),
                   child: ListTile(
-                    title: Text(publicThoughtsList.elementAt(index).email + ' '+ publicThoughtsList.elementAt(index).timestamp.toLocal().toString()),
+                    title: Text(
+                      publicThoughtsList.elementAt(index).email + ' '+ publicThoughtsList.elementAt(index).timestamp.toLocal().toString(),
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
