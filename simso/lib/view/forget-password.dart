@@ -41,36 +41,37 @@ class ForgetPassword extends StatefulWidget{
     return Scaffold(
       body: Form(
         key: formKey,
-              child: displayQuestions ? ListView(
-                children: <Widget>[
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: questions[q1] ,
-                      hintStyle: TextStyle(color: DesignConstants.yellow),
-                      labelStyle: TextStyle(color: DesignConstants.yellow),
-                    ),
-                    keyboardType: TextInputType.emailAddress,
-                    onSaved: controller.saveA1,
-                    style: TextStyle(color: DesignConstants.yellow),
-                  ),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: questions[q2] ,
-                      hintStyle: TextStyle(color: DesignConstants.yellow),
-                      labelStyle: TextStyle(color: DesignConstants.yellow),
-                    ),
-                    keyboardType: TextInputType.emailAddress,
-                    onSaved: controller.saveA2,
-                    style: TextStyle(color: DesignConstants.yellow),
-                  ),
-                  RaisedButton(
-                    child: Text('Reset', style: TextStyle(color: DesignConstants.yellow),),
-                    color: DesignConstants.blue,
-                    onPressed: controller.resetWithQA,),
-                  Text(msg, style: TextStyle(color: DesignConstants.red),),
-                ],
-              )
-              :
+              child: 
+              //  displayQuestions ? ListView(
+              //   children: <Widget>[
+              //     TextFormField(
+              //       decoration: InputDecoration(
+              //         labelText: questions[q1] ,
+              //         hintStyle: TextStyle(color: DesignConstants.yellow),
+              //         labelStyle: TextStyle(color: DesignConstants.yellow),
+              //       ),
+              //       keyboardType: TextInputType.emailAddress,
+              //       onSaved: controller.saveA1,
+              //       style: TextStyle(color: DesignConstants.yellow),
+              //     ),
+              //     TextFormField(
+              //       decoration: InputDecoration(
+              //         labelText: questions[q2] ,
+              //         hintStyle: TextStyle(color: DesignConstants.yellow),
+              //         labelStyle: TextStyle(color: DesignConstants.yellow),
+              //       ),
+              //       keyboardType: TextInputType.emailAddress,
+              //       onSaved: controller.saveA2,
+              //       style: TextStyle(color: DesignConstants.yellow),
+              //     ),
+              //     RaisedButton(
+              //       child: Text('Reset', style: TextStyle(color: DesignConstants.yellow),),
+              //       color: DesignConstants.blue,
+              //       onPressed: controller.resetWithQA,),
+              //     Text(msg, style: TextStyle(color: DesignConstants.red),),
+              //   ],
+              // )
+              // :
               ListView(
           children: <Widget>[
                   TextFormField(
@@ -91,12 +92,12 @@ class ForgetPassword extends StatefulWidget{
                     child: Text('Reset'),
                     onPressed: controller.checkEmail,
                   ),
-                  RaisedButton(
-                    textColor: DesignConstants.yellow,
-                    color: DesignConstants.blue,
-                    child: Text('Answer Questions'),
-                    onPressed: controller.answerQuestions,
-                  ),
+                  // RaisedButton(
+                  //   textColor: DesignConstants.yellow,
+                  //   color: DesignConstants.blue,
+                  //   child: Text('Answer Questions'),
+                  //   onPressed: controller.answerQuestions,
+                  // ),
           ],
         )
       ),
