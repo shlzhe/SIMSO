@@ -134,8 +134,10 @@ class MainChatPageController {
     } else if (state.friendFlag == true) {
       state.friendFlag = false;
       List<UserModel> userList;
+      
       try {
         userList = await MyFirebase.getUsers();
+       
       } catch (e) {
         throw e.toString();
       }

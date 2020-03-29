@@ -49,8 +49,9 @@ class PersonalChatPageState extends State<PersonalChatPage> {
   Widget build(BuildContext context) {
     this.context = context;
     return Scaffold(
-    
+      backgroundColor: DesignConstants.blue,
       appBar: AppBar(
+        elevation: 0.0,
         centerTitle: true,
         title: new Column(
             children: <Widget>[
@@ -68,7 +69,18 @@ class PersonalChatPageState extends State<PersonalChatPage> {
         ),
         backgroundColor: DesignConstants.blue,
       ),
-      body: Text('Personal Chat Screen with SimSo index $index'),
+      body: //Text('Personal Chat Screen with SimSo index $index'),
+      Container(
+       decoration: BoxDecoration(
+         color: Colors.white, 
+         borderRadius: BorderRadius.only(
+           topLeft:Radius.circular(30),
+           topRight: Radius.circular(30)
+         )
+         ),
+         //Show message 
+         
+      )
     );
 }
 }
