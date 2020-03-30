@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:simso/model/entities/myfirebase.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/model/services/itimer-service.dart';
@@ -18,7 +20,7 @@ class PersonalChatPageController {
   String userID;
   //Constructor
   PersonalChatPageController (this.state);
-
+  TextEditingController c;
 
   
   onTap(int index) async {
@@ -39,17 +41,19 @@ class PersonalChatPageController {
         ));
   
   }
- 
+ FormState value;
   void send() {
     print('send() called');
-    if(!state.formKey.currentState.validate()){
-      FormState value= state.formKey.currentState;
-      print(value);
-    
-     
-      //Save text message into message collection (Firebase)
+    if(!state.formKey.currentState.validate()){   //NOT validated text
+      
       return;
-    }
+     }
+      //value= state.formKey.currentState;   //Capture input message
+      state.formKey.currentState.save();
+      
+      
+     
+     
   }
 
   String validateTextMessage(String value) {
@@ -73,8 +77,37 @@ class PersonalChatPageController {
     return null;
   }
 
-  void saveTextMessage(String newValue) {
+  void saveTextMessage(String newValue) {  //newValue is validated input text msg
     print('saveTextMessage() called');
+    
+    state.c.clear(); //Clear form field after sending msg
+    //check info
+    print('Sender: ${state.user.uid}');
+    print('Sent: $newValue');
+    print('Receiver:: ${state.userList[state.index].uid}');
+        
+    //Save text message into message collection (Firebase)
+
+    //Capture date time for sent message
+    var now=DateTime.now();
+    String formattedDate = DateFormat('MM-dd-yyyy - HH:mm:ss').format(now);
+    
+    print('Now: $formattedDate');
+
+    //Adding a new DocumentReference to messages
+    Firestore.instance.collection('messages').document().
+      setData({
+        'isLike': 'false',
+        'receiver': '${state.userList[state.index].uid}',
+        'sender': '${state.user.uid}',
+        'text': '$newValue',
+        'time': '$formattedDate',
+        'unread': 'true',
+      });
+
+
+
+
   }
 
   

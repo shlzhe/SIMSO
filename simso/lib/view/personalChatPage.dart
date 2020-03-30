@@ -13,6 +13,7 @@ import '../service-locator.dart';
 import 'design-constants.dart';
 
 class PersonalChatPage extends StatefulWidget {
+  
   final UserModel user;
   int index; //index of selected Simso
   List<UserModel>userList;
@@ -25,6 +26,7 @@ class PersonalChatPage extends StatefulWidget {
 }
 
 class PersonalChatPageState extends State<PersonalChatPage> {
+  Message newMessage;
   BuildContext context;
   IUserService userService = locator<IUserService>();
   ITimerService timerService = locator<ITimerService>();
@@ -41,11 +43,31 @@ class PersonalChatPageState extends State<PersonalChatPage> {
     controller = PersonalChatPageController(this);
   
   }
-  
+  final c = TextEditingController();
+  String result="";
+  String text = "initial";
   void stateChanged(Function f) {
     setState(f);
   }
- 
+ @override
+ void initState(){
+   c.addListener((){
+     final text = c.text.toLowerCase();
+     c.value = c.value.copyWith(
+       text:text,
+       selection:TextSelection(baseOffset:text.length, extentOffset: text.length),
+       composing: TextRange.empty
+     );
+   });
+   super.initState();
+ }
+
+ @override
+ void dispose(){
+   c?.dispose();
+   super.dispose();
+ }
+
   @override
   Widget build(BuildContext context) {
     this.context = context;
@@ -94,7 +116,7 @@ class PersonalChatPageState extends State<PersonalChatPage> {
                   scrollPadding: EdgeInsets.all(8),
                   decoration: InputDecoration(
                         
-                        hintText: 'enter your message',
+                        hintText: 'start typing...',
                         hintStyle: TextStyle(color: DesignConstants.yellow),
                         contentPadding: EdgeInsets.all(10),
                         enabledBorder: OutlineInputBorder(
@@ -105,28 +127,30 @@ class PersonalChatPageState extends State<PersonalChatPage> {
                       ),
                       validator: controller.validateTextMessage,
                       onSaved: controller.saveTextMessage,
-                      onFieldSubmitted: (key){key='';},
                       autocorrect: true,
-
+                      
+                      controller: c,  //to delete sent msg after clicking send
+                     
                       style: TextStyle(color: DesignConstants.yellow,fontStyle: FontStyle.italic)
                 ),
               ),
           
                 Row(
-                  children: <Widget>[        
+                  children: <Widget>[      
+                     
                 IconButton(
                   icon: Icon(Icons.photo, color: DesignConstants.yellow,),
-                  onPressed: null
+                  onPressed: (){}
+             
                   ),
                  IconButton(
                   icon: Icon(Icons.send, color: DesignConstants.yellow,),
                   onPressed: controller.send,
+                  
                   ),
-      
-
                   ],
                 ),
-              
+                //------------------------------------------------------------
               
           
             //Show message    
