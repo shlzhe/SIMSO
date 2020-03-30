@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:simso/model/entities/myfirebase.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/model/services/itimer-service.dart';
 import 'package:simso/model/services/itouch-service.dart';
+import 'package:simso/view/design-constants.dart';
 import 'package:simso/view/mainChat-page.dart';
 import 'package:simso/view/personalChatPage.dart';
 
@@ -37,4 +39,43 @@ class PersonalChatPageController {
         ));
   
   }
+ 
+  void send() {
+    print('send() called');
+    if(!state.formKey.currentState.validate()){
+      FormState value= state.formKey.currentState;
+      print(value);
+    
+     
+      //Save text message into message collection (Firebase)
+      return;
+    }
+  }
+
+  String validateTextMessage(String value) {
+    print(value);
+    print('validateTextMessage() called');
+     //Avoid null text sent
+     if (value == '') {
+    
+    //Showing toast message
+    Fluttertoast.showToast(
+      msg: "Enter something first",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIos: 1,
+      backgroundColor: DesignConstants.red,
+      textColor: DesignConstants.yellow,
+      fontSize: 16,
+    );
+      return '';
+    }
+    return null;
+  }
+
+  void saveTextMessage(String newValue) {
+    print('saveTextMessage() called');
+  }
+
+  
 }

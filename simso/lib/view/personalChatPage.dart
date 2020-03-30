@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:simso/controller/mainChatPage-controller.dart';
 import 'package:simso/controller/personalChatPage-controller.dart';
+import 'package:simso/model/entities/message-model.dart';
 import 'package:simso/model/entities/myfirebase.dart';
 import 'package:simso/model/services/itouch-service.dart';
 import 'package:simso/view/navigation-drawer.dart';
@@ -16,7 +17,7 @@ class PersonalChatPage extends StatefulWidget {
   int index; //index of selected Simso
   List<UserModel>userList;
   PersonalChatPage(this.user, this.index,this.userList);        //Receive data from mainChatPage controller
-  
+
   @override
   State<StatefulWidget> createState() {
     return PersonalChatPageState(user, index,userList);
@@ -60,7 +61,6 @@ class PersonalChatPageState extends State<PersonalChatPage> {
               :CachedNetworkImage(imageUrl: userList[index].profilePic, height:30),
           
               //Display username
-          
               Text('${userList[index].username}',style: TextStyle(fontSize: 15),),
               
              
@@ -70,17 +70,81 @@ class PersonalChatPageState extends State<PersonalChatPage> {
         backgroundColor: DesignConstants.blue,
       ),
       body: //Text('Personal Chat Screen with SimSo index $index'),
-      Container(
-       decoration: BoxDecoration(
-         color: Colors.white, 
-         borderRadius: BorderRadius.only(
-           topLeft:Radius.circular(30),
-           topRight: Radius.circular(30)
-         )
-         ),
-         //Show message 
+      
+      Column(
+        
+        children: <Widget>[
+
+          Expanded(
+            child: Container(
+             decoration: BoxDecoration(
+               color: DesignConstants.blue, 
+               borderRadius: BorderRadius.only(
+                 topLeft:Radius.circular(30),
+                 topRight: Radius.circular(30)
+               )
+               ),      
+                    
+            ),
+          ),
+              
+              Form(
+                  key: formKey,
+                  child: TextFormField(
+                  scrollPadding: EdgeInsets.all(8),
+                  decoration: InputDecoration(
+                        
+                        hintText: 'enter your message',
+                        hintStyle: TextStyle(color: DesignConstants.yellow),
+                        contentPadding: EdgeInsets.all(10),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: DesignConstants.yellow,width:3)
+                        ),
+                        
+                        labelStyle: TextStyle(color: DesignConstants.yellow),
+                      ),
+                      validator: controller.validateTextMessage,
+                      onSaved: controller.saveTextMessage,
+                      onFieldSubmitted: (key){key='';},
+                      autocorrect: true,
+
+                      style: TextStyle(color: DesignConstants.yellow,fontStyle: FontStyle.italic)
+                ),
+              ),
+          
+                Row(
+                  children: <Widget>[        
+                IconButton(
+                  icon: Icon(Icons.photo, color: DesignConstants.yellow,),
+                  onPressed: null
+                  ),
+                 IconButton(
+                  icon: Icon(Icons.send, color: DesignConstants.yellow,),
+                  onPressed: controller.send,
+                  ),
+      
+
+                  ],
+                ),
+              
+              
+          
+            //Show message    
+             
+            
+          
+
+          
          
-      )
+           
+        ],
+       
+       
+      ),
+     
+       
     );
+    
 }
+
 }
