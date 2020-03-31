@@ -118,6 +118,8 @@ class LoginPageController {
     if (value == '' || value==null) {
       state.entry = false;
       state.setCredential = false;
+      state.credential = 'false';
+      state.passwordController.text = '';
     }
     state.stateChanged(() {});
   }

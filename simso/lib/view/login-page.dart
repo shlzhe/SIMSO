@@ -37,6 +37,7 @@ class LoginPageState extends State<LoginPage> {
   bool checkBiometric = false;
   bool setTouchID = false;
   bool setCredential = false;
+  String msg='Delete email to show Create Account';
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
   String authBio = "Not Authorized";
@@ -98,6 +99,7 @@ class LoginPageState extends State<LoginPage> {
                         Image.network(
                           DesignConstants.logo,
                         ),
+                        entry || setCredential ? Text(msg, style: TextStyle(color: DesignConstants.red,),):Text(''),
                         Container(
                           padding: EdgeInsets.only(left: 30, right: 30),
                           child: Column(
@@ -174,7 +176,7 @@ class LoginPageState extends State<LoginPage> {
                                       ),
                                     ],
                                   ),
-                            (entry == true ||credential =='true' || emailController.text!='')
+                            (entry == true || credential =='true' || emailController.text!='')
                                 ? FlatButton(
                                     onPressed: controller.goToHomepage,
                                     child: Text(
