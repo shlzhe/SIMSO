@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:simso/model/entities/message-model.dart';
 import 'package:simso/model/entities/myfirebase.dart';
 import 'package:simso/model/entities/song-model.dart';
 import 'package:simso/model/entities/user-model.dart';
@@ -126,6 +127,37 @@ class HomepageController {
   //friendListUID only contains friend UIDs
   
 
+  List<Message> messageCollection;
+ 
+
+  try {
+      //Stuff in userList
+      messageCollection = await MyFirebase.getMessages(state.user.uid);
+    } catch (e) {
+      throw e.toString();
+    }
+  for(int i = 0; i< messageCollection.length; i++){
+    //GET ALL MESSAGES WITH SENDER = CURRENT USER UID
+    if(messageCollection[i].sender == userList[currentIndex].uid) {
+      //Create a Collecion where sender is current user ONLY
+      print('Testing $i:${messageCollection[i].text}');
+
+    }   
+  }
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
 
 
 

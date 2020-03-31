@@ -26,7 +26,10 @@ class PersonalChatPage extends StatefulWidget {
 }
 
 class PersonalChatPageState extends State<PersonalChatPage> {
-  Message newMessage;
+  List<Message> messageCollecion;
+  
+  Message mesaage;
+  
   BuildContext context;
   IUserService userService = locator<IUserService>();
   ITimerService timerService = locator<ITimerService>();
@@ -105,11 +108,13 @@ class PersonalChatPageState extends State<PersonalChatPage> {
                  topLeft:Radius.circular(30),
                  topRight: Radius.circular(30)
                )
-               ),      
+               ),
+           
                     
             ),
+            
           ),
-              
+               
               Form(
                   key: formKey,
                   child: TextFormField(

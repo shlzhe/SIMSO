@@ -105,6 +105,7 @@ class PersonalChatPageController {
         'unread': 'true',
       });
 
+    //Collect all message pieces
 
 
 
