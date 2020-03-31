@@ -31,9 +31,28 @@ class PersonalChatPageState extends State<PersonalChatPage> {
 
   buildMessage(Message message, bool isMe){
     return Container(
-      color: DesignConstants.blueGreyish,
+      padding: EdgeInsets.symmetric(horizontal:25,vertical:15),
+      
       margin: isMe ? EdgeInsets.only(top:8, bottom:8,left:150): EdgeInsets.only(top:8, bottom:8,left:150),
-      child:Text(message.text, style: TextStyle(color:DesignConstants.yellow, fontSize: 20)),
+      decoration: BoxDecoration(
+        color: isMe? DesignConstants.blueGreyish: DesignConstants.blueLight,
+        borderRadius: isMe ? BorderRadius.only(
+          topLeft: Radius.circular(15),
+          bottomLeft:Radius.circular(15),
+        )
+        : 
+        BorderRadius.only(
+          topRight: Radius.circular(15),
+          bottomRight:Radius.circular(15),
+        ),
+        ),
+      child : Column(children: <Widget>[
+        SizedBox(height:8),
+        Text(message.time, style: TextStyle(fontStyle: FontStyle.italic)),
+        Text(message.text, style: TextStyle(color:DesignConstants.yellow, fontSize: 20)),
+      ],
+        
+      )
     );
   }
 
@@ -124,6 +143,7 @@ class PersonalChatPageState extends State<PersonalChatPage> {
              
              child: filteredMessages.length != 0 
             ? ListView.builder(
+              
               padding: EdgeInsets.only(top:15),
               itemCount: filteredMessages.length,
               itemBuilder: (BuildContext context,int index){

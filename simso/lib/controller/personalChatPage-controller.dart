@@ -117,7 +117,7 @@ class PersonalChatPageController {
 
     //Capture date time for sent message
     var now=DateTime.now();
-    //String formattedDate = DateFormat('MM-dd-yyyy - HH:mm:ss').format(now);
+    String formattedDate = DateFormat('MM-dd-yyyy - HH:mm:ss').format(now);
     
      //UPDATE FILTEREDMESSAGE
     try {
@@ -138,7 +138,7 @@ class PersonalChatPageController {
         'receiver': '${state.userList[state.index].uid}',
         'sender': '${state.user.uid}',
         'text': '$newValue',
-        'time': '$now',
+        'time': '$formattedDate',
         'unread': 'true',
         'counter': counter,
       });
