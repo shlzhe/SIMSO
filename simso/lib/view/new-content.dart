@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:simso/controller/new-content-page-controller.dart';
 import 'package:simso/model/entities/thought-model.dart';
 import 'package:simso/model/entities/user-model.dart';
-import 'package:simso/model/services/iuser-service.dart';
-import 'package:simso/service-locator.dart';
 import 'package:simso/view/design-constants.dart';
 
 class NewContentPage extends StatefulWidget{

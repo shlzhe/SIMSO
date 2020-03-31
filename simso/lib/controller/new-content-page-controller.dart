@@ -1,4 +1,3 @@
-import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/model/services/ithought-service.dart';
 import 'package:simso/model/services/iuser-service.dart';
 import 'package:simso/service-locator.dart';
