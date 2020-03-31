@@ -46,6 +46,7 @@ class CreateAccountController{
     MyDialog.showProgressBar(state.context);
     try{
       state.user.uid = await userService.createAccount(state.user);
+      
       if (state.user.uid!=''||state.user.uid!=null){
         userService.createUserDB(state.user);
       }

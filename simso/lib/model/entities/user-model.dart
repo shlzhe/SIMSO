@@ -31,6 +31,7 @@ class UserModel {
     this.friends = [];
     this.gender = 'S';
     this.age = 0;
+    this.answers = [];
   }
   UserModel.clone(UserModel b) {
     this.uid = b.uid;
@@ -45,6 +46,7 @@ class UserModel {
     this.friends = b.friends;
     this.gender = b.gender;
     this.age = b.age;
+    this.answers = b.answers;
   }
   String uid;
   String username;
@@ -59,6 +61,7 @@ class UserModel {
   List<dynamic> friendRequestSent;
   List<dynamic> friendRequestRecieved;
   List<dynamic> friends;
+  List<dynamic> answers;
   String gender;
   int age;
 
@@ -77,6 +80,7 @@ class UserModel {
   static const FRIENDS = 'friends';
   static const GENDER = 'gender';
   static const AGE = 'age';
+  static const ANSWERS = 'Answers';
 
   Map<String, dynamic> serialize() {
     return <String, dynamic>{
@@ -93,7 +97,8 @@ class UserModel {
       FRIENDREQUESTRECIEVED: friendRequestRecieved,
       FRIENDS: friends,
       GENDER: gender,
-      AGE: age
+      AGE: age,
+      ANSWERS: answers,
     };
   }
 
@@ -111,5 +116,6 @@ class UserModel {
         friendRequestRecieved = doc[FRIENDREQUESTRECIEVED],
         friends = doc[FRIENDS],
         gender = doc[GENDER],
-        age = doc[AGE];
+        age = doc[AGE],
+        answers = doc[ANSWERS];
 }
