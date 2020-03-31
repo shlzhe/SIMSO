@@ -191,7 +191,7 @@ class PersonalChatPageState extends State<PersonalChatPage> {
 
               ),
 
-                Text('${filteredMessages.length}'),
+                //Text('${filteredMessages.length}'),
                 Row(
                   children: <Widget>[      
                      
