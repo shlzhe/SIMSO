@@ -166,11 +166,13 @@ class MyDrawer extends StatelessWidget {
         MaterialPageRoute(
           builder: (context) => RecommendFriends(user),
         ));
+    checkLimits();
   }
 
   void navigateTimeManagement() async {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => TimeManagementPage(user)));
+    checkLimits();
   }
 
   void navigateMyMusic() async {
@@ -189,6 +191,7 @@ class MyDrawer extends StatelessWidget {
         builder: (context) => MyMusic(user, songlist),
       ),
     );
+    checkLimits();
   }
 
   void checkLimits() async {
@@ -197,7 +200,7 @@ class MyDrawer extends StatelessWidget {
     var touchLimitReached = (globals.getDate(globals.limit.overrideThruDate).difference(DateTime.now()).inDays != 0
           && globals.touchCounter.touches > globals.limit.touchLimit);  
 
-    if (timeLimitReached || touchLimitReached) {
+    if ((timeLimitReached && globals.limit.timeLimitMin > 0) || (touchLimitReached && globals.limit.touchLimit > 0)) {
       LimitReachedDialog.info(
           context: this.context, 
           user: this.user, 

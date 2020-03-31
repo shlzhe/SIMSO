@@ -82,7 +82,7 @@ class LimitReachedDialog {
                   'Logout',
                   style: TextStyle(color: Colors.white),
                 ),
-                color: Colors.green,
+                color: DesignConstants.blueLight,
                 onPressed: logOut,
               ),
               RaisedButton(
@@ -90,7 +90,7 @@ class LimitReachedDialog {
                   'Ignore Limit',
                   style: TextStyle(color: Colors.white),
                 ),
-                color: Colors.green,
+                color: DesignConstants.blueLight,
                 onPressed: ignoreLimit,
               ),
             ],
