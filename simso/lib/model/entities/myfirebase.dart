@@ -53,6 +53,9 @@ class MyFirebase{
           print('FilteredMessages is not empty');
           filteredMessages.add(Message.deserialize(doc.data));
     }
+          //SORTED FILTEREDMESSAGES BASED ON COUNTER
+          filteredMessages.sort((a, b)=> a.counter.compareTo(b.counter));
+
           return filteredMessages;
     }
     

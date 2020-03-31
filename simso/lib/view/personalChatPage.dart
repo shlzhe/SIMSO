@@ -77,7 +77,7 @@ class PersonalChatPageState extends State<PersonalChatPage> {
     controller = PersonalChatPageController(this);
   
   }
-  final c = TextEditingController();
+  var c = TextEditingController();
   String result="";
   String text = "initial";
   void stateChanged(Function f) {
@@ -163,6 +163,7 @@ class PersonalChatPageState extends State<PersonalChatPage> {
               Form(
                   key: formKey,
                   child: TextFormField(
+                  
                   scrollPadding: EdgeInsets.all(8),
                   decoration: InputDecoration(
                         
@@ -177,13 +178,19 @@ class PersonalChatPageState extends State<PersonalChatPage> {
                       ),
                       validator: controller.validateTextMessage,
                       onSaved: controller.saveTextMessage,
-                      autocorrect: true,
+                      
                       
                       controller: c,  //to delete sent msg after clicking send
                      
                       style: TextStyle(color: DesignConstants.yellow,fontStyle: FontStyle.italic)
                 ),
+                
+
+
+  
+
               ),
+
                 Text('${filteredMessages.length}'),
                 Row(
                   children: <Widget>[      

@@ -140,7 +140,7 @@ class PersonalChatPageController {
         'text': '$newValue',
         'time': '$formattedDate',
         'unread': 'true',
-        'counter': counter,
+        'counter': counter.toInt(),
       });
    
     //UPDATE FILTEREDMESSAGE
