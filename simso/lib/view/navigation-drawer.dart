@@ -30,6 +30,7 @@ import '../view/meme-page.dart';
 import '../view/account-setting-page.dart';
 import '../view/profile-page.dart';
 import '../view/my-music-page.dart';
+import 'limit-reached-dialog.dart';
 //controller import
 
 class MyDrawer extends StatelessWidget {
@@ -43,7 +44,7 @@ class MyDrawer extends StatelessWidget {
 
   MyDrawer(this.context, this.user);
 
-  void navigateHomepage() {
+  void navigateHomepage() async {
     List<SongModel> songlist;
     Navigator.push(
         context,
@@ -52,27 +53,32 @@ class MyDrawer extends StatelessWidget {
                   user,
                   songlist,
                 )));
+    checkLimits();
   }
 
-    void navigateProfile() {
+  void navigateProfile() {
     Navigator.push(context, MaterialPageRoute(
       builder: (context) => ProfilePage(user)
     ));
+    checkLimits();
   }
 
   void navigateSnapshotPage() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => SnapshotPage()));
+    checkLimits();
   }
 
   void navigateMemePage() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => MemePage()));
+    checkLimits();
   }
 
   void navigateAccountSettingPage() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => AccountSettingPage(user)));
+    checkLimits();
   }
 
   void navigateMyThoughts() async {
@@ -83,6 +89,7 @@ class MyDrawer extends StatelessWidget {
         context,
         MaterialPageRoute(
             builder: (context) => MyThoughtsPage(user, myThoughtsList)));
+    checkLimits();
   }
 
   void signOut() async {
@@ -182,6 +189,21 @@ class MyDrawer extends StatelessWidget {
         builder: (context) => MyMusic(user, songlist),
       ),
     );
+  }
+
+  void checkLimits() async {
+    var timeLimitReached = (globals.getDate(globals.limit.overrideThruDate).difference(DateTime.now()).inDays != 0
+          && globals.timer.timeOnAppSec / 60 > globals.limit.timeLimitMin);
+    var touchLimitReached = (globals.getDate(globals.limit.overrideThruDate).difference(DateTime.now()).inDays != 0
+          && globals.touchCounter.touches > globals.limit.touchLimit);  
+
+    if (timeLimitReached || touchLimitReached) {
+      LimitReachedDialog.info(
+          context: this.context, 
+          user: this.user, 
+          timeReached: timeLimitReached);
+        print('Limit Dialog opened');
+      }
   }
 
   @override
