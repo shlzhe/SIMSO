@@ -126,7 +126,7 @@ class HomepageController {
   //Retrieve User Model from friendListUID
   //friendListUID only contains friend UIDs
   
-
+/*
   List<Message> messageCollection;
  
 
@@ -144,7 +144,7 @@ class HomepageController {
 
     }   
   }
-  
+ */
 
 
 

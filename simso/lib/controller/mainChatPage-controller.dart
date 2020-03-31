@@ -94,7 +94,30 @@ class MainChatPageController {
   }
 
   onTap(int index) async {
-    print('tapped SimSo $index');
+    print('tapped SimSo-MainChat $index');
+    //print('Current user: ${state.user.username}');
+    //print('Receiver: ${state.userList[index].username}');
+     //-----------
+      List<Message> filteredMessages=[]; 
+  
+try {
+      //Stuff in userList
+      filteredMessages = await MyFirebase
+                   .getFilteredMessages(state.user.uid, state.userList[index].uid);
+    } catch (e) {
+      throw e.toString();
+    }
+for(int i = 0; i< filteredMessages.length; i++){
+    //GET ALL MESSAGES WITH SENDER = CURRENT USER UID
+    
+      //Create a Collecion where sender is current user ONLY
+      print('([Main Chat] $i:${filteredMessages[i].text}');
+
+    
+  }
+    //-----------
+
+
     //Retrieve selected SimSo user
     List<UserModel> allUsers;
 
@@ -109,7 +132,7 @@ class MainChatPageController {
     Navigator.push(
         state.context,
         MaterialPageRoute(
-          builder: (context) => PersonalChatPage(state.user, index,userList), 
+          builder: (context) => PersonalChatPage(state.user, index,userList,filteredMessages), 
           //Pass current user info + index of selected SimSo
         ));
   }

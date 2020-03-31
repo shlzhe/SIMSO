@@ -13,19 +13,30 @@ import '../service-locator.dart';
 import 'design-constants.dart';
 
 class PersonalChatPage extends StatefulWidget {
+
   
   final UserModel user;
   int index; //index of selected Simso
   List<UserModel>userList;
-  PersonalChatPage(this.user, this.index,this.userList);        //Receive data from mainChatPage controller
+  List<Message>filteredMessages;
+  PersonalChatPage(this.user, this.index,this.userList,this.filteredMessages);        //Receive data from mainChatPage controller
 
   @override
   State<StatefulWidget> createState() {
-    return PersonalChatPageState(user, index,userList);
+    return PersonalChatPageState(user, index,userList,filteredMessages);
   }
 }
 
 class PersonalChatPageState extends State<PersonalChatPage> {
+
+  buildMessage(Message message, bool isMe){
+    return Container(
+      color: DesignConstants.blueGreyish,
+      margin: isMe ? EdgeInsets.only(top:8, bottom:8,left:150): EdgeInsets.only(top:8, bottom:8,left:150),
+      child:Text(message.text, style: TextStyle(color:DesignConstants.yellow, fontSize: 20)),
+    );
+  }
+
   List<Message> messageCollecion;
   
   Message mesaage;
@@ -42,7 +53,8 @@ class PersonalChatPageState extends State<PersonalChatPage> {
   var formKey = GlobalKey<FormState>();
   bool publicFlag = false;
   List<UserModel>userList;
-  PersonalChatPageState(this.user,this.index,this.userList) {
+  List<Message>filteredMessages;
+  PersonalChatPageState(this.user,this.index,this.userList,this.filteredMessages) {
     controller = PersonalChatPageController(this);
   
   }
@@ -109,12 +121,25 @@ class PersonalChatPageState extends State<PersonalChatPage> {
                  topRight: Radius.circular(30)
                )
                ),
-           
-                    
+             
+             child: filteredMessages.length != 0 
+            ? ListView.builder(
+              padding: EdgeInsets.only(top:15),
+              itemCount: filteredMessages.length,
+              itemBuilder: (BuildContext context,int index){
+                final Message message = filteredMessages[index];
+                final bool isMe = message.sender == user.uid;
+                //return Text(filteredMessages[index].text, style: TextStyle(color:DesignConstants.yellow, fontSize: 20));
+                return(buildMessage(message,isMe));
+              }
+              
+              )
+            :Text('start a very first message....',style: TextStyle(color:DesignConstants.yellow, fontSize: 20)),    
+            
             ),
             
           ),
-               
+              
               Form(
                   key: formKey,
                   child: TextFormField(
@@ -139,7 +164,7 @@ class PersonalChatPageState extends State<PersonalChatPage> {
                       style: TextStyle(color: DesignConstants.yellow,fontStyle: FontStyle.italic)
                 ),
               ),
-          
+                Text('${filteredMessages.length}'),
                 Row(
                   children: <Widget>[      
                      
