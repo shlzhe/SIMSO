@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:simso/model/entities/message-model.dart';
 import 'package:simso/model/entities/myfirebase.dart';
 import 'package:simso/model/entities/song-model.dart';
 import 'package:simso/model/entities/user-model.dart';
@@ -106,21 +107,70 @@ class HomepageController {
     print('mainChatPage() called');
     //Retrieve all SimSo users
     try {
+      //Stuff in userList
       userList = await MyFirebase.getUsers();
     } catch (e) {
       throw e.toString();
     }
 
-  //Find current index
+  //Find current index of current user
   int currentIndex=0;
    for(int i = 0; i<userList.length; i++){
       if(userList[i].uid == state.user.uid)   //Found index of current user
          {
+          currentIndex = i;
           break;                                
          }else currentIndex++;
-    }   
+    }
 
-    print('CURRENT INDEX: $currentIndex');
+  //In current user, find all UID of friends and fetch into friendListUID
+  var friendListUID=[];
+  List<UserModel>friendList;
+  for(int i = 0; i<userList[currentIndex].friends.length; i++){
+    friendListUID.add(userList[currentIndex].friends[i]);
+  }
+  //Retrieve User Model from friendListUID
+  //friendListUID only contains friend UIDs
+  
+/*
+  List<Message> messageCollection;
+ 
+
+  try {
+      //Stuff in userList
+      messageCollection = await MyFirebase.getMessages(state.user.uid);
+    } catch (e) {
+      throw e.toString();
+    }
+  for(int i = 0; i< messageCollection.length; i++){
+    //GET ALL MESSAGES WITH SENDER = CURRENT USER UID
+    if(messageCollection[i].sender == userList[currentIndex].uid) {
+      //Create a Collecion where sender is current user ONLY
+      print('Testing $i:${messageCollection[i].text}');
+
+    }   
+  }
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+    print('USER CURRENT INDEX: $currentIndex');
     //Navigate MainChatScreen Page
     //Passing the userList array to MainChatScreen Page
     Navigator.push(
