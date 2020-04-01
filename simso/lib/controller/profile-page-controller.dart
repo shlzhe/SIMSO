@@ -6,12 +6,12 @@ class ProfilePageController {
   ProfilePageState state;
   ProfilePageController(this.state);
 
-  
   void accountSettings() async {
     Navigator.push(
         state.context,
         MaterialPageRoute(
-          builder: (context) => AccountSettingPage(state.user),
-        ));
+            builder: (context) => AccountSettingPage(
+                  state.user,
+                )));
   }
 }

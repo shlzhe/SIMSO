@@ -35,7 +35,7 @@ class HomepageController {
       print("ADD SONG TO LOCAL LIST");
       state.songlist.add(s);
     } else {
-      print("ERROR ADDING SONG TO LOCAL LIST");
+      //print("ERROR ADDING SONG TO LOCAL LIST");
     }
   }
 

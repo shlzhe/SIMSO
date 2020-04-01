@@ -16,6 +16,7 @@ import '../model/services/ifriend-service.dart';
 import '../model/services/ithought-service.dart';
 import '../model/entities/song-model.dart';
 import '../model/services/isong-service.dart';
+import '../model/services/iuser-service.dart';
 import '../model/services/idictionary-service.dart';
 //view imports
 import '../view/friends-page.dart';
@@ -30,6 +31,7 @@ import '../view/meme-page.dart';
 import '../view/account-setting-page.dart';
 import '../view/profile-page.dart';
 import '../view/my-music-page.dart';
+import '../view/music-feed.dart';
 //controller import
 
 class MyDrawer extends StatelessWidget {
@@ -38,26 +40,28 @@ class MyDrawer extends StatelessWidget {
   final LocalUser localUserFunction = LocalUser();
   final IFriendService friendService = locator<IFriendService>();
   final ISongService _songService = locator<ISongService>();
+  final IUserService _userService = locator<IUserService>();
   final IThoughtService _thoughtService = locator<IThoughtService>();
   final IDictionaryService _dictionaryService = locator<IDictionaryService>();
-
+  final bool visit = false;
   MyDrawer(this.context, this.user);
 
   void navigateHomepage() {
     List<SongModel> songlist;
     Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => Homepage(
-                  user,
-                  songlist,
-                )));
+      context,
+      MaterialPageRoute(
+        builder: (context) => Homepage(
+          user,
+          songlist,
+        ),
+      ),
+    );
   }
 
-    void navigateProfile() {
-    Navigator.push(context, MaterialPageRoute(
-      builder: (context) => ProfilePage(user)
-    ));
+  void navigateProfile() {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => ProfilePage(user, visit)));
   }
 
   void navigateSnapshotPage() {
@@ -71,14 +75,14 @@ class MyDrawer extends StatelessWidget {
   }
 
   void navigateAccountSettingPage() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => AccountSettingPage(user)));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => AccountSettingPage(user)));
   }
 
   void navigateMyThoughts() async {
     List<Thought> myThoughtsList =
         await _thoughtService.getThoughts(user.uid.toString());
-    
+
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -89,9 +93,9 @@ class MyDrawer extends StatelessWidget {
     String readInData = await localUserFunction.readLocalUser();
     String credential = await localUserFunction.readCredential();
     int i = readInData.indexOf(' ');
-    user.email = readInData.substring(0,i);
-    user.password= readInData.substring(i+1);
-    FirebaseAuth.instance.signOut();    //Email/pass sign out
+    user.email = readInData.substring(0, i);
+    user.password = readInData.substring(i + 1);
+    FirebaseAuth.instance.signOut(); //Email/pass sign out
     GoogleSignIn().signOut();
     //Display confirmation dialog box after user clicking on "Sign Out" button
     showDialog(
@@ -120,17 +124,19 @@ class MyDrawer extends StatelessWidget {
                 globals.touchCounter = null;
                 globals.limit = null;
                 //Close Drawer, then go back to Front Page
-                Navigator.pop(context);  //Close Dialog box
-                Navigator.pop(context);  //Close Drawer
-                //Navigator.pop(state.context);  //Close Home Page 
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (context)=> LoginPage(
-                    localUserFunction: localUserFunction, 
-                    credential: credential=='true'? credential: null,
-                    email: credential=='true'? user.email: null,
-                    password: credential=="true"? user.password: null,
-                    ),
-                ));
+                Navigator.pop(context); //Close Dialog box
+                Navigator.pop(context); //Close Drawer
+                //Navigator.pop(state.context);  //Close Home Page
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginPage(
+                        localUserFunction: localUserFunction,
+                        credential: credential == 'true' ? credential : null,
+                        email: credential == 'true' ? user.email : null,
+                        password: credential == "true" ? user.password : null,
+                      ),
+                    ));
               },
             ),
             RaisedButton(
@@ -164,6 +170,27 @@ class MyDrawer extends StatelessWidget {
   void navigateTimeManagement() async {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => TimeManagementPage(user)));
+  }
+
+  void navigateMusicFeed() async {
+    List<SongModel> allSongList;
+    List<UserModel> allUserList;
+    try {
+      print("GET SONGS & USERS");
+      allSongList = await _songService.getAllSongList();
+      allUserList = await _userService.readAllUser();
+    } catch (e) {
+      allSongList = <SongModel>[];
+
+      print("SONGLIST LENGTH: " + allSongList.length.toString());
+    }
+    print("SUCCEED IN GETTING SONGS & USERS");
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MusicFeed(user, allUserList, allSongList),
+      ),
+    );
   }
 
   void navigateMyMusic() async {
@@ -230,6 +257,11 @@ class MyDrawer extends StatelessWidget {
             leading: Icon(Icons.group_add),
             title: Text('Recommended Friends'),
             onTap: recommendFriends,
+          ),
+          ListTile(
+            leading: Icon(Icons.music_note),
+            title: Text('Music Feed'),
+            onTap: navigateMusicFeed,
           ),
           ListTile(
             leading: Icon(Icons.music_note),
