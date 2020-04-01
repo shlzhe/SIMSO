@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:simso/model/entities/message-model.dart';
 import 'package:simso/model/entities/myfirebase.dart';
 import 'package:simso/model/entities/song-model.dart';
 import 'package:simso/model/entities/user-model.dart';
@@ -16,6 +17,7 @@ class MainChatPageController {
   ITouchService touchService;
   UserModel user;
   List<UserModel> userList;
+  
   List<SongModel> songList;
 
   bool publicFlag;
@@ -92,9 +94,33 @@ class MainChatPageController {
   }
 
   onTap(int index) async {
-    print('tapped SimSo $index');
+    print('tapped SimSo-MainChat $index');
+    //print('Current user: ${state.user.username}');
+    //print('Receiver: ${state.userList[index].username}');
+     //-----------
+      List<Message> filteredMessages=[]; 
+  
+try {
+      //Stuff in userList
+      filteredMessages = await MyFirebase
+                   .getFilteredMessages(state.user.uid, state.userList[index].uid);
+    } catch (e) {
+      throw e.toString();
+    }
+for(int i = 0; i< filteredMessages.length; i++){
+    //GET ALL MESSAGES WITH SENDER = CURRENT USER UID
+    
+      //Create a Collecion where sender is current user ONLY
+      print('([Main Chat] $i:${filteredMessages[i].text}');
+
+    
+  }
+    //-----------
+
+
     //Retrieve selected SimSo user
     List<UserModel> allUsers;
+
     try {
       userList = await MyFirebase.getUsers();
     } catch (e) {
@@ -106,8 +132,8 @@ class MainChatPageController {
     Navigator.push(
         state.context,
         MaterialPageRoute(
-          builder: (context) => PersonalChatPage(state.user, index,
-              userList), //Pass current user info + index of selected SimSo
+          builder: (context) => PersonalChatPage(state.user, index,userList,filteredMessages), 
+          //Pass current user info + index of selected SimSo
         ));
   }
 
@@ -134,19 +160,18 @@ class MainChatPageController {
     } else if (state.friendFlag == true) {
       state.friendFlag = false;
       List<UserModel> userList;
+      
       try {
         userList = await MyFirebase.getUsers();
+       
       } catch (e) {
         throw e.toString();
       }
       Navigator.push(
           state.context,
           MaterialPageRoute(
-            builder: (context) => MainChatPage(
-                state.user,
-                userList,
-                state
-                    .currentIndex), //Pass current user info + index of selected SimSo
+            builder: (context) => MainChatPage(state.user,userList,state.currentIndex), 
+            //Pass current user info + index of selected SimSo
           ));
     } else if (state.publicFlag == false && state.friendFlag == false) {
       //Navigate to Home Page

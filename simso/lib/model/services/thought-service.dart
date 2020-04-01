@@ -1,4 +1,4 @@
-import 'package:simso/model/entities/thought-model.dart';
+  import 'package:simso/model/entities/thought-model.dart';
 import 'package:simso/model/entities/dictionary-word-model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:simso/service-locator.dart';
@@ -76,5 +76,39 @@ class ThoughtService extends IThoughtService {
       throw e;
     }
 
+  }
+
+  @override
+  Future<List<Thought>> contentThoughtList(bool friends, List<dynamic> friendslist) async {
+    var data = <Thought>[];
+    var friendsThoughtList = <Thought>[];
+    try {
+      QuerySnapshot querySnapshot = await Firestore.instance
+          .collection(Thought.THOUGHTS_COLLECTION)
+          .orderBy(Thought.TIMESTAMP)
+          .getDocuments();
+      for (DocumentSnapshot doc in querySnapshot.documents) {
+        data.add(Thought.deserialize(doc.data, doc.documentID));
+      }
+      if(!friends){ //new content remove friends content
+        try{
+          for (var i in friendslist){
+            data.removeWhere((element) => element.uid==i.toString());
+          }
+        }catch(error){print(error);}
+        return data;
+      }
+      else{
+        try{
+          for (var i in friendslist){//friends content remove public content
+            var temp = data.where((element) => element.uid==i.toString());
+            friendsThoughtList.addAll(temp);
+          }
+        }catch(error){print(error);}
+      }
+      return friendsThoughtList;
+    }catch(error){
+      return data;
+    }
   }
 }

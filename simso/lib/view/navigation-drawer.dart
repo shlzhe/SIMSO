@@ -44,6 +44,7 @@ class MyDrawer extends StatelessWidget {
 
   MyDrawer(this.context, this.user);
 
+<<<<<<< HEAD
   void navigateHomepage() async {
     List<SongModel> songlist;
     Navigator.push(
@@ -54,6 +55,10 @@ class MyDrawer extends StatelessWidget {
                   songlist,
                 )));
     checkLimits();
+=======
+  void navigateHomepage() {
+    Navigator.pop(context);
+>>>>>>> dab6f3fc20ed31c0808d795614e55ba7a3584491
   }
 
   void navigateProfile() {
@@ -93,11 +98,15 @@ class MyDrawer extends StatelessWidget {
   }
 
   void signOut() async {
-    String readInData = await localUserFunction.readLocalUser();
-    String credential = await localUserFunction.readCredential();
-    int i = readInData.indexOf(' ');
-    user.email = readInData.substring(0,i);
-    user.password= readInData.substring(i+1);
+    String readInData;
+    String credential;
+    try{  
+      readInData = await localUserFunction.readLocalUser();
+      credential = await localUserFunction.readCredential();
+      int i = readInData.indexOf(' ');
+      user.email = readInData.substring(0,i);
+      user.password= readInData.substring(i+1);
+    }catch(error){}
     FirebaseAuth.instance.signOut();    //Email/pass sign out
     GoogleSignIn().signOut();
     //Display confirmation dialog box after user clicking on "Sign Out" button
