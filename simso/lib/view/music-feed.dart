@@ -2,9 +2,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:simso/controller/music-feed-controller.dart';
+import 'package:simso/model/entities/thought-model.dart';
+import 'package:simso/model/services/ilimit-service.dart';
 import 'package:simso/model/services/isong-service.dart';
+import 'package:simso/model/services/itimer-service.dart';
+import 'package:simso/model/services/itouch-service.dart';
 import 'package:simso/model/services/iuser-service.dart';
 import 'package:simso/model/services/song-service.dart';
+import 'package:simso/view/homepage.dart';
 import 'package:simso/view/profile-page.dart';
 import '../model/entities/song-model.dart';
 import 'package:simso/model/entities/user-model.dart';
@@ -34,12 +39,23 @@ class MusicFeedState extends State<MusicFeed> {
   SongModel song;
   SongModel songCopy;
   bool visit = false;
+  List<SongModel> songlist;
   List<SongModel> allSongList;
   List<int> deleteIndices;
   int currentScreenIndex = 0;
   int songCount = songNum;
   ISongService _songService = locator<ISongService>();
   IUserService _userService = locator<IUserService>();
+  IUserService userService = locator<IUserService>();
+  ITimerService timerService = locator<ITimerService>();
+  ITouchService touchService = locator<ITouchService>();
+  ILimitService limitService = locator<ILimitService>();
+  bool meme = false;
+  bool music = true;
+  bool snapshots = false;
+  bool thoughts = false;
+  bool friends = false;
+  List<Thought> publicThoughtsList = [];
 
   MusicFeedState(this.user, this.allUserList, this.allSongList) {
     controller = MusicFeedController(this);
@@ -75,15 +91,25 @@ class MusicFeedState extends State<MusicFeed> {
             leading: IconButton(
               icon: Icon(
                 Icons.arrow_back_ios,
-                color: Colors.white,
+                color: DesignConstants.yellow,
               ),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => Homepage(
+                      user,
+                      songlist,
+                    ),
+                  ),
+                );
               },
             ),
-            backgroundColor: Colors.black,
+            backgroundColor: DesignConstants.blue,
             title: Text(
               'Music Feed',
+              style: TextStyle(
+                color: DesignConstants.yellow,
+              ),
             ),
           ),
           body: ListView.builder(
@@ -92,6 +118,9 @@ class MusicFeedState extends State<MusicFeed> {
               child: Container(
                 child: Column(
                   children: <Widget>[
+                    SizedBox(
+                      height: 20,
+                    ),
                     for (UserModel users in allUserList)
                       Container(
                         child: allSongList[index].createdBy == users.email
@@ -320,6 +349,52 @@ class MusicFeedState extends State<MusicFeed> {
                   ],
                 ),
               ),
+            ),
+          ),
+          bottomNavigationBar: BottomAppBar(
+            color: Colors.black,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                RaisedButton(
+                  child: Text(
+                    'Thoughts',
+                    style: TextStyle(color: DesignConstants.yellow),
+                  ),
+                  onPressed: controller.newContent,
+                  color: thoughts
+                      ? DesignConstants.blueLight
+                      : DesignConstants.blue,
+                ),
+                RaisedButton(
+                  child: Text(
+                    'Memes',
+                    style: TextStyle(color: DesignConstants.yellow),
+                  ),
+                  onPressed: controller.meme,
+                  color:
+                      meme ? DesignConstants.blueLight : DesignConstants.blue,
+                ),
+                RaisedButton(
+                  child: Text(
+                    'SnapShots',
+                    style: TextStyle(color: DesignConstants.yellow),
+                  ),
+                  onPressed: controller.snapshots,
+                  color: snapshots
+                      ? DesignConstants.blueLight
+                      : DesignConstants.blue,
+                ),
+                RaisedButton(
+                  child: Text(
+                    'Music',
+                    style: TextStyle(color: DesignConstants.yellow),
+                  ),
+                  onPressed: controller.music,
+                  color:
+                      music ? DesignConstants.blueLight : DesignConstants.blue,
+                ),
+              ],
             ),
           ),
         ),

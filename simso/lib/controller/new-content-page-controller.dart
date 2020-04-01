@@ -1,13 +1,19 @@
+import 'package:flutter/material.dart';
+import 'package:simso/model/entities/song-model.dart';
+import 'package:simso/model/entities/user-model.dart';
+import 'package:simso/model/services/isong-service.dart';
 import 'package:simso/model/services/ithought-service.dart';
 import 'package:simso/model/services/iuser-service.dart';
 import 'package:simso/service-locator.dart';
+import 'package:simso/view/music-feed.dart';
 import 'package:simso/view/new-content.dart';
 
 class NewContentPageController{
   NewContentPageState state;
   NewContentPageController(this.state);
   
-  IUserService userService = locator<IUserService>();
+  final ISongService _songService = locator<ISongService>();
+  final IUserService _userService = locator<IUserService>();
   final IThoughtService thoughtService = locator<IThoughtService>();
   void snapshots() {
     if (state.snapshots == false){
@@ -19,7 +25,7 @@ class NewContentPageController{
     }
   }
 
-  void music() {
+  Future music() async {
     if (state.music == false){
       state.stateChanged((){
         state.meme = false;
@@ -28,6 +34,28 @@ class NewContentPageController{
         state.snapshots = false;
       });
     }
+   List<SongModel> allSongList;
+    List<UserModel> allUserList;
+    try {
+      print("GET SONGS & USERS");
+      allSongList = await _songService.getAllSongList();
+      allUserList = await _userService.readAllUser();
+    } catch (e) {
+      allSongList = <SongModel>[];
+
+      print("SONGLIST LENGTH: " + allSongList.length.toString());
+    }
+    print("SUCCEED IN GETTING SONGS & USERS");
+    Navigator.push(
+      state.context,
+      MaterialPageRoute(
+        builder: (context) => MusicFeed(
+          state.user,
+          allUserList,
+          allSongList,
+        ),
+      ),
+    );
   }
 
   void thoughts() async {
