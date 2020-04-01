@@ -44,7 +44,6 @@ class MyDrawer extends StatelessWidget {
 
   MyDrawer(this.context, this.user);
 
-<<<<<<< HEAD
   void navigateHomepage() async {
     List<SongModel> songlist;
     Navigator.push(
@@ -55,10 +54,6 @@ class MyDrawer extends StatelessWidget {
                   songlist,
                 )));
     checkLimits();
-=======
-  void navigateHomepage() {
-    Navigator.pop(context);
->>>>>>> dab6f3fc20ed31c0808d795614e55ba7a3584491
   }
 
   void navigateProfile() {
