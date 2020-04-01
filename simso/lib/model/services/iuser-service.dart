@@ -11,4 +11,8 @@ abstract class IUserService {
   Future<List<UserModel>> readAllUser();
   void changePassword(UserModel user, String password);
   void deleteUser(UserModel user);
+  Future<List<dynamic>> readQuestion();
+  Future<List<dynamic>> answerQuestion(String email);
+  Future<String> friendthoughts(String uid);
+  Future<List<UserModel>> readUsername();
 }
