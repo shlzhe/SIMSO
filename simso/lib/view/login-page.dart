@@ -37,6 +37,9 @@ class LoginPageState extends State<LoginPage> {
   bool checkBiometric = false;
   bool setTouchID = false;
   bool setCredential = false;
+  String msg='Delete email to show Create Account';
+  var emailController = TextEditingController();
+  var passwordController = TextEditingController();
   String authBio = "Not Authorized";
   List<BiometricType> biometricList = List<BiometricType>();
   IUserService userService = locator<IUserService>();
@@ -46,6 +49,16 @@ class LoginPageState extends State<LoginPage> {
     controller = LoginPageController(this, this.userService);
     user = UserModel.isEmpty();
     credential == 'true'? setCredential = true : setCredential = false;
+    emailController.text = credential=='true'? email:'';
+    passwordController.text = credential=='true'? password:'';
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed from the
+    // widget tree.
+    emailController.dispose();
+    super.dispose();
   }
 
   void stateChanged(Function f) {
@@ -86,12 +99,13 @@ class LoginPageState extends State<LoginPage> {
                         Image.network(
                           DesignConstants.logo,
                         ),
+                        entry || setCredential ? Text(msg, style: TextStyle(color: DesignConstants.red,),):Text(''),
                         Container(
                           padding: EdgeInsets.only(left: 30, right: 30),
                           child: Column(
                             children: <Widget>[
                               TextFormField(
-                                initialValue: credential=='true'? email:null,
+                                controller: emailController,
                                 decoration: InputDecoration(
                                   enabledBorder: UnderlineInputBorder(
                                     borderSide:
@@ -120,7 +134,7 @@ class LoginPageState extends State<LoginPage> {
                         Container(
                           padding: EdgeInsets.only(left: 30, right: 30),
                           child: TextFormField(
-                            initialValue: credential=='true'?password:null,
+                            controller: passwordController,
                             obscureText: true,
                             decoration: InputDecoration(
                               enabledBorder: UnderlineInputBorder(
@@ -162,7 +176,7 @@ class LoginPageState extends State<LoginPage> {
                                       ),
                                     ],
                                   ),
-                            (entry == true || credential =='true')
+                            (entry == true || credential =='true' || emailController.text!='')
                                 ? FlatButton(
                                     onPressed: controller.goToHomepage,
                                     child: Text(
@@ -227,6 +241,11 @@ class LoginPageState extends State<LoginPage> {
                             ),
                             ), 
                             //----------------------------------------------------
+                        FlatButton.icon(
+                          onPressed: controller.forgetPassword, 
+                          icon: Icon(Icons.vpn_key, color: DesignConstants.yellow,), 
+                          label: Text("Forget Password",style: TextStyle(color:DesignConstants.yellow,fontSize: 15),),
+                        ),
                       ],
                     ),
                   ],
