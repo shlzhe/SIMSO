@@ -11,9 +11,11 @@ import '../model/entities/local-user.dart';
 import '../model/entities/friend-model.dart';
 import '../model/entities/user-model.dart';
 import '../model/entities/thought-model.dart';
+import '../model/entities/snapshot-model.dart';
 import '../model/entities/dictionary-word-model.dart';
 import '../model/services/ifriend-service.dart';
 import '../model/services/ithought-service.dart';
+import '../model/services/isnapshot-service.dart';
 import '../model/entities/song-model.dart';
 import '../model/services/isong-service.dart';
 import '../model/services/idictionary-service.dart';
@@ -21,6 +23,7 @@ import '../model/services/idictionary-service.dart';
 import '../view/friends-page.dart';
 import '../view/homepage.dart';
 import '../view/my-thoughts-page.dart';
+import '../view/my-snapshots-page.dart';
 import '../view/login-page.dart';
 import '../view/recommend-friends-page.dart';
 import '../view/time-management-page.dart';
@@ -40,6 +43,7 @@ class MyDrawer extends StatelessWidget {
   final IFriendService friendService = locator<IFriendService>();
   final ISongService _songService = locator<ISongService>();
   final IThoughtService _thoughtService = locator<IThoughtService>();
+  final ISnapshotService _snapshotService = locator<ISnapshotService>();
   final IDictionaryService _dictionaryService = locator<IDictionaryService>();
 
   MyDrawer(this.context, this.user);
@@ -57,15 +61,19 @@ class MyDrawer extends StatelessWidget {
   }
 
   void navigateProfile() {
-    Navigator.push(context, MaterialPageRoute(
-      builder: (context) => ProfilePage(user)
-    ));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => ProfilePage(user)));
     checkLimits();
   }
 
-  void navigateSnapshotPage() {
+  void navigateMySnapshots() async {
+    List<Snapshot> mySnapshotsList =
+        await _snapshotService.getSnapshots(user.uid.toString());
+
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => SnapshotPage()));
+        context,
+        MaterialPageRoute(
+            builder: (context) => MySnapshotsPage(user, mySnapshotsList)));
     checkLimits();
   }
 
@@ -76,15 +84,15 @@ class MyDrawer extends StatelessWidget {
   }
 
   void navigateAccountSettingPage() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => AccountSettingPage(user)));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => AccountSettingPage(user)));
     checkLimits();
   }
 
   void navigateMyThoughts() async {
     List<Thought> myThoughtsList =
         await _thoughtService.getThoughts(user.uid.toString());
-    
+
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -95,14 +103,14 @@ class MyDrawer extends StatelessWidget {
   void signOut() async {
     String readInData;
     String credential;
-    try{  
+    try {
       readInData = await localUserFunction.readLocalUser();
       credential = await localUserFunction.readCredential();
       int i = readInData.indexOf(' ');
-      user.email = readInData.substring(0,i);
-      user.password= readInData.substring(i+1);
-    }catch(error){}
-    FirebaseAuth.instance.signOut();    //Email/pass sign out
+      user.email = readInData.substring(0, i);
+      user.password = readInData.substring(i + 1);
+    } catch (error) {}
+    FirebaseAuth.instance.signOut(); //Email/pass sign out
     GoogleSignIn().signOut();
     //Display confirmation dialog box after user clicking on "Sign Out" button
     showDialog(
@@ -131,17 +139,19 @@ class MyDrawer extends StatelessWidget {
                 globals.touchCounter = null;
                 globals.limit = null;
                 //Close Drawer, then go back to Front Page
-                Navigator.pop(context);  //Close Dialog box
-                Navigator.pop(context);  //Close Drawer
-                //Navigator.pop(state.context);  //Close Home Page 
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (context)=> LoginPage(
-                    localUserFunction: localUserFunction, 
-                    credential: credential=='true'? credential: null,
-                    email: credential=='true'? user.email: null,
-                    password: credential=="true"? user.password: null,
-                    ),
-                ));
+                Navigator.pop(context); //Close Dialog box
+                Navigator.pop(context); //Close Drawer
+                //Navigator.pop(state.context);  //Close Home Page
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginPage(
+                        localUserFunction: localUserFunction,
+                        credential: credential == 'true' ? credential : null,
+                        email: credential == 'true' ? user.email : null,
+                        password: credential == "true" ? user.password : null,
+                      ),
+                    ));
               },
             ),
             RaisedButton(
@@ -200,18 +210,27 @@ class MyDrawer extends StatelessWidget {
   }
 
   void checkLimits() async {
-    var timeLimitReached = (globals.getDate(globals.limit.overrideThruDate).difference(DateTime.now()).inDays != 0
-          && globals.timer.timeOnAppSec / 60 > globals.limit.timeLimitMin);
-    var touchLimitReached = (globals.getDate(globals.limit.overrideThruDate).difference(DateTime.now()).inDays != 0
-          && globals.touchCounter.touches > globals.limit.touchLimit);  
+    var timeLimitReached = (globals
+                .getDate(globals.limit.overrideThruDate)
+                .difference(DateTime.now())
+                .inDays !=
+            0 &&
+        globals.timer.timeOnAppSec / 60 > globals.limit.timeLimitMin);
+    var touchLimitReached = (globals
+                .getDate(globals.limit.overrideThruDate)
+                .difference(DateTime.now())
+                .inDays !=
+            0 &&
+        globals.touchCounter.touches > globals.limit.touchLimit);
 
-    if ((timeLimitReached && globals.limit.timeLimitMin > 0) || (touchLimitReached && globals.limit.touchLimit > 0)) {
+    if ((timeLimitReached && globals.limit.timeLimitMin > 0) ||
+        (touchLimitReached && globals.limit.touchLimit > 0)) {
       LimitReachedDialog.info(
-          context: this.context, 
-          user: this.user, 
+          context: this.context,
+          user: this.user,
           timeReached: timeLimitReached);
-        print('Limit Dialog opened');
-      }
+      print('Limit Dialog opened');
+    }
   }
 
   @override
@@ -269,7 +288,7 @@ class MyDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.camera),
             title: Text('My Snapshots'),
-            onTap: navigateSnapshotPage,
+            onTap: navigateMySnapshots,
           ),
           ListTile(
             leading: Icon(Icons.mood),
