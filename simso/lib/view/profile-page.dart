@@ -8,7 +8,6 @@ import '../controller/profile-page-controller.dart';
 class ProfilePage extends StatefulWidget {
 
   final UserModel user;
-
   ProfilePage(this.user);
 
   @override
@@ -51,8 +50,6 @@ class ProfilePageState extends State<ProfilePage> {
       ),
       body: ListView(
         children: <Widget>[
-          // UserAccountsDrawerHeader(
-            // decoration: BoxDecoration(color: DesignConstants.blue),
           Container(
             padding: EdgeInsets.all(10),
             width: 70,
@@ -69,12 +66,48 @@ class ProfilePageState extends State<ProfilePage> {
             ),
           ),
           Text(
-            'Profile Feed',
+            'My Profile',
+            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            textAlign: (TextAlign.center),
+          ),
+          Text(''),
+          Text(
+            'Email: ' + user.email,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             textAlign: (TextAlign.center),
           ),
-          Container(
-            
+          Text(
+            'Username: ' + user.username,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            textAlign: (TextAlign.center),
+          ),
+          if(user.age == 0) 
+            Text(
+              'Age: ',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              textAlign: (TextAlign.center),
+            ),
+          if (user.age != 0)
+            Text(
+              'Age: ' + user.age.toString(),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              textAlign: (TextAlign.center),
+            ),
+          
+          Text(
+            'Gender: ' + user.gender,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            textAlign: (TextAlign.center),
+          ),
+          Text(
+            'City: ' + user.city,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            textAlign: (TextAlign.center),
+          ),
+          Text(
+            'Bio: ' + user.aboutme,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            textAlign: (TextAlign.center),
           ),
         ]
       ),

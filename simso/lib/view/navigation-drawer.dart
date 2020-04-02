@@ -14,7 +14,9 @@ import '../model/entities/thought-model.dart';
 import '../model/entities/dictionary-word-model.dart';
 import '../model/services/ifriend-service.dart';
 import '../model/services/ithought-service.dart';
+import '../model/entities/image-model.dart';
 import '../model/entities/song-model.dart';
+import '../model/services/ipicture-service.dart';
 import '../model/services/isong-service.dart';
 import '../model/services/idictionary-service.dart';
 //view imports
@@ -38,6 +40,7 @@ class MyDrawer extends StatelessWidget {
   final LocalUser localUserFunction = LocalUser();
   final IFriendService friendService = locator<IFriendService>();
   final ISongService _songService = locator<ISongService>();
+  final IImageService _imageService = locator<IImageService>();
   final IThoughtService _thoughtService = locator<IThoughtService>();
   final IDictionaryService _dictionaryService = locator<IDictionaryService>();
 
@@ -54,15 +57,22 @@ class MyDrawer extends StatelessWidget {
                 )));
   }
 
-    void navigateProfile() {
+  void navigateProfile() {
     Navigator.push(context, MaterialPageRoute(
       builder: (context) => ProfilePage(user)
     ));
   }
 
-  void navigateSnapshotPage() {
+  void navigateSnapshotPage() async {
+    List<ImageModel> imagelist;
+    try {
+      imagelist = await _imageService.getImage(user.email);
+    } catch (e) {
+      imagelist = <ImageModel>[];
+    }
+    print("SUCCESS");
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => SnapshotPage()));
+        context, MaterialPageRoute(builder: (context) => SnapshotPage(user, imagelist)));
   }
 
   void navigateMemePage() {
