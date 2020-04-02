@@ -31,7 +31,7 @@ class NewContentPageController{
   }
 
   void thoughts() async {
-    state.publicThoughtsList = await thoughtService.contentThoughtList(state.friends, state.user.friends);
+    state.publicThoughtsList = await thoughtService.contentThoughtList(state.friends, state.user.friends, state.user.language);
     if (state.thoughts == false){
       state.meme = false;
       state.thoughts = true;

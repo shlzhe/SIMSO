@@ -5,18 +5,20 @@ import 'package:flutter/material.dart';
 
 import 'package:google_sign_in/google_sign_in.dart';
 import '../service-locator.dart';
+import '../supported-languages.dart';
 //model imports
 import '../model/entities/globals.dart' as globals;
 import '../model/entities/local-user.dart';
 import '../model/entities/friend-model.dart';
 import '../model/entities/user-model.dart';
 import '../model/entities/thought-model.dart';
-import '../model/entities/dictionary-word-model.dart';
 import '../model/services/ifriend-service.dart';
 import '../model/services/ithought-service.dart';
 import '../model/entities/song-model.dart';
 import '../model/services/isong-service.dart';
 import '../model/services/idictionary-service.dart';
+import 'package:simso/model/entities/language-model.dart';
+
 //view imports
 import '../view/friends-page.dart';
 import '../view/homepage.dart';
@@ -31,7 +33,9 @@ import '../view/account-setting-page.dart';
 import '../view/profile-page.dart';
 import '../view/my-music-page.dart';
 import 'limit-reached-dialog.dart';
-//controller import
+
+
+
 
 class MyDrawer extends StatelessWidget {
   final UserModel user;
@@ -84,7 +88,8 @@ class MyDrawer extends StatelessWidget {
   void navigateMyThoughts() async {
     List<Thought> myThoughtsList =
         await _thoughtService.getThoughts(user.uid.toString());
-    
+
+
     Navigator.push(
         context,
         MaterialPageRoute(
