@@ -9,6 +9,7 @@ import '../view/add-meme-page.dart';
 import '../view/mydialog.dart';
 import '../view/profile-page.dart';
 
+final bool visit = false;
 
 class MyMemesController {
   MyMemesPageState state;
@@ -45,7 +46,7 @@ class MyMemesController {
     Navigator.pop(state.context);
   }
 
-    void onTapProfile(List<Meme> myMemesList, int index) async {
+  void onTapProfile(List<Meme> myMemesList, int index) async {
     MyDialog.showProgressBar(state.context);
 
     //List<String> myKeywords = await _dictionaryService.getMyKeywords(
@@ -54,10 +55,9 @@ class MyMemesController {
     await Navigator.push(
         state.context,
         MaterialPageRoute(
-          builder: (context) => ProfilePage(
-            state.user,
-            //myKeywords,
-          ),
+          builder: (context) => ProfilePage(state.user, visit
+              //myKeywords,
+              ),
         ));
     Navigator.pop(state.context);
   }
