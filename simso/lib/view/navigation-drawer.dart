@@ -28,7 +28,7 @@ import '../view/login-page.dart';
 import '../view/recommend-friends-page.dart';
 import '../view/time-management-page.dart';
 import '../view/design-constants.dart';
-import '../view/snapshot-page.dart';
+import '../view/my-snapshot-page.dart';
 import '../view/meme-page.dart';
 import '../view/account-setting-page.dart';
 import '../view/profile-page.dart';
