@@ -56,7 +56,7 @@ class NotificationPage extends StatelessWidget {
                       _showDialog(context, friendUser).then(
                       (value) {
                         var mySnackbar =
-                            SnackBar(content: Text("Friend Added"));
+                            SnackBar(content: Text("..."));
                         Scaffold.of(context).showSnackBar(mySnackbar);
                       },
                     );
