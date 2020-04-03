@@ -1,42 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:unicorndial/unicorndial.dart';
 import '../model/entities/user-model.dart';
-import '../model/entities/snapshot-model.dart';
+import '../model/entities/meme-model.dart';
 import '../view/design-constants.dart';
 import '../view/navigation-drawer.dart';
-import '../controller/add-snapshot-controller.dart';
+import '../controller/add-meme-controller.dart';
 
-class AddSnapshotPage extends StatefulWidget {
+class AddMemePage extends StatefulWidget {
   final UserModel user;
-  final Snapshot snapshot;
+  final Meme meme;
 
-  AddSnapshotPage(this.user, this.snapshot);
+  AddMemePage(this.user, this.meme);
 
   @override
   State<StatefulWidget> createState() {
-    return AddSnapshotPageState(user, snapshot);
+    return AddMemePageState(user, meme);
   }
 }
 
-class AddSnapshotPageState extends State<AddSnapshotPage> {
+class AddMemePageState extends State<AddMemePage> {
   BuildContext context;
-  AddSnapshotController controller;
+  AddMemeController controller;
 
   UserModel user;
-  Snapshot snapshot;
-  Snapshot snapshotCopy;
+  Meme meme;
+  Meme memeCopy;
 
   //bool entry = false; //keep, there was something I liked about this snippet of code from Hiep
 
   var formKey = GlobalKey<FormState>();
 
-  AddSnapshotPageState(this.user, this.snapshot) {
-    controller = AddSnapshotController(this);
-    if (snapshot == null) {
+  AddMemePageState(this.user, this.meme) {
+    controller = AddMemeController(this);
+    if (meme == null) {
       //addButton
-      snapshotCopy = Snapshot.empty();
+      memeCopy = Meme.empty();
     } else {
-      snapshotCopy = Snapshot.clone(snapshot);
+      memeCopy = Meme.clone(meme);
     }
   }
 
@@ -51,10 +51,10 @@ class AddSnapshotPageState extends State<AddSnapshotPage> {
     return Scaffold(
 
         appBar: AppBar(
-          actions: snapshot == null
+          actions: meme == null
               ? null:<Widget>[
                   IconButton(
-                      icon: Icon(Icons.delete), onPressed: controller.deleteSnapshot,
+                      icon: Icon(Icons.delete), onPressed: controller.deleteMeme,
                   )],
           title: Text(
             'Snapshot',
@@ -76,7 +76,7 @@ class AddSnapshotPageState extends State<AddSnapshotPage> {
                       .copyWith(splashColor: Colors.transparent),
                   child: TextFormField(
                     autofocus: false,
-                    initialValue: snapshotCopy.imgUrl,
+                    initialValue: memeCopy.imgUrl,
                     validator: controller.validateImgUrl,
                     onSaved: controller.saveImgUrl,
                     style: TextStyle(fontSize: 22.0, color: Colors.grey[700]),

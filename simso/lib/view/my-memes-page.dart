@@ -2,38 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:unicorndial/unicorndial.dart';
 import '../model/entities/user-model.dart';
-import '../model/entities/snapshot-model.dart';
+import '../model/entities/meme-model.dart';
 import '../view/design-constants.dart';
 import '../view/navigation-drawer.dart';
-import '../controller/my-snapshots-controller.dart';
+import '../controller/my-memes-controller.dart';
 import '../controller/my-thoughts-controller.dart' as addthought;
 import 'package:cached_network_image/cached_network_image.dart';
 
-class MySnapshotsPage extends StatefulWidget {
+class MyMemesPage extends StatefulWidget {
   final UserModel user;
-  List<Snapshot> mySnapshotsList;
+  List<Meme> myMemesList;
 
-  MySnapshotsPage(this.user, this.mySnapshotsList);
+  MyMemesPage(this.user, this.myMemesList);
 
   @override
   State<StatefulWidget> createState() {
-    return MySnapshotsPageState(user, mySnapshotsList);
+    return MyMemesPageState(user, myMemesList);
   }
 }
 
-class MySnapshotsPageState extends State<MySnapshotsPage> {
+class MyMemesPageState extends State<MyMemesPage> {
   BuildContext context;
-  MySnapshotsController controller;
+  MyMemesController controller;
 
   UserModel user;
-  List<Snapshot> mySnapshotsList;
+  List<Meme> myMemesList;
 
   //bool entry = false; //keep, there was something I liked about this snippet of code from Hiep
 
   var formKey = GlobalKey<FormState>();
 
-  MySnapshotsPageState(this.user, this.mySnapshotsList) {
-    controller = MySnapshotsController(this);
+  MyMemesPageState(this.user, this.myMemesList) {
+    controller = MyMemesController(this);
   }
 
   void stateChanged(Function f) {
@@ -77,7 +77,7 @@ class MySnapshotsPageState extends State<MySnapshotsPage> {
             Icons.camera,
             color: Colors.black,
           ),
-          onPressed: controller.addSnapshot,
+          onPressed: null,
         ),
       ),
     );
@@ -95,7 +95,7 @@ class MySnapshotsPageState extends State<MySnapshotsPage> {
             Icons.mood,
             color: Colors.black,
           ),
-          onPressed: null,
+          onPressed: controller.addMeme,
         ),
       ),
     );
@@ -129,7 +129,7 @@ class MySnapshotsPageState extends State<MySnapshotsPage> {
         ),
         appBar: AppBar(
           title: Text(
-            'My Snapshots',
+            'Memes Page',
             style: TextStyle(
                 fontFamily: 'Quicksand',
                 fontSize: 30.0,
@@ -139,33 +139,33 @@ class MySnapshotsPageState extends State<MySnapshotsPage> {
         ),
         drawer: MyDrawer(context, user),
         body: ListView.builder(
-            itemCount: mySnapshotsList == null ? 0 : mySnapshotsList.length,
+            itemCount: myMemesList == null ? 0 : myMemesList.length,
             itemBuilder: (BuildContext context, int index) {
-              if (mySnapshotsList != null) {
+              if (myMemesList != null) {
                 return Container(
                   child: Column(
                     children: <Widget>[
                       ListTile(
                           leading: CircleAvatar(
                             backgroundImage: CachedNetworkImageProvider(
-                                mySnapshotsList[index].ownerPic),
+                                myMemesList[index].ownerPic),
                             backgroundColor: Colors.grey,
                           ),
                           title: GestureDetector(
-                            child: Text(mySnapshotsList[index].ownerName),
+                            child: Text(myMemesList[index].ownerName),
                             onTap: () =>
-                                controller.onTapProfile(mySnapshotsList, index),
+                                controller.onTapProfile(myMemesList, index),
                           ),
                           subtitle: Text(DateFormat("MMM dd-yyyy 'at' HH:mm:ss")
-                              .format(mySnapshotsList[index].timestamp)),
+                              .format(myMemesList[index].timestamp)),
                           trailing: GestureDetector(
                             child: const Icon(Icons.edit),
-                            onTap: () => controller.onTapSnapshot(
-                                mySnapshotsList, index),
+                            onTap: () => controller.onTapMeme(
+                                myMemesList, index),
                           )),
                           
                       CachedNetworkImage(
-                        imageUrl: mySnapshotsList[index].imgUrl,
+                        imageUrl: myMemesList[index].imgUrl,
                         fit: BoxFit.fitWidth,
                         placeholder: (context, url) =>
                             CircularProgressIndicator(),

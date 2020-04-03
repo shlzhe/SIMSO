@@ -1,5 +1,5 @@
-class Snapshot {
-  String snapshotId; //firestore doc id
+class Meme {
+  String memeId; //firestore doc id
   String uid;
   String imgUrl;
   String email;
@@ -8,8 +8,8 @@ class Snapshot {
   DateTime timestamp;
   List<dynamic> tags;
 
-  Snapshot(
-      {this.snapshotId,
+  Meme(
+      {this.memeId,
       this.uid, 
       this.imgUrl,
       this.timestamp,
@@ -18,9 +18,9 @@ class Snapshot {
       this.ownerName,
       this.ownerPic});
 
-  Snapshot.empty() {
+  Meme.empty() {
     this.uid = '';
-    this.snapshotId = '';
+    this.memeId = '';
     this.imgUrl = '';
     this.email = '';
     this.ownerPic = '';
@@ -28,8 +28,8 @@ class Snapshot {
     this.tags = <dynamic>[];
   }
 
-  Snapshot.clone(Snapshot c) {
-    this.snapshotId = c.snapshotId;
+  Meme.clone(Meme c) {
+    this.memeId = c.memeId;
     this.uid = c.uid;
     this.imgUrl = c.imgUrl;
     this.timestamp = c.timestamp;
@@ -42,7 +42,7 @@ class Snapshot {
 
   Map<String, dynamic> serialize() {
     return <String, dynamic>{
-      SNAPSHOTID: snapshotId,
+      SNAPSHOTID: memeId,
       UID: uid,
       IMGURL: imgUrl,
       TIMESTAMP: timestamp,
@@ -53,25 +53,25 @@ class Snapshot {
     };
   }
 
-  static Snapshot deserialize(Map<String, dynamic> data, String docID) {
-    var snapshot = Snapshot(
-      snapshotId: data[Snapshot.SNAPSHOTID],
-      uid: data[Snapshot.UID],
-      imgUrl: data[Snapshot.IMGURL],
-      tags: data[Snapshot.TAGS],
-      email: data[Snapshot.EMAIL],
-      ownerName: data[Snapshot.OWNERNAME],
-      ownerPic: data[Snapshot.OWNERPIC]
+  static Meme deserialize(Map<String, dynamic> data, String docID) {
+    var snapshot = Meme(
+      memeId: data[Meme.SNAPSHOTID],
+      uid: data[Meme.UID],
+      imgUrl: data[Meme.IMGURL],
+      tags: data[Meme.TAGS],
+      email: data[Meme.EMAIL],
+      ownerName: data[Meme.OWNERNAME],
+      ownerPic: data[Meme.OWNERPIC]
     );
-    if (data[Snapshot.TIMESTAMP] != null) {
+    if (data[Meme.TIMESTAMP] != null) {
       snapshot.timestamp = DateTime.fromMillisecondsSinceEpoch(
-          data[Snapshot.TIMESTAMP].millisecondsSinceEpoch);
+          data[Meme.TIMESTAMP].millisecondsSinceEpoch);
     }
-    snapshot.snapshotId = docID;
+    snapshot.memeId = docID;
     return snapshot;
   }
 
-  static const SNAPSHOTS_COLLECTION = 'snapshots';
+  static const MEMES_COLLECTION = 'snapshots';
   static const SNAPSHOTID = 'snapshotId';
   static const UID = 'uid';
   static const IMGURL = 'imgUrl';

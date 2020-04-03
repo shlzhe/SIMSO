@@ -14,8 +14,8 @@ import 'model/services/song-service.dart';
 import 'model/services/picture-service.dart';
 import 'model/services/thought-service.dart';
 import 'model/services/ithought-service.dart';
-import 'model/services/snapshot-service.dart';
-import 'model/services/isnapshot-service.dart';
+import 'model/services/meme-service.dart';
+import 'model/services/imeme-service.dart';
 import 'model/services/dictionary-service.dart';
 import 'model/services/idictionary-service.dart';
 import 'package:get_it/get_it.dart';
@@ -30,7 +30,7 @@ setupServiceLocator() {
   locator.registerLazySingleton<ISongService>(() => SongService());
   locator.registerLazySingleton<IImageService>(() => ImageService());
   locator.registerLazySingleton<IThoughtService>(() => ThoughtService());
-  locator.registerLazySingleton<ISnapshotService>(() => SnapshotService());
+  locator.registerLazySingleton<IMemeService>(() => MemeService());
   //locator.registerLazySingleton<IMemeService>(() => MemeService());
 
   locator.registerLazySingleton<IFriendService>(() => FriendService());

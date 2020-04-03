@@ -11,11 +11,11 @@ import '../model/entities/local-user.dart';
 import '../model/entities/friend-model.dart';
 import '../model/entities/user-model.dart';
 import '../model/entities/thought-model.dart';
-import '../model/entities/snapshot-model.dart';
+import '../model/entities/meme-model.dart';
 import '../model/entities/dictionary-word-model.dart';
 import '../model/services/ifriend-service.dart';
 import '../model/services/ithought-service.dart';
-import '../model/services/isnapshot-service.dart';
+import '../model/services/imeme-service.dart';
 import '../model/entities/song-model.dart';
 import '../model/services/isong-service.dart';
 import '../model/services/idictionary-service.dart';
@@ -23,7 +23,7 @@ import '../model/services/idictionary-service.dart';
 import '../view/friends-page.dart';
 import '../view/homepage.dart';
 import '../view/my-thoughts-page.dart';
-import '../view/my-snapshots-page.dart';
+import '../view/my-memes-page.dart';
 import '../view/login-page.dart';
 import '../view/recommend-friends-page.dart';
 import '../view/time-management-page.dart';
@@ -43,7 +43,7 @@ class MyDrawer extends StatelessWidget {
   final IFriendService friendService = locator<IFriendService>();
   final ISongService _songService = locator<ISongService>();
   final IThoughtService _thoughtService = locator<IThoughtService>();
-  final ISnapshotService _snapshotService = locator<ISnapshotService>();
+  final IMemeService _memeService = locator<IMemeService>();
   final IDictionaryService _dictionaryService = locator<IDictionaryService>();
 
   MyDrawer(this.context, this.user);
@@ -66,20 +66,14 @@ class MyDrawer extends StatelessWidget {
     checkLimits();
   }
 
-  void navigateMySnapshots() async {
-    List<Snapshot> mySnapshotsList =
-        await _snapshotService.getSnapshots(user.uid.toString());
+  void navigateMyMemes() async {
+    List<Meme> myMemesList =
+        await _memeService.getMemes(user.uid.toString());
 
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => MySnapshotsPage(user, mySnapshotsList)));
-    checkLimits();
-  }
-
-  void navigateMemePage() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => MemePage()));
+            builder: (context) => MyMemesPage(user, myMemesList)));
     checkLimits();
   }
 
@@ -288,12 +282,12 @@ class MyDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.camera),
             title: Text('My Snapshots'),
-            onTap: navigateMySnapshots,
+            onTap: null,
           ),
           ListTile(
             leading: Icon(Icons.mood),
             title: Text('My Memes'),
-            onTap: navigateMemePage,
+            onTap: navigateMyMemes,
           ),
           ListTile(
             leading: Icon(Icons.settings),

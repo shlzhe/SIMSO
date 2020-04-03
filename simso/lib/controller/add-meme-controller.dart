@@ -3,22 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:simso/model/entities/song-model.dart';
 import '../service-locator.dart';
 import '../model/entities/user-model.dart';
-import '../model/entities/snapshot-model.dart';
+import '../model/entities/meme-model.dart';
 import '../model/entities/dictionary-word-model.dart';
-import '../model/services/isnapshot-service.dart';
+import '../model/services/imeme-service.dart';
 import '../view/mydialog.dart';
 import '../view/homepage.dart';
-import '../view/add-snapshot-page.dart';
-import '../view/my-snapshots-page.dart';
+import '../view/add-meme-page.dart';
+import '../view/my-memes-page.dart';
 
-class AddSnapshotController {
-  AddSnapshotPageState state;
+class AddMemeController {
+  AddMemePageState state;
   UserModel newUser = UserModel();
   String userID;
-  ISnapshotService _snapshotService = locator<ISnapshotService>();
+  IMemeService _memeService = locator<IMemeService>();
   List<SongModel> songlist;
 
-  AddSnapshotController(this.state);
+  AddMemeController(this.state);
 
   String validateImgUrl(String value) {
     if (value == null || value.length == 0) {
@@ -28,21 +28,21 @@ class AddSnapshotController {
   }
 
   void saveImgUrl(String value) {
-    state.snapshotCopy.imgUrl = value;
-    state.snapshotCopy.email = state.user.email;
-    state.snapshotCopy.ownerName = state.user.username;
-    state.snapshotCopy.ownerPic = state.user.profilePic;
+    state.memeCopy.imgUrl = value;
+    state.memeCopy.email = state.user.email;
+    state.memeCopy.ownerName = state.user.username;
+    state.memeCopy.ownerPic = state.user.profilePic;
   }
-  void deleteSnapshot() async {
+  void deleteMeme() async {
     //print('deleting snapshot docid' + state.snapshot.snapshotId);
     try {
-      _snapshotService.deleteSnapshot(state.snapshot.snapshotId);
-      List<Snapshot> mySnapshotsList =
-          await _snapshotService.getSnapshots(state.user.uid.toString());
+      _memeService.deleteMeme(state.meme.memeId);
+      List<Meme> myMemesList =
+          await _memeService.getMemes(state.user.uid.toString());
       await Navigator.push(
           state.context,
           MaterialPageRoute(
-            builder: (context) => MySnapshotsPage(state.user, mySnapshotsList),
+            builder: (context) => MyMemesPage(state.user, myMemesList),
           ));
       Navigator.pop(state.context);
     } catch (e) {
@@ -61,28 +61,28 @@ class AddSnapshotController {
       return;
     }
     state.formKey.currentState.save();
-    state.snapshotCopy.uid = state.user.uid;
-    state.snapshotCopy.ownerName = state.user.username;
-    state.snapshotCopy.ownerPic = state.user.profilePic;
-    state.snapshotCopy.timestamp = DateTime.now();
+    state.memeCopy.uid = state.user.uid;
+    state.memeCopy.ownerName = state.user.username;
+    state.memeCopy.ownerPic = state.user.profilePic;
+    state.memeCopy.timestamp = DateTime.now();
 
     try {
-      //from add button, new snapshot
-      if (state.snapshot == null) {
-        await _snapshotService.addSnapshot(state.snapshotCopy);
+      //from add button, new meme
+      if (state.meme == null) {
+        await _memeService.addMeme(state.memeCopy);
       } else {
         // edit
-        await _snapshotService.updateSnapshot(state.snapshotCopy);
+        await _memeService.updateMeme(state.memeCopy);
       }
 
-      state.snapshot = state.snapshotCopy;
+      state.meme = state.memeCopy;
       //prep to exit page
-      List<Snapshot> mySnapshotsList =
-          await _snapshotService.getSnapshots(state.user.uid.toString());
+      List<Meme> myMemesList =
+          await _memeService.getMemes(state.user.uid.toString());
       await Navigator.push(
           state.context,
           MaterialPageRoute(
-            builder: (context) => MySnapshotsPage(state.user, mySnapshotsList),
+            builder: (context) => MyMemesPage(state.user, myMemesList),
           ));
       Navigator.pop(state.context);
     } catch (e) {

@@ -2,32 +2,32 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../service-locator.dart';
 import '../model/entities/user-model.dart';
-import '../model/entities/snapshot-model.dart';
+import '../model/entities/meme-model.dart';
 import '../model/services/idictionary-service.dart';
-import '../view/my-snapshots-page.dart';
-import '../view/add-snapshot-page.dart';
+import '../view/my-memes-page.dart';
+import '../view/add-meme-page.dart';
 import '../view/mydialog.dart';
 import '../view/profile-page.dart';
 
 
-class MySnapshotsController {
-  MySnapshotsPageState state;
+class MyMemesController {
+  MyMemesPageState state;
   UserModel newUser = UserModel();
   String userID;
-  List<Snapshot> mySnapshotsList;
+  List<Meme> myMemesList;
   IDictionaryService _dictionaryService = locator<IDictionaryService>();
 
-  MySnapshotsController(this.state);
+  MyMemesController(this.state);
 
-  void addSnapshot() {
+  void addMeme() {
     Navigator.push(
         state.context,
         MaterialPageRoute(
-          builder: (context) => AddSnapshotPage(state.user, null),
+          builder: (context) => AddMemePage(state.user, null),
         ));
   }
 
-  void onTapSnapshot(List<Snapshot> mySnapshotsList, int index) async {
+  void onTapMeme(List<Meme> myMemesList, int index) async {
     MyDialog.showProgressBar(state.context);
 
     //List<String> myKeywords = await _dictionaryService.getMyKeywords(
@@ -36,16 +36,16 @@ class MySnapshotsController {
     await Navigator.push(
         state.context,
         MaterialPageRoute(
-          builder: (context) => AddSnapshotPage(
+          builder: (context) => AddMemePage(
             state.user,
-            state.mySnapshotsList[index],
+            state.myMemesList[index],
             //myKeywords,
           ),
         ));
     Navigator.pop(state.context);
   }
 
-    void onTapProfile(List<Snapshot> mySnapshotsList, int index) async {
+    void onTapProfile(List<Meme> myMemesList, int index) async {
     MyDialog.showProgressBar(state.context);
 
     //List<String> myKeywords = await _dictionaryService.getMyKeywords(
