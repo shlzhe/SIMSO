@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'package:google_sign_in/google_sign_in.dart';
 import '../service-locator.dart';
+import '../supported-languages.dart';
 //model imports
 import '../model/entities/globals.dart' as globals;
 import '../model/entities/local-user.dart';
@@ -16,9 +17,16 @@ import '../model/entities/dictionary-word-model.dart';
 import '../model/services/ifriend-service.dart';
 import '../model/services/ithought-service.dart';
 import '../model/services/imeme-service.dart';
+import '../model/services/ifriend-service.dart';
+import '../model/services/ithought-service.dart';
+import '../model/entities/image-model.dart';
 import '../model/entities/song-model.dart';
+import '../model/services/ipicture-service.dart';
 import '../model/services/isong-service.dart';
+import '../model/services/iuser-service.dart';
 import '../model/services/idictionary-service.dart';
+import 'package:simso/model/entities/language-model.dart';
+
 //view imports
 import '../view/friends-page.dart';
 import '../view/homepage.dart';
@@ -28,13 +36,16 @@ import '../view/login-page.dart';
 import '../view/recommend-friends-page.dart';
 import '../view/time-management-page.dart';
 import '../view/design-constants.dart';
-import '../view/snapshot-page.dart';
+import '../view/my-snapshot-page.dart';
 import '../view/meme-page.dart';
 import '../view/account-setting-page.dart';
 import '../view/profile-page.dart';
 import '../view/my-music-page.dart';
+import '../view/music-feed.dart';
 import 'limit-reached-dialog.dart';
-//controller import
+
+
+
 
 class MyDrawer extends StatelessWidget {
   final UserModel user;
@@ -42,10 +53,12 @@ class MyDrawer extends StatelessWidget {
   final LocalUser localUserFunction = LocalUser();
   final IFriendService friendService = locator<IFriendService>();
   final ISongService _songService = locator<ISongService>();
+  final IImageService _imageService = locator<IImageService>();
+  final IUserService _userService = locator<IUserService>();
   final IThoughtService _thoughtService = locator<IThoughtService>();
   final IMemeService _memeService = locator<IMemeService>();
   final IDictionaryService _dictionaryService = locator<IDictionaryService>();
-
+  final bool visit = false;
   MyDrawer(this.context, this.user);
 
   void navigateHomepage() async {
@@ -62,8 +75,24 @@ class MyDrawer extends StatelessWidget {
 
   void navigateProfile() {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => ProfilePage(user)));
+        context, MaterialPageRoute(builder: (context) => ProfilePage(user,visit)));
     checkLimits();
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) => ProfilePage(user, visit)
+    ));
+    checkLimits();
+  }
+
+  void navigateSnapshotPage() async {
+    List<ImageModel> imagelist;
+    try {
+      imagelist = await _imageService.getImage(user.email);
+    } catch (e) {
+      imagelist = <ImageModel>[];
+    }
+    print("SUCCESS");
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => SnapshotPage(user, imagelist)));
   }
 
   void navigateMyMemes() async {
@@ -184,6 +213,27 @@ class MyDrawer extends StatelessWidget {
     checkLimits();
   }
 
+  void navigateMusicFeed() async {
+    List<SongModel> allSongList;
+    List<UserModel> allUserList;
+    try {
+      print("GET SONGS & USERS");
+      allSongList = await _songService.getAllSongList();
+      allUserList = await _userService.readAllUser();
+    } catch (e) {
+      allSongList = <SongModel>[];
+
+      print("SONGLIST LENGTH: " + allSongList.length.toString());
+    }
+    print("SUCCEED IN GETTING SONGS & USERS");
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MusicFeed(user, allUserList, allSongList),
+      ),
+    );
+  }
+
   void navigateMyMusic() async {
     List<SongModel> songlist;
     try {
@@ -273,6 +323,11 @@ class MyDrawer extends StatelessWidget {
             leading: Icon(Icons.group_add),
             title: Text('Recommended Friends'),
             onTap: recommendFriends,
+          ),
+          ListTile(
+            leading: Icon(Icons.music_note),
+            title: Text('Music Feed'),
+            onTap: navigateMusicFeed,
           ),
           ListTile(
             leading: Icon(Icons.music_note),

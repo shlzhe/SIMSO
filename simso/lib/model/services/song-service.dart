@@ -64,6 +64,32 @@ class SongService extends ISongService {
   }
 
   @override
+  Future<List<SongModel>> getAllSongList() async {
+    try {
+      // get song
+      // 1st where the array contains, then order by the below
+      // each uses a key and firebase will throw a precondition indexing issue
+      // have to build index for each query in FireStore
+      QuerySnapshot querySnapshot = await Firestore.instance
+          .collection(SongModel.SONG_COLLECTION)
+          .orderBy(SongModel.LASTUPDATEDAT)
+          .getDocuments();
+      var songlist = <SongModel>[];
+      if (querySnapshot == null || querySnapshot.documents.length == 0) {
+        return songlist;
+      }
+      for (DocumentSnapshot doc in querySnapshot.documents) {
+        songlist.add(SongModel.deserialize(doc.data, doc.documentID));
+      }
+
+      songNum = querySnapshot.documents.length;
+      return songlist.reversed.toList();
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  @override
   Future<void> updateSongURL(String songURL, SongModel song) async {
     await Firestore.instance
         .collection(SongModel.SONG_COLLECTION)

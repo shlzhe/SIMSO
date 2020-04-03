@@ -1,4 +1,3 @@
-
 import '../view/snapshot-page.dart';
 
 class SnapshotPageController {
