@@ -35,7 +35,7 @@ class HomepageState extends State<Homepage> {
   bool snapshots = false;
   bool thoughts = true;
   bool friends = true;
-  List<Thought> publicThoughtsList =[];
+  List<Thought> publicThoughtsList = [];
   HomepageController controller;
   UserModel user;
   List<SongModel> songlist;
@@ -166,93 +166,123 @@ class HomepageState extends State<Homepage> {
         backgroundColor: DesignConstants.blue,
         actions: <Widget>[
           IconButton(
-                  onPressed: controller.newContent, 
-                  icon: Icon(Icons.new_releases,size: 25,),
-                  iconSize: 200,
-                  color: DesignConstants.yellow,
-                ),
+            onPressed: controller.newContent,
+            icon: Icon(
+              Icons.new_releases,
+              size: 25,
+            ),
+            iconSize: 200,
+            color: DesignConstants.yellow,
+          ),
         ],
       ),
       drawer: MyDrawer(context, user),
-      body: thoughts ? ListView.builder(
-                  itemCount: publicThoughtsList.length,
-                  itemBuilder: (BuildContext context, int index){
-                    return Container(
-                padding: EdgeInsets.all(15.0),
-                child: Container(
-                  //padding: EdgeInsets.all(15.0),
-                  //color: Colors.grey[200],
-                  padding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFFFFFF),
-                    border: Border.all(
-                      color: DesignConstants.blue,
-                      width: 4,
-                    ),
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: ListTile(
-                    title: Text(
-                      publicThoughtsList.elementAt(index).email + ' '+ publicThoughtsList.elementAt(index).timestamp.toLocal().toString(),
-                      style: TextStyle(fontWeight: FontWeight.bold),
+      body: thoughts
+          ? ListView.builder(
+              itemCount: publicThoughtsList.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Container(
+                  padding: EdgeInsets.all(15.0),
+                  child: Container(
+                    //padding: EdgeInsets.all(15.0),
+                    //color: Colors.grey[200],
+                    padding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFFFFF),
+                      border: Border.all(
+                        color: DesignConstants.blue,
+                        width: 4,
                       ),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(publicThoughtsList.elementAt(index).text),
-                      ],
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: ListTile(
+                      title: Text(
+                        publicThoughtsList.elementAt(index).email +
+                            ' ' +
+                            publicThoughtsList
+                                .elementAt(index)
+                                .timestamp
+                                .toLocal()
+                                .toString(),
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(publicThoughtsList.elementAt(index).text),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              );
+                );
+              },
+            )
+          : (meme
+              ? ListView.builder(
+                  itemCount: 0,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Container(
+                      child: Text('Memes'),
+                    );
                   },
-                  )
-            :
-            (
-              meme ? ListView.builder(
-                  itemCount: 0,
-                  itemBuilder: (BuildContext context, int index){return Container(
-                    child: Text('Memes'),
-                  );},
-                  )
-            : snapshots ? ListView.builder(
-                  itemCount: 0,
-                  itemBuilder: (BuildContext context, int index){return Container(
-                    child: Text('SnapShots'),
-                  );},
-                  )
-            : ListView.builder(
-                  itemCount: 0,
-                  itemBuilder: (BuildContext context, int index){return Container(
-                    child: Text('Music'),
-                  );},
-                  )
-            ),
+                )
+              : snapshots
+                  ? ListView.builder(
+                      itemCount: 0,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Container(
+                          child: Text('SnapShots'),
+                        );
+                      },
+                    )
+                  : ListView.builder(
+                      itemCount: 0,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Container(
+                          child: Text('Music'),
+                        );
+                      },
+                    )),
       bottomNavigationBar: BottomAppBar(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-          RaisedButton(
-            child: Text('Thoughts', style: TextStyle(color: DesignConstants.yellow),),
-            onPressed: controller.thoughts,
-            color: thoughts ? DesignConstants.blueLight : DesignConstants.blue,
-            ),
-          RaisedButton(
-            child: Text('Memes', style: TextStyle(color: DesignConstants.yellow),),
-            onPressed: controller.meme,
-            color: meme ? DesignConstants.blueLight : DesignConstants.blue,
+            RaisedButton(
+              child: Text(
+                'Thoughts',
+                style: TextStyle(color: DesignConstants.yellow),
+              ),
+              onPressed: controller.thoughts,
+              color:
+                  thoughts ? DesignConstants.blueLight : DesignConstants.blue,
             ),
             RaisedButton(
-            child: Text('SnapShots', style: TextStyle(color: DesignConstants.yellow),),
-            onPressed: controller.snapshots,
-            color: snapshots ? DesignConstants.blueLight : DesignConstants.blue,
+              child: Text(
+                'Memes',
+                style: TextStyle(color: DesignConstants.yellow),
+              ),
+              onPressed: controller.meme,
+              color: meme ? DesignConstants.blueLight : DesignConstants.blue,
             ),
             RaisedButton(
-            child: Text('Music', style: TextStyle(color: DesignConstants.yellow),),
-            onPressed: controller.music,
-            color: music ? DesignConstants.blueLight : DesignConstants.blue,
+              child: Text(
+                'SnapShots',
+                style: TextStyle(color: DesignConstants.yellow),
+              ),
+              onPressed: controller.snapshots,
+              color:
+                  snapshots ? DesignConstants.blueLight : DesignConstants.blue,
             ),
-        ],),
+            RaisedButton(
+              child: Text(
+                'Music',
+                style: TextStyle(color: DesignConstants.yellow),
+              ),
+              onPressed: controller.music,
+              color: music ? DesignConstants.blueLight : DesignConstants.blue,
+            ),
+          ],
+        ),
       ),
     );
   }

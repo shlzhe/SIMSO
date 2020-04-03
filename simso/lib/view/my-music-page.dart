@@ -53,7 +53,7 @@ class MyMusicState extends State<MyMusic> {
     } else {
       return Container(
         child: FutureBuilder<List<SongModel>>(
-          future: _songService.getSong(user.email),
+          future: _songService.getSongList(user.email),
           builder: (context, snapshot) {
             if (!snapshot.hasData)
               return Container(
