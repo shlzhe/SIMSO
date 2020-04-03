@@ -11,6 +11,9 @@ import 'package:simso/model/services/iuser-service.dart';
 import '../model/entities/user-model.dart';
 import '../service-locator.dart';
 import 'design-constants.dart';
+import '../model/entities/friendRequest-model.dart';
+import 'package:simso/model/services/ifriend-service.dart';
+import 'package:simso/view/notification-page.dart' ;
 
 class Homepage extends StatefulWidget {
   final UserModel user;
@@ -30,6 +33,7 @@ class HomepageState extends State<Homepage> {
   ITimerService timerService = locator<ITimerService>();
   ITouchService touchService = locator<ITouchService>();
   ILimitService limitService = locator<ILimitService>();
+  final IFriendService friendService = locator<IFriendService>();
   bool meme = false;
   bool music = false;
   bool snapshots = false;
@@ -174,6 +178,9 @@ class HomepageState extends State<Homepage> {
             iconSize: 200,
             color: DesignConstants.yellow,
           ),
+           IconButton(icon: Icon(Icons.notifications), 
+                           onPressed:  myFriendsRequest, 
+          ),
         ],
       ),
       drawer: MyDrawer(context, user),
@@ -286,4 +293,14 @@ class HomepageState extends State<Homepage> {
       ),
     );
   }
+
+  void myFriendsRequest() async {
+    print('myFriendRequest() called');
+    List<FriendRequests> friendRequests = await friendService.getFriendRequests(user.friendRequestRecieved);
+     Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => NotificationPage(user, friendRequests)));
+  }
+
 }

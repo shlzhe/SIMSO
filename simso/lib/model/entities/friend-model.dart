@@ -9,7 +9,7 @@ class Friend {
 
 Friend({this.uid, this.username, this.aboutme, this.profilePic, this.city});
 
-  static Friend deserialize(Map<String, dynamic> document){
+ static Friend deserialize(Map<String, dynamic> document){
     return Friend(
       username: document[UserModel.USERNAME],
       aboutme: document[UserModel.ABOUTME],
