@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import '../service-locator.dart';
 import '../model/entities/user-model.dart';
 import '../model/entities/thought-model.dart';
-import '../model/entities/dictionary-word-model.dart';
-
-import '../model/services/ithought-service.dart';
 import '../model/services/idictionary-service.dart';
 import '../view/my-thoughts-page.dart';
 import '../view/add-thought-page.dart';

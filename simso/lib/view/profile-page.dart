@@ -6,30 +6,32 @@ import '../model/entities/image-model.dart';
 import '../controller/profile-page-controller.dart';
 
 class ProfilePage extends StatefulWidget {
-
   final UserModel user;
-  ProfilePage(this.user);
+  final bool visit;
+  ProfilePage(this.user, this.visit);
 
   @override
   State<StatefulWidget> createState() {
-    return ProfilePageState(user);
+    return ProfilePageState(user, visit);
   }
 }
 
 class ProfilePageState extends State<ProfilePage> {
-
   UserModel user;
+  UserModel ogUser;
+  bool visit;
   ProfilePageController controller;
   var formKey = GlobalKey<FormState>();
   BuildContext context;
 
-  ProfilePageState(this.user) {
+  ProfilePageState(this.user, this.visit) {
     controller = ProfilePageController(this);
   }
 
   void stateChanged(Function fn) {
     setState(fn);
   }
+
   @override
   Widget build(BuildContext context) {
     this.context = context;
@@ -38,14 +40,16 @@ class ProfilePageState extends State<ProfilePage> {
         title: Text(user.username + ' Profile'),
         backgroundColor: DesignConstants.blue,
         actions: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.notifications),
-                  onPressed: (){},
-                ),
-                IconButton(
+          IconButton(
+            icon: Icon(Icons.notifications),
+            onPressed: () {},
+          ),
+          visit == false 
+              ? IconButton(
                   icon: Icon(Icons.settings),
                   onPressed: controller.accountSettings,
-                ),
+                )
+              : Container(),
         ],
       ),
       body: ListView(

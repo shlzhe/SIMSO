@@ -44,6 +44,7 @@ class AccountSettingController {
   void savePassword(String value) {
     if (state.changing_s == true) {
       userService.changePassword(state.user, value);
+      localUserFunction.writeLocalUser(state.userCopy.email + ' ' + state.userCopy.password);
     } else
       return;
   }
@@ -159,8 +160,8 @@ void signOut(){
                           builder: (context)=> LoginPage(
                             localUserFunction: localUserFunction, 
                             credential: credential=='true'? credential: null,
-                            email: credential=='true'? state.user.email: null,
-                            password: credential=="true"? state.user.password: null,
+                            email: credential=='true'? state.userCopy.email: null,
+                            password: credential=="true"? state.userCopy.password: null,
                             ),
                         ));
                       },

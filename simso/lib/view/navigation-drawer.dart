@@ -18,6 +18,7 @@ import '../model/entities/image-model.dart';
 import '../model/entities/song-model.dart';
 import '../model/services/ipicture-service.dart';
 import '../model/services/isong-service.dart';
+import '../model/services/iuser-service.dart';
 import '../model/services/idictionary-service.dart';
 //view imports
 import '../view/friends-page.dart';
@@ -32,6 +33,8 @@ import '../view/meme-page.dart';
 import '../view/account-setting-page.dart';
 import '../view/profile-page.dart';
 import '../view/my-music-page.dart';
+import '../view/music-feed.dart';
+import 'limit-reached-dialog.dart';
 //controller import
 
 class MyDrawer extends StatelessWidget {
@@ -41,12 +44,13 @@ class MyDrawer extends StatelessWidget {
   final IFriendService friendService = locator<IFriendService>();
   final ISongService _songService = locator<ISongService>();
   final IImageService _imageService = locator<IImageService>();
+  final IUserService _userService = locator<IUserService>();
   final IThoughtService _thoughtService = locator<IThoughtService>();
   final IDictionaryService _dictionaryService = locator<IDictionaryService>();
-
+  final bool visit = false;
   MyDrawer(this.context, this.user);
 
-  void navigateHomepage() {
+  void navigateHomepage() async {
     List<SongModel> songlist;
     Navigator.push(
         context,
@@ -55,12 +59,14 @@ class MyDrawer extends StatelessWidget {
                   user,
                   songlist,
                 )));
+    checkLimits();
   }
 
   void navigateProfile() {
     Navigator.push(context, MaterialPageRoute(
-      builder: (context) => ProfilePage(user)
+      builder: (context) => ProfilePage(user, visit)
     ));
+    checkLimits();
   }
 
   void navigateSnapshotPage() async {
@@ -78,29 +84,36 @@ class MyDrawer extends StatelessWidget {
   void navigateMemePage() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => MemePage()));
+    checkLimits();
   }
 
   void navigateAccountSettingPage() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => AccountSettingPage(user)));
+    checkLimits();
   }
 
   void navigateMyThoughts() async {
     List<Thought> myThoughtsList =
         await _thoughtService.getThoughts(user.uid.toString());
-    
+
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => MyThoughtsPage(user, myThoughtsList)));
+    checkLimits();
   }
 
   void signOut() async {
-    String readInData = await localUserFunction.readLocalUser();
-    String credential = await localUserFunction.readCredential();
-    int i = readInData.indexOf(' ');
-    user.email = readInData.substring(0,i);
-    user.password= readInData.substring(i+1);
+    String readInData;
+    String credential;
+    try{  
+      readInData = await localUserFunction.readLocalUser();
+      credential = await localUserFunction.readCredential();
+      int i = readInData.indexOf(' ');
+      user.email = readInData.substring(0,i);
+      user.password= readInData.substring(i+1);
+    }catch(error){}
     FirebaseAuth.instance.signOut();    //Email/pass sign out
     GoogleSignIn().signOut();
     //Display confirmation dialog box after user clicking on "Sign Out" button
@@ -130,17 +143,19 @@ class MyDrawer extends StatelessWidget {
                 globals.touchCounter = null;
                 globals.limit = null;
                 //Close Drawer, then go back to Front Page
-                Navigator.pop(context);  //Close Dialog box
-                Navigator.pop(context);  //Close Drawer
-                //Navigator.pop(state.context);  //Close Home Page 
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (context)=> LoginPage(
-                    localUserFunction: localUserFunction, 
-                    credential: credential=='true'? credential: null,
-                    email: credential=='true'? user.email: null,
-                    password: credential=="true"? user.password: null,
-                    ),
-                ));
+                Navigator.pop(context); //Close Dialog box
+                Navigator.pop(context); //Close Drawer
+                //Navigator.pop(state.context);  //Close Home Page
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginPage(
+                        localUserFunction: localUserFunction,
+                        credential: credential == 'true' ? credential : null,
+                        email: credential == 'true' ? user.email : null,
+                        password: credential == "true" ? user.password : null,
+                      ),
+                    ));
               },
             ),
             RaisedButton(
@@ -161,6 +176,7 @@ class MyDrawer extends StatelessWidget {
     List<Friend> friends = await friendService.getFriends(user.friends);
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => FriendPage(user, friends)));
+    checkLimits();
   }
 
   void recommendFriends() async {
@@ -169,11 +185,34 @@ class MyDrawer extends StatelessWidget {
         MaterialPageRoute(
           builder: (context) => RecommendFriends(user),
         ));
+    checkLimits();
   }
 
   void navigateTimeManagement() async {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => TimeManagementPage(user)));
+    checkLimits();
+  }
+
+  void navigateMusicFeed() async {
+    List<SongModel> allSongList;
+    List<UserModel> allUserList;
+    try {
+      print("GET SONGS & USERS");
+      allSongList = await _songService.getAllSongList();
+      allUserList = await _userService.readAllUser();
+    } catch (e) {
+      allSongList = <SongModel>[];
+
+      print("SONGLIST LENGTH: " + allSongList.length.toString());
+    }
+    print("SUCCEED IN GETTING SONGS & USERS");
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MusicFeed(user, allUserList, allSongList),
+      ),
+    );
   }
 
   void navigateMyMusic() async {
@@ -192,6 +231,22 @@ class MyDrawer extends StatelessWidget {
         builder: (context) => MyMusic(user, songlist),
       ),
     );
+    checkLimits();
+  }
+
+  void checkLimits() async {
+    var timeLimitReached = (globals.getDate(globals.limit.overrideThruDate).difference(DateTime.now()).inDays != 0
+          && globals.timer.timeOnAppSec / 60 > globals.limit.timeLimitMin);
+    var touchLimitReached = (globals.getDate(globals.limit.overrideThruDate).difference(DateTime.now()).inDays != 0
+          && globals.touchCounter.touches > globals.limit.touchLimit);  
+
+    if ((timeLimitReached && globals.limit.timeLimitMin > 0) || (touchLimitReached && globals.limit.touchLimit > 0)) {
+      LimitReachedDialog.info(
+          context: this.context, 
+          user: this.user, 
+          timeReached: timeLimitReached);
+        print('Limit Dialog opened');
+      }
   }
 
   @override
@@ -240,6 +295,11 @@ class MyDrawer extends StatelessWidget {
             leading: Icon(Icons.group_add),
             title: Text('Recommended Friends'),
             onTap: recommendFriends,
+          ),
+          ListTile(
+            leading: Icon(Icons.music_note),
+            title: Text('Music Feed'),
+            onTap: navigateMusicFeed,
           ),
           ListTile(
             leading: Icon(Icons.music_note),

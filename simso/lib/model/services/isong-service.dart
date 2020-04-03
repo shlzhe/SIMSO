@@ -6,4 +6,5 @@ abstract class ISongService {
   Future<void> updateSongURL(String songURL, SongModel song);
   Future<void> updateSong(SongModel song);
   Future<List<SongModel>> getSongList(String email);
+  Future<List<SongModel>> getAllSongList();
 }
