@@ -337,7 +337,7 @@ class MyDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.camera),
             title: Text('My Snapshots'),
-            onTap: null,
+            onTap: navigateSnapshotPage,
           ),
           ListTile(
             leading: Icon(Icons.mood),
