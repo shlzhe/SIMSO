@@ -14,7 +14,9 @@ import '../model/entities/user-model.dart';
 import '../model/entities/thought-model.dart';
 import '../model/services/ifriend-service.dart';
 import '../model/services/ithought-service.dart';
+import '../model/entities/image-model.dart';
 import '../model/entities/song-model.dart';
+import '../model/services/ipicture-service.dart';
 import '../model/services/isong-service.dart';
 import '../model/services/iuser-service.dart';
 import '../model/services/idictionary-service.dart';
@@ -28,7 +30,7 @@ import '../view/login-page.dart';
 import '../view/recommend-friends-page.dart';
 import '../view/time-management-page.dart';
 import '../view/design-constants.dart';
-import '../view/snapshot-page.dart';
+import '../view/my-snapshot-page.dart';
 import '../view/meme-page.dart';
 import '../view/account-setting-page.dart';
 import '../view/profile-page.dart';
@@ -45,6 +47,7 @@ class MyDrawer extends StatelessWidget {
   final LocalUser localUserFunction = LocalUser();
   final IFriendService friendService = locator<IFriendService>();
   final ISongService _songService = locator<ISongService>();
+  final IImageService _imageService = locator<IImageService>();
   final IUserService _userService = locator<IUserService>();
   final IThoughtService _thoughtService = locator<IThoughtService>();
   final IDictionaryService _dictionaryService = locator<IDictionaryService>();
@@ -70,10 +73,16 @@ class MyDrawer extends StatelessWidget {
     checkLimits();
   }
 
-  void navigateSnapshotPage() {
+  void navigateSnapshotPage() async {
+    List<ImageModel> imagelist;
+    try {
+      imagelist = await _imageService.getImage(user.email);
+    } catch (e) {
+      imagelist = <ImageModel>[];
+    }
+    print("SUCCESS");
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => SnapshotPage()));
-    checkLimits();
+        context, MaterialPageRoute(builder: (context) => SnapshotPage(user, imagelist)));
   }
 
   void navigateMemePage() {
