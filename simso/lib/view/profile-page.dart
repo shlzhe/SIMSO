@@ -44,7 +44,7 @@ class ProfilePageState extends State<ProfilePage> {
             icon: Icon(Icons.notifications),
             onPressed: () {},
           ),
-          visit == false 
+          visit == false
               ? IconButton(
                   icon: Icon(Icons.settings),
                   onPressed: controller.accountSettings,
@@ -52,69 +52,69 @@ class ProfilePageState extends State<ProfilePage> {
               : Container(),
         ],
       ),
-      body: ListView(
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.all(10),
-            width: 70,
-            height: 120,
-            child: CachedNetworkImage(
-              imageUrl: user.profilePic != null &&
-                        user.profilePic != ''
-                  ? user.profilePic
-                  : DesignConstants.profile,
-              placeholder: (context, url) =>
-                  CircularProgressIndicator(),
-              errorWidget: (context, url, error) =>
-                  Icon(Icons.account_circle),
-            ),
+      body: ListView(children: <Widget>[
+        Container(
+          padding: EdgeInsets.all(10),
+          width: 70,
+          height: 120,
+          child: CachedNetworkImage(
+            imageUrl: user.profilePic != null && user.profilePic != ''
+                ? user.profilePic
+                : DesignConstants.profile,
+            placeholder: (context, url) => CircularProgressIndicator(),
+            errorWidget: (context, url, error) => Icon(Icons.account_circle),
           ),
+        ),
+        Text(
+          'My Profile',
+          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+          textAlign: (TextAlign.center),
+        ),
+        Text(''),
+        Text(
+          'Email: ' + user.email,
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          textAlign: (TextAlign.center),
+        ),
+        Text(
+          'Username: ' + user.username,
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          textAlign: (TextAlign.center),
+        ),
+        if (user.age == 0)
           Text(
-            'My Profile',
-            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-            textAlign: (TextAlign.center),
-          ),
-          Text(''),
-          Text(
-            'Email: ' + user.email,
+            'Age: ',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             textAlign: (TextAlign.center),
           ),
+        if (user.age != 0)
           Text(
-            'Username: ' + user.username,
+            'Age: ' + user.age.toString(),
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             textAlign: (TextAlign.center),
           ),
-          if(user.age == 0) 
-            Text(
-              'Age: ',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              textAlign: (TextAlign.center),
-            ),
-          if (user.age != 0)
-            Text(
-              'Age: ' + user.age.toString(),
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              textAlign: (TextAlign.center),
-            ),
-          
-          Text(
-            'Gender: ' + user.gender,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            textAlign: (TextAlign.center),
-          ),
-          Text(
-            'City: ' + user.city,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            textAlign: (TextAlign.center),
-          ),
-          Text(
-            'Bio: ' + user.aboutme,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            textAlign: (TextAlign.center),
-          ),
-        ]
-      ),
+        user.gender != null
+            ? Text(
+                'Gender: ' + user.gender,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                textAlign: (TextAlign.center),
+              )
+            : Text(
+                'Gender: Uavailable',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                textAlign: (TextAlign.center),
+              ),
+        Text(
+          'City: ' + user.city,
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          textAlign: (TextAlign.center),
+        ),
+        Text(
+          'Bio: ' + user.aboutme,
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          textAlign: (TextAlign.center),
+        ),
+      ]),
     );
   }
 }
