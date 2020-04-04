@@ -130,7 +130,7 @@ class FriendService extends IFriendService {
   @override
   Future<List<FriendRequests>> getFriendRequests(List friendRequestList) async {
   
-    if (friendRequestList.isEmpty)
+    if (friendRequestList == null || friendRequestList.isEmpty)
      return new List<FriendRequests>();
 
     var friendRequests = <FriendRequests>[];
@@ -160,18 +160,25 @@ class FriendService extends IFriendService {
 
 
   @override
-  void addFriend(UserModel currentUser, FriendRequests friendUser) async {  
-        try{       
-     await Firestore.instance.collection(UserModel.USERCOLLECTION).document(currentUser.uid).updateData({
-          UserModel.FRIENDS: FieldValue.arrayUnion([friendUser.uid])
-          });
-       } catch (e) {
-          print(e);
-        }
-        await Firestore.instance.collection(UserModel.USERCOLLECTION).document(currentUser.uid).updateData({
-          UserModel.FRIENDREQUESTRECIEVED: FieldValue.arrayRemove([friendUser.uid])
-        });
-          }
+  void addFriend(UserModel currentUser, FriendRequests friendRequest) async {  
+    print(friendRequest.uid);
+    try{       
+      await Firestore.instance.collection(UserModel.USERCOLLECTION).document(currentUser.uid).updateData({
+        UserModel.FRIENDS: FieldValue.arrayUnion([friendRequest.uid])
+      });    
+      await Firestore.instance.collection(UserModel.USERCOLLECTION).document(friendRequest.uid).updateData({
+        UserModel.FRIENDS: FieldValue.arrayUnion([currentUser.uid])
+      });
+    } catch (e) {
+        print(e);
+    }
+    await Firestore.instance.collection(UserModel.USERCOLLECTION).document(friendRequest.uid).updateData({
+      UserModel.FRIENDREQUESTSENT: FieldValue.arrayRemove([currentUser.uid])
+    });
+    await Firestore.instance.collection(UserModel.USERCOLLECTION).document(currentUser.uid).updateData({
+      UserModel.FRIENDREQUESTRECIEVED: FieldValue.arrayRemove([friendRequest.uid])
+    });
+  }
         
 
      @override
