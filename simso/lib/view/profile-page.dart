@@ -52,28 +52,69 @@ class ProfilePageState extends State<ProfilePage> {
               : Container(),
         ],
       ),
-      body: ListView(children: <Widget>[
-        // UserAccountsDrawerHeader(
-        // decoration: BoxDecoration(color: DesignConstants.blue),
-        Container(
-          padding: EdgeInsets.all(10),
-          width: 70,
-          height: 120,
-          child: CachedNetworkImage(
-            imageUrl: user.profilePic != null && user.profilePic != ''
-                ? user.profilePic
-                : DesignConstants.profile,
-            placeholder: (context, url) => CircularProgressIndicator(),
-            errorWidget: (context, url, error) => Icon(Icons.account_circle),
+      body: ListView(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.all(10),
+            width: 70,
+            height: 120,
+            child: CachedNetworkImage(
+              imageUrl: user.profilePic != null &&
+                        user.profilePic != ''
+                  ? user.profilePic
+                  : DesignConstants.profile,
+              placeholder: (context, url) =>
+                  CircularProgressIndicator(),
+              errorWidget: (context, url, error) =>
+                  Icon(Icons.account_circle),
+            ),
           ),
-        ),
-        Text(
-          'Profile Feed',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          textAlign: (TextAlign.center),
-        ),
-        Container(),
-      ]),
+          Text(
+            'My Profile',
+            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            textAlign: (TextAlign.center),
+          ),
+          Text(''),
+          Text(
+            'Email: ' + user.email,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            textAlign: (TextAlign.center),
+          ),
+          Text(
+            'Username: ' + user.username,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            textAlign: (TextAlign.center),
+          ),
+          if(user.age == 0) 
+            Text(
+              'Age: ',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              textAlign: (TextAlign.center),
+            ),
+          if (user.age != 0)
+            Text(
+              'Age: ' + user.age.toString(),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              textAlign: (TextAlign.center),
+            ),
+          
+          Text(
+            'Gender: ' + user.gender,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            textAlign: (TextAlign.center),
+          ),
+          Text(
+            'City: ' + user.city,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            textAlign: (TextAlign.center),
+          ),
+          Text(
+            'Bio: ' + user.aboutme,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            textAlign: (TextAlign.center),
+          ),
+        ]
+      ),
     );
   }
 }

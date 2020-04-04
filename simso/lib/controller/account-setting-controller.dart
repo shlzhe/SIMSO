@@ -44,43 +44,52 @@ class AccountSettingController {
   void savePassword(String value) {
     if (state.changing_s == true) {
       userService.changePassword(state.user, value);
-      localUserFunction.writeLocalUser(state.userCopy.email + ' ' + state.userCopy.password);
+      localUserFunction
+          .writeLocalUser(state.userCopy.email + ' ' + state.userCopy.password);
     } else
       return;
   }
-void signOut(){
-        showDialog(
-            context: state.context,
-            builder: (context) => new AlertDialog(
-                  title: new Text('Are you sure?'),
-                  content: new Text(
-                      'Do you want to sign out?'),
-                  actions: <Widget>[
-                    new GestureDetector(
-                      onTap: () async {
-                        String credential = await localUserFunction.readCredential();
-                        FirebaseAuth.instance.signOut(); //Email/pass sign out
-                        GoogleSignIn().signOut();
-                        globals.timer = null;
-                        globals.touchCounter = null;
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context)=> LoginPage(
-                            localUserFunction: localUserFunction, 
-                            credential: credential=='true'? credential: null,
-                            email: credential=='true'? state.user.email: null,
-                            password: credential=="true"? state.user.password: null,
-                            ),
+
+  void signOut() {
+    showDialog(
+        context: state.context,
+        builder: (context) => new AlertDialog(
+              title: new Text('Are you sure?'),
+              content: new Text('Do you want to sign out?'),
+              actions: <Widget>[
+                new GestureDetector(
+                  onTap: () async {
+                    String credential =
+                        await localUserFunction.readCredential();
+                    FirebaseAuth.instance.signOut(); //Email/pass sign out
+                    GoogleSignIn().signOut();
+                    globals.timer = null;
+                    globals.touchCounter = null;
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LoginPage(
+                            localUserFunction: localUserFunction,
+                            credential:
+                                credential == 'true' ? credential : null,
+                            email:
+                                credential == 'true' ? state.user.email : null,
+                            password: credential == "true"
+                                ? state.user.password
+                                : null,
+                          ),
                         ));
-                      },
-                      child: Text("Yes"),
-                    ),
-                                        new GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: Text("No"),)
-                  ],
-                ));
-      
-}
+                  },
+                  child: Text("Yes"),
+                ),
+                new GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Text("No"),
+                )
+              ],
+            ));
+  }
+
   void deleteUser() {
     //Display confirmation dialog box after user clicking on "Sign Out" button
     showDialog(
@@ -109,14 +118,17 @@ void signOut(){
                 Navigator.pop(context); //Close Dialog box
                 Navigator.pop(context); //Close Drawer
                 //Navigator.pop(state.context);  //Close Home Page
-                Navigator.push(context, MaterialPageRoute(
-                          builder: (context)=> LoginPage(
-                            localUserFunction: localUserFunction, 
-                            credential: credential=='true'? credential: null,
-                            email: credential=='true'? state.user.email: null,
-                            password: credential=="true"? state.user.password: null,
-                            ),
-                        ));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginPage(
+                        localUserFunction: localUserFunction,
+                        credential: credential == 'true' ? credential : null,
+                        email: credential == 'true' ? state.user.email : null,
+                        password:
+                            credential == "true" ? state.user.password : null,
+                      ),
+                    ));
               },
             ),
             RaisedButton(
@@ -151,19 +163,27 @@ void signOut(){
                   actions: <Widget>[
                     new GestureDetector(
                       onTap: () async {
-                        String credential = await localUserFunction.readCredential();
+                        String credential =
+                            await localUserFunction.readCredential();
                         FirebaseAuth.instance.signOut(); //Email/pass sign out
                         GoogleSignIn().signOut();
                         globals.timer = null;
                         globals.touchCounter = null;
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context)=> LoginPage(
-                            localUserFunction: localUserFunction, 
-                            credential: credential=='true'? credential: null,
-                            email: credential=='true'? state.userCopy.email: null,
-                            password: credential=="true"? state.userCopy.password: null,
-                            ),
-                        ));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => LoginPage(
+                                localUserFunction: localUserFunction,
+                                credential:
+                                    credential == 'true' ? credential : null,
+                                email: credential == 'true'
+                                    ? state.userCopy.email
+                                    : null,
+                                password: credential == "true"
+                                    ? state.userCopy.password
+                                    : null,
+                              ),
+                            ));
                       },
                       child: Text("OK"),
                     ),
@@ -211,8 +231,10 @@ void signOut(){
           ],
         ),
       );
-    } else
-      Navigator.of(state.context).pop(true); //??false;
+    } else {
+      Navigator.pop(state.context, true);
+      return Future.value(false);
+    } //??false;
   }
 
   void showSnackBar(String label) {
