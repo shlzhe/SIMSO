@@ -1,26 +1,27 @@
-  import 'package:simso/model/entities/thought-model.dart';
+import 'package:simso/model/entities/thought-model.dart';
 import 'package:simso/model/entities/dictionary-word-model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:simso/service-locator.dart';
 import 'ithought-service.dart';
 import 'idictionary-service.dart';
+import 'package:translator/translator.dart';
 
 class ThoughtService extends IThoughtService {
   IDictionaryService _dictionaryService = locator<IDictionaryService>();
+  final translator = new GoogleTranslator();
 
   @override
   Future<void> addThought(Thought thought) async {
+    await Firestore.instance
+        .collection(Thought.THOUGHTS_COLLECTION)
+        .add(thought.serialize())
+        .then((docRef) {
+      thought.thoughtId = docRef.documentID;
+    }).catchError((onError) {
+      print(onError);
+      return null;
+    });
 
-    await Firestore.instance.collection(Thought.THOUGHTS_COLLECTION)
-      .add(thought.serialize())
-      .then((docRef) {
-        thought.thoughtId = docRef.documentID;
-      })
-      .catchError((onError) {
-        print(onError);
-        return null;
-      });
-    
     _dictionaryService.updateDictionary(thought, null, null);
   }
 
@@ -38,15 +39,13 @@ class ThoughtService extends IThoughtService {
 
   @override
   Future<List<Thought>> getThoughts(String uid) async {
+    var myThoughtsList = <Thought>[];
     try {
       QuerySnapshot querySnapshot = await Firestore.instance
           .collection(Thought.THOUGHTS_COLLECTION)
           .where(Thought.UID, isEqualTo: uid)
           .orderBy(Thought.TIMESTAMP)
           .getDocuments();
-      var myThoughtsList = <Thought>[];
-      
-
       if (querySnapshot == null || querySnapshot.documents.length == 0) {
         var newThought = Thought(
             tags: ['Welcome'],
@@ -54,32 +53,30 @@ class ThoughtService extends IThoughtService {
             timestamp: DateTime.now(),
             uid: uid);
         myThoughtsList.add(newThought);
+      } else
+        for (DocumentSnapshot doc in querySnapshot.documents) {
+          myThoughtsList.add(Thought.deserialize(doc.data, doc.documentID));
+        }
+    } catch (e) {
+      throw e;
+    }
+    return myThoughtsList;
+  }
 
-        return myThoughtsList;
-      }
-      for (DocumentSnapshot doc in querySnapshot.documents) {
-        myThoughtsList.add(Thought.deserialize(doc.data, doc.documentID));
-      }
-      return myThoughtsList;
+  Future<void> deleteThought(String docID) async {
+    try {
+      await Firestore.instance
+          .collection(Thought.THOUGHTS_COLLECTION)
+          .document(docID)
+          .delete();
     } catch (e) {
       throw e;
     }
   }
 
-  Future<void> deleteThought(String docID) async {
-    try{
-    await Firestore.instance
-        .collection(Thought.THOUGHTS_COLLECTION)
-        .document(docID)
-        .delete();
-    } catch (e){
-      throw e;
-    }
-
-  }
-
   @override
-  Future<List<Thought>> contentThoughtList(bool friends, List<dynamic> friendslist) async {
+  Future<List<Thought>> contentThoughtList(
+      bool friends, List<dynamic> friendslist, String langPref) async {
     var data = <Thought>[];
     var friendsThoughtList = <Thought>[];
     try {
@@ -88,26 +85,36 @@ class ThoughtService extends IThoughtService {
           .orderBy(Thought.TIMESTAMP)
           .getDocuments();
       for (DocumentSnapshot doc in querySnapshot.documents) {
-        data.add(Thought.deserialize(doc.data, doc.documentID));
+        Thought newThought = Thought.deserialize(doc.data, doc.documentID);
+        if (langPref != 'none' && langPref != null) {
+          newThought.text =
+              await translator.translate(newThought.text, to: langPref);
+        }
+        data.add(newThought);
       }
-      if(!friends){ //new content remove friends content
-        try{
-          for (var i in friendslist){
-            data.removeWhere((element) => element.uid==i.toString());
+      if (!friends) {
+        //new content remove friends content
+        try {
+          for (var i in friendslist) {
+            data.removeWhere((element) => element.uid == i.toString());
           }
-        }catch(error){print(error);}
+        } catch (error) {
+          print(error);
+        }
         return data;
-      }
-      else{
-        try{
-          for (var i in friendslist){//friends content remove public content
-            var temp = data.where((element) => element.uid==i.toString());
+      } else {
+        try {
+          for (var i in friendslist) {
+            //friends content remove public content
+            var temp = data.where((element) => element.uid == i.toString());
             friendsThoughtList.addAll(temp);
           }
-        }catch(error){print(error);}
+        } catch (error) {
+          print(error);
+        }
       }
       return friendsThoughtList;
-    }catch(error){
+    } catch (error) {
       return data;
     }
   }

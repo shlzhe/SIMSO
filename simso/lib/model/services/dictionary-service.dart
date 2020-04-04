@@ -21,19 +21,16 @@ class DictionaryService extends IDictionaryService {
           .toSet();
 
       //compare existing dictionary with thought text
-      print('updating dictionary for thoughtId: ' + thought.thoughtId);
       var matched = false;
       var newWordDocID;
       thoughtWordList.forEach((word) async => {
             word = word.toLowerCase(),
-            print('word: ' + word),
             matched = false,
             if (dictionaryWordList != null)
               {
                 dictionaryWordList.forEach((doc) async => {
                       if (word == doc.word.toLowerCase())
                         {
-                          print('matched ' + word),
                           matched = true,
                           updateDictionaryWord(doc, thought, null, null)
                         }
@@ -46,7 +43,6 @@ class DictionaryService extends IDictionaryService {
 
   Future<void> updateDictionaryWord(DictionaryWord word, Thought thought,
       SongModel song, ImageModel image) async {
-    print('updating dictionary word for ' + word.word);
     var duplicateThought = false;
     var duplicateSong = false;
     var duplicateImage = false;
@@ -108,7 +104,6 @@ class DictionaryService extends IDictionaryService {
 
   Future<void> addDictionaryWord(
       String text, Thought thought, SongModel song, ImageModel image) async {
-        print('adding dictionary word for ' + text);
     var newWord = DictionaryWord.empty();
     
     newWord.word = text;
@@ -139,10 +134,6 @@ class DictionaryService extends IDictionaryService {
       var duplicate = false;
       var keyword;
 
-      if(thoughtId == null) print('thought is null');
-      else { 
-        print('thoughtid ' + thoughtId);
-      }
       try{
           querySnapshot = await Firestore.instance
           .collection(DictionaryWord.DICTIONARY_COLLECTION)
@@ -180,7 +171,6 @@ class DictionaryService extends IDictionaryService {
         dictionaryWordList
             .add(DictionaryWord.deserialize(doc.data, doc.documentID));
       }
-      //dictionaryWordList.forEach((doc) => {print(doc.word)});
       return dictionaryWordList;
     } catch (e) {
       throw e;
