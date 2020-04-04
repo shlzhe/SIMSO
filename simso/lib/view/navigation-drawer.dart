@@ -12,6 +12,11 @@ import '../model/entities/local-user.dart';
 import '../model/entities/friend-model.dart';
 import '../model/entities/user-model.dart';
 import '../model/entities/thought-model.dart';
+import '../model/entities/meme-model.dart';
+import '../model/entities/dictionary-word-model.dart';
+import '../model/services/ifriend-service.dart';
+import '../model/services/ithought-service.dart';
+import '../model/services/imeme-service.dart';
 import '../model/services/ifriend-service.dart';
 import '../model/services/ithought-service.dart';
 import '../model/entities/image-model.dart';
@@ -26,6 +31,7 @@ import 'package:simso/model/entities/language-model.dart';
 import '../view/friends-page.dart';
 import '../view/homepage.dart';
 import '../view/my-thoughts-page.dart';
+import '../view/my-memes-page.dart';
 import '../view/login-page.dart';
 import '../view/recommend-friends-page.dart';
 import '../view/time-management-page.dart';
@@ -50,6 +56,7 @@ class MyDrawer extends StatelessWidget {
   final IImageService _imageService = locator<IImageService>();
   final IUserService _userService = locator<IUserService>();
   final IThoughtService _thoughtService = locator<IThoughtService>();
+  final IMemeService _memeService = locator<IMemeService>();
   final IDictionaryService _dictionaryService = locator<IDictionaryService>();
   final bool visit = false;
   MyDrawer(this.context, this.user);
@@ -67,6 +74,9 @@ class MyDrawer extends StatelessWidget {
   }
 
   void navigateProfile() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => ProfilePage(user,visit)));
+    checkLimits();
     Navigator.push(context, MaterialPageRoute(
       builder: (context) => ProfilePage(user, visit)
     ));
@@ -85,22 +95,27 @@ class MyDrawer extends StatelessWidget {
         context, MaterialPageRoute(builder: (context) => SnapshotPage(user, imagelist)));
   }
 
-  void navigateMemePage() {
+  void navigateMyMemes() async {
+    List<Meme> myMemesList =
+        await _memeService.getMemes(user.uid.toString());
+
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => MemePage()));
+        context,
+        MaterialPageRoute(
+            builder: (context) => MyMemesPage(user, myMemesList)));
     checkLimits();
   }
 
   void navigateAccountSettingPage() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => AccountSettingPage(user)));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => AccountSettingPage(user)));
     checkLimits();
   }
 
   void navigateMyThoughts() async {
     List<Thought> myThoughtsList =
         await _thoughtService.getThoughts(user.uid.toString());
-    
+
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -111,14 +126,14 @@ class MyDrawer extends StatelessWidget {
   void signOut() async {
     String readInData;
     String credential;
-    try{  
+    try {
       readInData = await localUserFunction.readLocalUser();
       credential = await localUserFunction.readCredential();
       int i = readInData.indexOf(' ');
-      user.email = readInData.substring(0,i);
-      user.password= readInData.substring(i+1);
-    }catch(error){}
-    FirebaseAuth.instance.signOut();    //Email/pass sign out
+      user.email = readInData.substring(0, i);
+      user.password = readInData.substring(i + 1);
+    } catch (error) {}
+    FirebaseAuth.instance.signOut(); //Email/pass sign out
     GoogleSignIn().signOut();
     //Display confirmation dialog box after user clicking on "Sign Out" button
     showDialog(
@@ -239,18 +254,27 @@ class MyDrawer extends StatelessWidget {
   }
 
   void checkLimits() async {
-    var timeLimitReached = (globals.getDate(globals.limit.overrideThruDate).difference(DateTime.now()).inDays != 0
-          && globals.timer.timeOnAppSec / 60 > globals.limit.timeLimitMin);
-    var touchLimitReached = (globals.getDate(globals.limit.overrideThruDate).difference(DateTime.now()).inDays != 0
-          && globals.touchCounter.touches > globals.limit.touchLimit);  
+    var timeLimitReached = (globals
+                .getDate(globals.limit.overrideThruDate)
+                .difference(DateTime.now())
+                .inDays !=
+            0 &&
+        globals.timer.timeOnAppSec / 60 > globals.limit.timeLimitMin);
+    var touchLimitReached = (globals
+                .getDate(globals.limit.overrideThruDate)
+                .difference(DateTime.now())
+                .inDays !=
+            0 &&
+        globals.touchCounter.touches > globals.limit.touchLimit);
 
-    if ((timeLimitReached && globals.limit.timeLimitMin > 0) || (touchLimitReached && globals.limit.touchLimit > 0)) {
+    if ((timeLimitReached && globals.limit.timeLimitMin > 0) ||
+        (touchLimitReached && globals.limit.touchLimit > 0)) {
       LimitReachedDialog.info(
-          context: this.context, 
-          user: this.user, 
+          context: this.context,
+          user: this.user,
           timeReached: timeLimitReached);
-        print('Limit Dialog opened');
-      }
+      print('Limit Dialog opened');
+    }
   }
 
   @override
@@ -313,12 +337,12 @@ class MyDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.camera),
             title: Text('My Snapshots'),
-            onTap: navigateSnapshotPage,
+            onTap: null,
           ),
           ListTile(
             leading: Icon(Icons.mood),
             title: Text('My Memes'),
-            onTap: navigateMemePage,
+            onTap: navigateMyMemes,
           ),
           ListTile(
             leading: Icon(Icons.settings),
