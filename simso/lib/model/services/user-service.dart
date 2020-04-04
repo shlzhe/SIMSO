@@ -42,6 +42,25 @@ class UserService extends IUserService {
   }
 
   @override
+  Future<List<UserModel>> readAllUser() async {
+    try {
+      var query = await Firestore.instance
+          .collection(UserModel.USERCOLLECTION)
+          .getDocuments();
+      var userList = <UserModel>[];
+      if (query.documents.isEmpty || query == null || query.documents.length == 0)
+        return userList;
+     for (DocumentSnapshot doc in query.documents) {
+       userList.add(UserModel.deserialize(doc.data));
+     }
+
+     return userList;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  @override
   Future<String> createAccount(UserModel user) async {
     try {
       AuthResult auth = await FirebaseAuth.instance

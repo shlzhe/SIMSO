@@ -16,6 +16,7 @@ import '../model/services/ifriend-service.dart';
 import '../model/services/ithought-service.dart';
 import '../model/entities/song-model.dart';
 import '../model/services/isong-service.dart';
+import '../model/services/iuser-service.dart';
 import '../model/services/idictionary-service.dart';
 import 'package:simso/model/entities/language-model.dart';
 
@@ -32,6 +33,7 @@ import '../view/meme-page.dart';
 import '../view/account-setting-page.dart';
 import '../view/profile-page.dart';
 import '../view/my-music-page.dart';
+import '../view/music-feed.dart';
 import 'limit-reached-dialog.dart';
 
 
@@ -43,9 +45,10 @@ class MyDrawer extends StatelessWidget {
   final LocalUser localUserFunction = LocalUser();
   final IFriendService friendService = locator<IFriendService>();
   final ISongService _songService = locator<ISongService>();
+  final IUserService _userService = locator<IUserService>();
   final IThoughtService _thoughtService = locator<IThoughtService>();
   final IDictionaryService _dictionaryService = locator<IDictionaryService>();
-
+  final bool visit = false;
   MyDrawer(this.context, this.user);
 
   void navigateHomepage() async {
@@ -62,7 +65,7 @@ class MyDrawer extends StatelessWidget {
 
   void navigateProfile() {
     Navigator.push(context, MaterialPageRoute(
-      builder: (context) => ProfilePage(user)
+      builder: (context) => ProfilePage(user, visit)
     ));
     checkLimits();
   }
@@ -88,8 +91,7 @@ class MyDrawer extends StatelessWidget {
   void navigateMyThoughts() async {
     List<Thought> myThoughtsList =
         await _thoughtService.getThoughts(user.uid.toString());
-
-
+    
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -136,17 +138,19 @@ class MyDrawer extends StatelessWidget {
                 globals.touchCounter = null;
                 globals.limit = null;
                 //Close Drawer, then go back to Front Page
-                Navigator.pop(context);  //Close Dialog box
-                Navigator.pop(context);  //Close Drawer
-                //Navigator.pop(state.context);  //Close Home Page 
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (context)=> LoginPage(
-                    localUserFunction: localUserFunction, 
-                    credential: credential=='true'? credential: null,
-                    email: credential=='true'? user.email: null,
-                    password: credential=="true"? user.password: null,
-                    ),
-                ));
+                Navigator.pop(context); //Close Dialog box
+                Navigator.pop(context); //Close Drawer
+                //Navigator.pop(state.context);  //Close Home Page
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginPage(
+                        localUserFunction: localUserFunction,
+                        credential: credential == 'true' ? credential : null,
+                        email: credential == 'true' ? user.email : null,
+                        password: credential == "true" ? user.password : null,
+                      ),
+                    ));
               },
             ),
             RaisedButton(
@@ -183,6 +187,27 @@ class MyDrawer extends StatelessWidget {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => TimeManagementPage(user)));
     checkLimits();
+  }
+
+  void navigateMusicFeed() async {
+    List<SongModel> allSongList;
+    List<UserModel> allUserList;
+    try {
+      print("GET SONGS & USERS");
+      allSongList = await _songService.getAllSongList();
+      allUserList = await _userService.readAllUser();
+    } catch (e) {
+      allSongList = <SongModel>[];
+
+      print("SONGLIST LENGTH: " + allSongList.length.toString());
+    }
+    print("SUCCEED IN GETTING SONGS & USERS");
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MusicFeed(user, allUserList, allSongList),
+      ),
+    );
   }
 
   void navigateMyMusic() async {
@@ -265,6 +290,11 @@ class MyDrawer extends StatelessWidget {
             leading: Icon(Icons.group_add),
             title: Text('Recommended Friends'),
             onTap: recommendFriends,
+          ),
+          ListTile(
+            leading: Icon(Icons.music_note),
+            title: Text('Music Feed'),
+            onTap: navigateMusicFeed,
           ),
           ListTile(
             leading: Icon(Icons.music_note),

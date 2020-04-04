@@ -1,3 +1,5 @@
+//import 'package:flutter/material.dart';
+//import 'package:simso/model/entities/song-model.dart';
 import 'package:flutter/material.dart';
 import 'package:simso/model/entities/song-model.dart';
 import 'package:simso/model/entities/user-model.dart';
@@ -5,36 +7,44 @@ import 'package:simso/model/services/isong-service.dart';
 import 'package:simso/model/services/ithought-service.dart';
 import 'package:simso/model/services/iuser-service.dart';
 import 'package:simso/service-locator.dart';
-import 'package:simso/view/music-feed.dart';
 import 'package:simso/view/new-content.dart';
 
-class NewContentPageController{
-  NewContentPageState state;
-  NewContentPageController(this.state);
-  
+import '../view/music-feed.dart';
+
+class MusicFeedController {
+  MusicFeedState state;
+  //NowPlayingScreenState state1;
+  MusicFeedController(this.state);
+  int selectedIndex = 0;
   final ISongService _songService = locator<ISongService>();
   final IUserService _userService = locator<IUserService>();
   final IThoughtService thoughtService = locator<IThoughtService>();
+
+  void newContent() async {
+    Navigator.push(state.context,
+        MaterialPageRoute(builder: (context) => NewContentPage(state.user)));
+  }
+
   void snapshots() {
-    if (state.snapshots == false){
+    if (state.snapshots == false) {
       state.meme = false;
       state.thoughts = false;
       state.music = false;
       state.snapshots = true;
-      state.stateChanged((){});
+      state.stateChanged(() {});
     }
   }
 
   Future music() async {
-    if (state.music == false){
-      state.stateChanged((){
+    if (state.music == false) {
+      state.stateChanged(() {
         state.meme = false;
         state.thoughts = false;
         state.music = true;
         state.snapshots = false;
       });
     }
-   List<SongModel> allSongList;
+    List<SongModel> allSongList;
     List<UserModel> allUserList;
     try {
       print("GET SONGS & USERS");
@@ -58,8 +68,8 @@ class NewContentPageController{
     );
   }
 
-  void thoughts() async {
-    state.publicThoughtsList = await thoughtService.contentThoughtList(state.friends, state.user.friends, state.user.language);
+ void thoughts() async {
+    state.publicThoughtsList = await thoughtService.contentThoughtList(state.friends, state.user.friends);
     if (state.thoughts == false){
       state.meme = false;
       state.thoughts = true;
@@ -71,12 +81,12 @@ class NewContentPageController{
   }
 
   void meme() {
-    if (state.meme == false){
+    if (state.meme == false) {
       state.meme = true;
       state.thoughts = false;
       state.music = false;
       state.snapshots = false;
-      state.stateChanged((){});
+      state.stateChanged(() {});
     }
   }
 }
