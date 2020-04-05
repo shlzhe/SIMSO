@@ -11,36 +11,23 @@ import '../model/entities/globals.dart' as globals;
 import '../model/entities/local-user.dart';
 import '../model/entities/friend-model.dart';
 import '../model/entities/user-model.dart';
-import '../model/entities/thought-model.dart';
-import '../model/entities/meme-model.dart';
-import '../model/entities/dictionary-word-model.dart';
 import '../model/services/ifriend-service.dart';
-import '../model/services/ithought-service.dart';
-import '../model/services/imeme-service.dart';
-import '../model/services/ifriend-service.dart';
-import '../model/services/ithought-service.dart';
 import '../model/entities/image-model.dart';
 import '../model/entities/song-model.dart';
 import '../model/services/ipicture-service.dart';
 import '../model/services/isong-service.dart';
 import '../model/services/iuser-service.dart';
-import '../model/services/idictionary-service.dart';
-import 'package:simso/model/entities/language-model.dart';
 
 //view imports
 import '../view/friends-page.dart';
 import '../view/homepage.dart';
-import '../view/my-thoughts-page.dart';
-import '../view/my-memes-page.dart';
 import '../view/login-page.dart';
 import '../view/recommend-friends-page.dart';
 import '../view/time-management-page.dart';
 import '../view/design-constants.dart';
 import '../view/my-snapshot-page.dart';
-import '../view/meme-page.dart';
 import '../view/account-setting-page.dart';
 import '../view/profile-page.dart';
-import '../view/my-music-page.dart';
 import '../view/music-feed.dart';
 import 'limit-reached-dialog.dart';
 
@@ -55,9 +42,6 @@ class MyDrawer extends StatelessWidget {
   final ISongService _songService = locator<ISongService>();
   final IImageService _imageService = locator<IImageService>();
   final IUserService _userService = locator<IUserService>();
-  final IThoughtService _thoughtService = locator<IThoughtService>();
-  final IMemeService _memeService = locator<IMemeService>();
-  final IDictionaryService _dictionaryService = locator<IDictionaryService>();
   final bool visit = false;
   MyDrawer(this.context, this.user);
 
@@ -95,33 +79,12 @@ class MyDrawer extends StatelessWidget {
         context, MaterialPageRoute(builder: (context) => SnapshotPage(user, imagelist)));
   }
 
-  void navigateMyMemes() async {
-    List<Meme> myMemesList =
-        await _memeService.getMemes(user.uid.toString());
-
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => MyMemesPage(user, myMemesList)));
-    checkLimits();
-  }
-
   void navigateAccountSettingPage() {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => AccountSettingPage(user)));
     checkLimits();
   }
 
-  void navigateMyThoughts() async {
-    List<Thought> myThoughtsList =
-        await _thoughtService.getThoughts(user.uid.toString());
-
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => MyThoughtsPage(user, myThoughtsList)));
-    checkLimits();
-  }
 
   void signOut() async {
     String readInData;
@@ -234,25 +197,6 @@ class MyDrawer extends StatelessWidget {
     );
   }
 
-  void navigateMyMusic() async {
-    List<SongModel> songlist;
-    try {
-      print("GET SONGS");
-      songlist = await _songService.getSong(user.email);
-    } catch (e) {
-      songlist = <SongModel>[];
-      print("SONGLIST LENGTH: " + songlist.length.toString());
-    }
-    print("SUCCEED IN GETTING SONGS");
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => MyMusic(user, songlist),
-      ),
-    );
-    checkLimits();
-  }
-
   void checkLimits() async {
     var timeLimitReached = (globals
                 .getDate(globals.limit.overrideThruDate)
@@ -330,29 +274,9 @@ class MyDrawer extends StatelessWidget {
             onTap: navigateMusicFeed,
           ),
           ListTile(
-            leading: Icon(Icons.music_note),
-            title: Text('My Music'),
-            onTap: navigateMyMusic,
-          ),
-          ListTile(
-            leading: Icon(Icons.camera),
-            title: Text('My Snapshots'),
-            onTap: navigateSnapshotPage,
-          ),
-          ListTile(
-            leading: Icon(Icons.mood),
-            title: Text('My Memes'),
-            onTap: navigateMyMemes,
-          ),
-          ListTile(
             leading: Icon(Icons.settings),
             title: Text('Account Settings'),
             onTap: navigateAccountSettingPage,
-          ),
-          ListTile(
-            leading: Icon(Icons.bubble_chart),
-            title: Text('My Thoughts'),
-            onTap: navigateMyThoughts,
           ),
           ListTile(
             leading: Icon(Icons.exit_to_app),
