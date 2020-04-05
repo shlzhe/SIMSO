@@ -87,10 +87,10 @@ class MyDrawer extends StatelessWidget {
     List<ImageModel> imagelist;
     try {
       imagelist = await _imageService.getImage(user.email);
-    } catch (e) {
+    } 
+    catch (e) {
       imagelist = <ImageModel>[];
     }
-    print("SUCCESS");
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => SnapshotPage(user, imagelist)));
   }

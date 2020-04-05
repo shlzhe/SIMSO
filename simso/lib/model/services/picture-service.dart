@@ -37,10 +37,6 @@ class ImageService extends IImageService {
   @override
   Future<List<ImageModel>> getImageList(String email) async {
     try {
-      // get song
-      // 1st where the array contains, then order by the below
-      // each uses a key and firebase will throw a precondition indexing issue
-      // have to build index for each query in FireStore
       QuerySnapshot querySnapshot = await Firestore.instance
           .collection(ImageModel.IMAGE_COLLECTION)
           .where(ImageModel.CREATEDBY, isEqualTo: email) // access request
@@ -56,7 +52,7 @@ class ImageService extends IImageService {
       imageNum = querySnapshot.documents.length;
       return imagelist.reversed.toList();
     } catch (e) {
-      throw e;
+      print(e);
     }
   }
 
