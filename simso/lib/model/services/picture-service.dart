@@ -40,7 +40,7 @@ class ImageService extends IImageService {
       QuerySnapshot querySnapshot = await Firestore.instance
           .collection(ImageModel.IMAGE_COLLECTION)
           .where(ImageModel.CREATEDBY, isEqualTo: email) // access request
-          //.orderBy(ImageModel.LASTUPDATEDAT)
+          .orderBy(ImageModel.LASTUPDATEDAT)
           .getDocuments();
       var imagelist = <ImageModel>[];
       if (querySnapshot == null || querySnapshot.documents.length == 0) {
@@ -53,7 +53,7 @@ class ImageService extends IImageService {
       return imagelist.reversed.toList();
     } 
     catch (e) {
-      print("-----");
+      print("getImageList(picture-service) error");
       print(e);
     }
   }

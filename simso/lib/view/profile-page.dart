@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:simso/view/design-constants.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../model/entities/user-model.dart';
-import '../model/entities/image-model.dart';
 import '../controller/profile-page-controller.dart';
 
 class ProfilePage extends StatefulWidget {
