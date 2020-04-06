@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:simso/model/entities/song-model.dart';
 import 'package:simso/model/entities/user-model.dart';
-import 'package:simso/model/entities/local-user.dart';
 import 'package:simso/model/services/isong-service.dart';
 import 'package:simso/model/services/iuser-service.dart';
 import 'package:simso/view/create-account.dart';
+import 'package:simso/view/forget-password.dart';
 import 'package:simso/view/homepage.dart';
 import 'package:simso/view/login-page.dart';
 import 'package:simso/view/mydialog.dart';
@@ -34,7 +34,7 @@ class LoginPageController {
     try {
       state.user.uid = await userService.login(state.user);
       if (state.user.uid != '' || state.user.uid != null) {
-        if (state.setTouchID)
+        if (state.setTouchID || state.setCredential)
           state.localUserFunction
               .writeLocalUser(state.user.email + " " + state.user.password);
         if (state.setCredential) {
@@ -115,7 +115,12 @@ class LoginPageController {
     if (value != null) {
       state.entry = true;
     }
-    if (value == '') state.entry = false;
+    if (value == '' || value==null) {
+      state.entry = false;
+      state.setCredential = false;
+      state.credential = 'false';
+      state.passwordController.text = '';
+    }
     state.stateChanged(() {});
   }
 
@@ -329,10 +334,21 @@ class LoginPageController {
     if (state.setCredential == false) {
       state.setCredential = true;
     } else {
-      state.setCredential = false;
-      if (!state.setCredential)
-        state.localUserFunction.writeCredential('false');
+      state.stateChanged((){
+        state.setCredential = false;
+        if (!state.setCredential){
+          state.localUserFunction.writeCredential('false');
+          state.credential = 'false';
+          state.emailController.text ='';
+          state.passwordController.text ='';
+        }
+      });
     }
     state.stateChanged(() {});
+  }
+
+  void forgetPassword(){
+    Navigator.push(state.context, MaterialPageRoute(
+      builder: (context)=>ForgetPassword()));
   }
 }

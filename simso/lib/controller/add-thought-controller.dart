@@ -29,6 +29,7 @@ class AddThoughtController {
 
   void saveText(String value) {
     state.thoughtCopy.text = value;
+    state.thoughtCopy.email = state.user.email;
   }
 
   

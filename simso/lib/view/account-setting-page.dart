@@ -44,7 +44,6 @@ class AccountSettingPageState extends State<AccountSettingPage> {
   @override
   Widget build(BuildContext context) {
     this.context = context;
-
     return WillPopScope(
       onWillPop: controller.onBackPressed,
       child: Scaffold(
@@ -77,6 +76,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
             _buildCardSettingsText_Name(),
             _buildCardSettingsText_City(),
             _buildCardSettingsListPicker_Gender(),
+            _buildCardSettingsListPicker_Language(),
             _buildCardSettingsNumberPicker(),
             _buildCardSettingsParagraph(3),
           ],
@@ -218,6 +218,29 @@ class AccountSettingPageState extends State<AccountSettingPage> {
         setState(() {
           userCopy.gender = value;
           user.gender = value;
+        });
+      },
+    );
+  }
+
+  CardSettingsListPicker _buildCardSettingsListPicker_Language() {
+    return CardSettingsListPicker(
+      label: 'Language',
+      initialValue: userCopy.language,
+      hintText: 'Language',
+      autovalidate: autoValidate,
+      options: <String>[ 'None', 'Afrikaans', 'Albanian', 'Amharic', 'Arabic', 'Armenian', 'Azerbaijani', 'Basque', 'Belarusian', 'Bengali', 'Bosnian', 'Bulgarian', 'Catalan', 'Cebuano', 'Chichewa', 'Chinese Simplified', 'Chinese Traditional', 'Corsican', 'Croatian', 'Czech', 'Danish', 'Dutch', 'English', 'Esperanto', 'Estonian', 'Filipino', 'Finnish', 'French', 'Frisian', 'Galician', 'Georgian', 'German', 'Greek', 'Gujarati', 'Haitian Creole', 'Hausa', 'Hawaiian', 'Hebrew', 'Hindi', 'Hmong', 'Hungarian', 'Icelandic', 'Igbo', 'Indonesian', 'Irish', 'Italian', 'Japanese', 'Javanese', 'Kannada', 'Kazakh', 'Khmer', 'Korean', 'Kurdish (Kurmanji)', 'Kyrgyz', 'Lao', 'Latin', 'Latvian', 'Lithuanian', 'Luxembourgish', 'Macedonian', 'Malagasy', 'Malay', 'Malayalam', 'Maltese', 'Maori', 'Marathi', 'Mongolian', 'Myanmar (Burmese)', 'Nepali', 'Norwegian', 'Pashto', 'Persian', 'Polish', 'Portuguese', 'Punjabi', 'Romanian', 'Russian', 'Samoan', 'Scots Gaelic', 'Serbian', 'Sesotho', 'Shona', 'Sindhi', 'Sinhala', 'Slovak', 'Slovenian', 'Somali', 'Spanish', 'Sundanese', 'Swahili', 'Swedish', 'Tajik', 'Tamil', 'Telugu', 'Thai', 'Turkish', 'Ukrainian', 'Urdu', 'Uzbek', 'Vietnamese', 'Welsh', 'Xhosa', 'Yiddish', 'Yoruba', 'Zulu'],
+      values: <String>[ 'none', 'af', 'sq', 'am', 'ar', 'hy', 'az', 'eu', 'be', 'bn', 'bs', 'bg', 'ca', 'ceb', 'ny', 'zh-cn', 'zh-tw', 'co', 'hr', 'cs', 'da', 'nl', 'en', 'eo', 'et', 'tl', 'fi', 'fr', 'fy', 'gl', 'ka', 'de', 'el', 'gu', 'ht', 'ha', 'haw', 'iw', 'hi', 'hmn', 'hu', 'is', 'ig', 'id', 'ga', 'it', 'ja', 'jw', 'kn', 'kk', 'km', 'ko', 'ku', 'ky', 'lo', 'la', 'lv', 'lt', 'lb', 'mk', 'mg', 'ms', 'ml', 'mt', 'mi', 'mr', 'mn', 'my', 'ne', 'no', 'ps', 'fa', 'pl', 'pt', 'pa', 'ro', 'ru', 'sm', 'gd', 'sr', 'st', 'sn', 'sd', 'si', 'sk', 'sl', 'so', 'es', 'su', 'sw', 'sv', 'tg', 'ta', 'te', 'th', 'tr', 'uk', 'ur', 'uz', 'vi', 'cy', 'xh', 'yi', 'yo', 'zu'],
+      validator: (String value) {
+        //if (value == null || value.isEmpty) return 'Please select your gender';
+        return null;
+      },
+      onSaved: (value) => userCopy.language = value,
+      onChanged: (value) {
+        changing = true;
+        setState(() {
+          userCopy.language = value;
+          user.language = value;
         });
       },
     );

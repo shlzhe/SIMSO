@@ -42,6 +42,25 @@ class UserService extends IUserService {
   }
 
   @override
+  Future<List<UserModel>> readAllUser() async {
+    try {
+      var query = await Firestore.instance
+          .collection(UserModel.USERCOLLECTION)
+          .getDocuments();
+      var userList = <UserModel>[];
+      if (query.documents.isEmpty || query == null || query.documents.length == 0)
+        return userList;
+     for (DocumentSnapshot doc in query.documents) {
+       userList.add(UserModel.deserialize(doc.data));
+     }
+
+     return userList;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  @override
   Future<String> createAccount(UserModel user) async {
     try {
       AuthResult auth = await FirebaseAuth.instance
@@ -95,4 +114,51 @@ class UserService extends IUserService {
         .document(user.uid)
         .delete();
   }
+
+  @override
+  Future<List<dynamic>> readQuestion() async {
+    List<dynamic> questions;
+    var doc = await Firestore.instance.collection('Questions')
+      .where('Questions')
+      .getDocuments();
+    doc.documents.forEach((element) {questions = element.data.values.first;});
+    return questions;
+  }
+
+  @override
+  Future<List<dynamic>> answerQuestion(String email) async{
+    var doc = await Firestore.instance.collection('Answers')
+    .where('email', isEqualTo: email)
+    .getDocuments();
+    if (doc.documents.isNotEmpty) return doc.documents.first.data.values.first;
+    else return [];
+  }
+
+  @override
+  Future<String> friendthoughts(String uid) async {
+    var doc = await Firestore.instance.collection('thoughts')
+      .where('uid', isEqualTo: uid)
+      .getDocuments();
+    String thoughts = doc.documents.first.data.values.toString();
+    print(thoughts +'userfunction');
+    return thoughts[2];
+  }
+
+  @override
+  Future<List<UserModel>> readUsername() async{
+    List<UserModel> userList=[];
+    var doc = await Firestore.instance.collection(UserModel.USERCOLLECTION)
+      .getDocuments();
+    try{
+      doc.documents.forEach((element) {
+        UserModel user = UserModel.deserialize(element.data);
+        userList.add(user);
+      });
+      return userList;
+    }catch(error){
+      return userList=[];
+    }
+  }
+
+  
 }

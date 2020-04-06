@@ -2,6 +2,9 @@ import 'package:simso/model/entities/friend-model.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/model/services/ifriend-service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:simso/model/entities/friendRequest-model.dart' ;
+import 'package:simso/model/services/ifriend-service.dart';
+
 
 class FriendService extends IFriendService {
   static const FriendRequest = "friendrequest";
@@ -121,4 +124,87 @@ class FriendService extends IFriendService {
     print(friends[0].profilePic);
     return friends;
   }
+
+  
+
+  @override
+  Future<List<FriendRequests>> getFriendRequests(List friendRequestList) async {
+  
+    if (friendRequestList == null || friendRequestList.isEmpty)
+     return new List<FriendRequests>();
+
+    var friendRequests = <FriendRequests>[];
+    
+    for (var friendRequestId in friendRequestList) {
+      try {
+
+        DocumentSnapshot documentSnapshot = await Firestore.instance
+          .collection(UserModel.USERCOLLECTION)     
+          .document(friendRequestId)
+          .get();
+      //  print(friendRequestList);
+        if (documentSnapshot == null) {
+          return friendRequests;
+        } 
+        friendRequests.add(FriendRequests.deserialize(documentSnapshot.data));
+        
+      } catch(e) {
+        throw e;
+      }
+      
+    }
+    print(friendRequestList);
+  return friendRequests;
+  
+  }
+
+
+  @override
+  void addFriend(UserModel currentUser, FriendRequests friendRequest) async {  
+    print(friendRequest.uid);
+    try{       
+      await Firestore.instance.collection(UserModel.USERCOLLECTION).document(currentUser.uid).updateData({
+        UserModel.FRIENDS: FieldValue.arrayUnion([friendRequest.uid])
+      });    
+      await Firestore.instance.collection(UserModel.USERCOLLECTION).document(friendRequest.uid).updateData({
+        UserModel.FRIENDS: FieldValue.arrayUnion([currentUser.uid])
+      });
+    } catch (e) {
+        print(e);
+    }
+    await Firestore.instance.collection(UserModel.USERCOLLECTION).document(friendRequest.uid).updateData({
+      UserModel.FRIENDREQUESTSENT: FieldValue.arrayRemove([currentUser.uid])
+    });
+    await Firestore.instance.collection(UserModel.USERCOLLECTION).document(currentUser.uid).updateData({
+      UserModel.FRIENDREQUESTRECIEVED: FieldValue.arrayRemove([friendRequest.uid])
+    });
+  }
+        
+
+     @override
+  void declineFriend(UserModel currentUser, FriendRequests friendUser) async {  
+        try{       
+     await Firestore.instance.collection(UserModel.USERCOLLECTION).document(currentUser.uid).updateData({
+          UserModel.FRIENDREQUESTRECIEVED: FieldValue.arrayRemove([friendUser.uid])
+          });
+       } catch (e) {
+          print(e);
+        }   
+  }
+
+ @override
+  void deleteFriend(UserModel currentUser, UserModel friendUser) async {  
+        try{       
+     await Firestore.instance.collection(UserModel.USERCOLLECTION).document(currentUser.uid).updateData({
+          UserModel.FRIENDS: FieldValue.arrayRemove([friendUser.uid])
+          });
+       } catch (e) {
+          print(e);
+        }   
+  }
+
+
 }
+
+
+

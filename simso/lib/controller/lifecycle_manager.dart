@@ -25,7 +25,7 @@ class _LifeCycleManagerState extends State<LifeCycleManager>
       case AppLifecycleState.resumed:
         print('Resumed');
         if (globals.touchCounter != null) 
-          globals.touchCounter..addOne();
+          globals.touchCounter.addOne();
         if (globals.timer != null)
           globals.timer.startTimer();
         break;

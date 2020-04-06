@@ -126,7 +126,7 @@ class MainChatPageState extends State<MainChatPage> {
                      
                     ListTile(
                           leading: CachedNetworkImage(
-                            imageUrl: userList[index].profilePic == null ? '':userList[index].profilePic,
+                            imageUrl: userList[index].profilePic == null ? '': userList[index].profilePic,
                             placeholder: (context, url)=>CircularProgressIndicator(),
                             errorWidget: (context, url, error)=> Icon(Icons.tag_faces),
                             ),
