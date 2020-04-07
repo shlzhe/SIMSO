@@ -160,7 +160,7 @@ class NewContentPageState extends State<NewContentPage> {
                         onTap: (){gotoProfile(imageList[index].ownerID);},
                           leading: imageList[index].ownerPic.contains('http') ? CircleAvatar(
                             backgroundImage: CachedNetworkImageProvider(
-                                imageList[index].imageURL,
+                                imageList[index].ownerPic,
                                 ),
                             backgroundColor: Colors.grey,
                             ) 

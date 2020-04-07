@@ -17,7 +17,6 @@ import '../model/services/iuser-service.dart';
 //view imports
 import '../view/friends-page.dart';
 import '../view/homepage.dart';
-import '../view/login-page.dart';
 import '../view/recommend-friends-page.dart';
 import '../view/time-management-page.dart';
 import '../view/design-constants.dart';
