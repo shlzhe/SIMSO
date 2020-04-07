@@ -1,6 +1,6 @@
 class Meme {
   String memeId; //firestore doc id
-  String uid;
+  String ownerID;
   String imgUrl;
   String email;
   String ownerName;
@@ -10,7 +10,7 @@ class Meme {
 
   Meme(
       {this.memeId,
-      this.uid, 
+      this.ownerID, 
       this.imgUrl,
       this.timestamp,
       this.tags,
@@ -19,7 +19,7 @@ class Meme {
       this.ownerPic});
 
   Meme.empty() {
-    this.uid = '';
+    this.ownerID = '';
     this.memeId = '';
     this.imgUrl = '';
     this.email = '';
@@ -30,7 +30,7 @@ class Meme {
 
   Meme.clone(Meme c) {
     this.memeId = c.memeId;
-    this.uid = c.uid;
+    this.ownerID = c.ownerID;
     this.imgUrl = c.imgUrl;
     this.timestamp = c.timestamp;
     this.email = c.email;
@@ -42,8 +42,7 @@ class Meme {
 
   Map<String, dynamic> serialize() {
     return <String, dynamic>{
-      SNAPSHOTID: memeId,
-      UID: uid,
+      OWNERID: ownerID,
       IMGURL: imgUrl,
       TIMESTAMP: timestamp,
       OWNERPIC: ownerPic,
@@ -54,9 +53,8 @@ class Meme {
   }
 
   static Meme deserialize(Map<String, dynamic> data, String docID) {
-    var snapshot = Meme(
-      memeId: data[Meme.SNAPSHOTID],
-      uid: data[Meme.UID],
+    var meme = Meme(
+      ownerID: data[OWNERID],
       imgUrl: data[Meme.IMGURL],
       tags: data[Meme.TAGS],
       email: data[Meme.EMAIL],
@@ -64,16 +62,15 @@ class Meme {
       ownerPic: data[Meme.OWNERPIC]
     );
     if (data[Meme.TIMESTAMP] != null) {
-      snapshot.timestamp = DateTime.fromMillisecondsSinceEpoch(
+      meme.timestamp = DateTime.fromMillisecondsSinceEpoch(
           data[Meme.TIMESTAMP].millisecondsSinceEpoch);
     }
-    snapshot.memeId = docID;
-    return snapshot;
+    meme.memeId = docID;
+    return meme;
   }
 
-  static const MEMES_COLLECTION = 'snapshots';
-  static const SNAPSHOTID = 'snapshotId';
-  static const UID = 'uid';
+  static const MEMES_COLLECTION = 'memes';
+  static const OWNERID = 'ownerID';
   static const IMGURL = 'imgUrl';
   static const TIMESTAMP = 'timestamp';
   static const TAGS = 'tags';

@@ -37,7 +37,6 @@ import 'limit-reached-dialog.dart';
 class MyDrawer extends StatelessWidget {
   final UserModel user;
   final BuildContext context;
-  final LocalUser localUserFunction = LocalUser();
   final IFriendService friendService = locator<IFriendService>();
   final ISongService _songService = locator<ISongService>();
   final IImageService _imageService = locator<IImageService>();
@@ -87,15 +86,6 @@ class MyDrawer extends StatelessWidget {
 
 
   void signOut() async {
-    String readInData;
-    String credential;
-    try {
-      readInData = await localUserFunction.readLocalUser();
-      credential = await localUserFunction.readCredential();
-      int i = readInData.indexOf(' ');
-      user.email = readInData.substring(0, i);
-      user.password = readInData.substring(i + 1);
-    } catch (error) {}
     FirebaseAuth.instance.signOut(); //Email/pass sign out
     GoogleSignIn().signOut();
     //Display confirmation dialog box after user clicking on "Sign Out" button
@@ -127,17 +117,7 @@ class MyDrawer extends StatelessWidget {
                 //Close Drawer, then go back to Front Page
                 Navigator.pop(context); //Close Dialog box
                 Navigator.pop(context); //Close Drawer
-                //Navigator.pop(state.context);  //Close Home Page
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LoginPage(
-                        localUserFunction: localUserFunction,
-                        credential: credential == 'true' ? credential : null,
-                        email: credential == 'true' ? user.email : null,
-                        password: credential == "true" ? user.password : null,
-                      ),
-                    ));
+                Navigator.pop(context); //Close homepage return to Login
               },
             ),
             RaisedButton(

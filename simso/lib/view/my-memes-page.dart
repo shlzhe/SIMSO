@@ -43,90 +43,11 @@ class MyMemesPageState extends State<MyMemesPage> {
   @override
   Widget build(BuildContext context) {
     this.context = context;
-    var childButtons = List<UnicornButton>();
-
-    childButtons.add(
-      UnicornButton(
-        hasLabel: true,
-        labelText: "Add Thoughts",
-        labelFontSize: 10,
-        currentButton: FloatingActionButton(
-            heroTag: "Add Thoughts",
-            backgroundColor: Colors.white,
-            mini: true,
-            child: Icon(
-              Icons.bubble_chart,
-              color: Colors.black,
-            ),
-            onPressed: null
-            //addthought.MyThoughtsController.addThought,
-            ),
-      ),
-    );
-
-    childButtons.add(
-      UnicornButton(
-        hasLabel: true,
-        labelText: "Add Snapshots",
-        labelFontSize: 10,
-        currentButton: FloatingActionButton(
-          heroTag: "Add Snapshots",
-          backgroundColor: Colors.white,
-          mini: true,
-          child: Icon(
-            Icons.camera,
-            color: Colors.black,
-          ),
-          onPressed: null,
-        ),
-      ),
-    );
-
-    childButtons.add(
-      UnicornButton(
-        hasLabel: true,
-        labelText: "Add Memes",
-        labelFontSize: 10,
-        currentButton: FloatingActionButton(
-          heroTag: "Add Memes",
-          backgroundColor: Colors.white,
-          mini: true,
-          child: Icon(
-            Icons.mood,
-            color: Colors.black,
-          ),
-          onPressed: controller.addMeme,
-        ),
-      ),
-    );
-
-    childButtons.add(
-      UnicornButton(
-        hasLabel: true,
-        labelText: "Add Music",
-        labelFontSize: 10,
-        currentButton: FloatingActionButton(
-          heroTag: "Add Music",
-          backgroundColor: Colors.white,
-          mini: true,
-          child: Icon(
-            Icons.music_note,
-            color: Colors.black,
-          ),
-          onPressed: null,
-        ),
-      ),
-    );
     return Scaffold(
-        floatingActionButton: UnicornDialer(
-          backgroundColor: Colors.transparent,
-          parentButtonBackground: Colors.blueGrey[300],
-          orientation: UnicornOrientation.VERTICAL,
-          parentButton: Icon(
-            Icons.add,
+        floatingActionButton: FloatingActionButton(
+          child: Text("Add Memes"),
+          onPressed: controller.addMeme,
           ),
-          childButtons: childButtons,
-        ),
         appBar: AppBar(
           title: Text(
             'Memes Page',
@@ -162,16 +83,16 @@ class MyMemesPageState extends State<MyMemesPage> {
                             child: const Icon(Icons.edit),
                             onTap: () => controller.onTapMeme(
                                 myMemesList, index),
-                          )),
-                          
-                      CachedNetworkImage(
+                          )
+                          ),
+                        CachedNetworkImage(
                         imageUrl: myMemesList[index].imgUrl,
                         fit: BoxFit.fitWidth,
                         placeholder: (context, url) =>
                             CircularProgressIndicator(),
                         errorWidget: (context, url, error) =>
                             Icon(Icons.error_outline),
-                      ),
+                      )
                     ],
                   ),
                 );

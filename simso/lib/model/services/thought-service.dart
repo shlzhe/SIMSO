@@ -1,6 +1,6 @@
 import 'package:simso/model/entities/thought-model.dart';
-import 'package:simso/model/entities/dictionary-word-model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/service-locator.dart';
 import 'ithought-service.dart';
 import 'idictionary-service.dart';
@@ -76,7 +76,7 @@ class ThoughtService extends IThoughtService {
 
   @override
   Future<List<Thought>> contentThoughtList(
-      bool friends, List<dynamic> friendslist, String langPref) async {
+      bool friends, UserModel user, String langPref) async {
     var data = <Thought>[];
     var friendsThoughtList = <Thought>[];
     try {
@@ -92,10 +92,11 @@ class ThoughtService extends IThoughtService {
         }
         data.add(newThought);
       }
+      data.removeWhere((element) => element.uid == user.uid.toString());
       if (!friends) {
         //new content remove friends content
         try {
-          for (var i in friendslist) {
+          for (var i in user.friends) {
             data.removeWhere((element) => element.uid == i.toString());
           }
         } catch (error) {
@@ -104,7 +105,7 @@ class ThoughtService extends IThoughtService {
         return data;
       } else {
         try {
-          for (var i in friendslist) {
+          for (var i in user.friends) {
             //friends content remove public content
             var temp = data.where((element) => element.uid == i.toString());
             friendsThoughtList.addAll(temp);

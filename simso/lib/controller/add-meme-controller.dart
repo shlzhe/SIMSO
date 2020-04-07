@@ -61,7 +61,7 @@ class AddMemeController {
       return;
     }
     state.formKey.currentState.save();
-    state.memeCopy.uid = state.user.uid;
+    state.memeCopy.ownerID = state.user.uid;
     state.memeCopy.ownerName = state.user.username;
     state.memeCopy.ownerPic = state.user.profilePic;
     state.memeCopy.timestamp = DateTime.now();

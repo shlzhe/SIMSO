@@ -1,8 +1,16 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:intl/intl.dart';
+import 'package:simso/model/entities/image-model.dart';
+import 'package:simso/model/entities/meme-model.dart';
 import 'package:simso/model/entities/song-model.dart';
 import 'package:simso/model/entities/thought-model.dart';
 import 'package:simso/model/services/ilimit-service.dart';
+import 'package:simso/model/services/ipicture-service.dart';
 import 'package:simso/model/services/itouch-service.dart';
+import 'package:simso/view/my-memes-page.dart';
+import 'package:simso/view/my-snapshot-page.dart';
 import 'package:simso/view/navigation-drawer.dart';
+import 'package:simso/view/profile-page.dart';
 import 'package:unicorndial/unicorndial.dart';
 import 'package:flutter/material.dart';
 import 'package:simso/controller/homepage-controller.dart';
@@ -13,7 +21,7 @@ import '../service-locator.dart';
 import 'design-constants.dart';
 import '../model/entities/friendRequest-model.dart';
 import 'package:simso/model/services/ifriend-service.dart';
-import 'package:simso/view/notification-page.dart' ;
+import 'package:simso/view/notification-page.dart';
 
 class Homepage extends StatefulWidget {
   final UserModel user;
@@ -33,6 +41,7 @@ class HomepageState extends State<Homepage> {
   ITimerService timerService = locator<ITimerService>();
   ITouchService touchService = locator<ITouchService>();
   ILimitService limitService = locator<ILimitService>();
+  IImageService imageService = locator<IImageService>();
   final IFriendService friendService = locator<IFriendService>();
   bool meme = false;
   bool music = false;
@@ -42,7 +51,10 @@ class HomepageState extends State<Homepage> {
   List<Thought> publicThoughtsList = [];
   HomepageController controller;
   UserModel user;
+  List<UserModel> visitUser;
+  List<ImageModel> imageList =[];
   List<SongModel> songlist;
+  List<Meme> memesList;
   String returnedID;
   var idController = TextEditingController();
   var formKey = GlobalKey<FormState>();
@@ -54,6 +66,12 @@ class HomepageState extends State<Homepage> {
     controller.setupTouchCounter();
     controller.getLimits();
     controller.thoughts();
+  }
+
+  gotoProfile(String uid) async {
+    UserModel visitUser = await userService.readUser(uid);
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => ProfilePage(visitUser, true)));
   }
 
   void stateChanged(Function f) {
@@ -114,7 +132,7 @@ class HomepageState extends State<Homepage> {
             Icons.mood,
             color: Colors.black,
           ),
-          onPressed: () {},
+          onPressed: controller.navigateToMemes,
         ),
       ),
     );
@@ -172,14 +190,15 @@ class HomepageState extends State<Homepage> {
           IconButton(
             onPressed: controller.newContent,
             icon: Icon(
-              Icons.new_releases,
+              Icons.search,
               size: 25,
             ),
             iconSize: 200,
             color: DesignConstants.yellow,
           ),
-           IconButton(icon: Icon(Icons.notifications), 
-                           onPressed:  myFriendsRequest, 
+          IconButton(
+            icon: Icon(Icons.notifications),
+            onPressed: myFriendsRequest,
           ),
         ],
       ),
@@ -189,10 +208,8 @@ class HomepageState extends State<Homepage> {
               itemCount: publicThoughtsList.length,
               itemBuilder: (BuildContext context, int index) {
                 return Container(
-                  padding: EdgeInsets.all(15.0),
+                  padding: EdgeInsets.all(5.0),
                   child: Container(
-                    //padding: EdgeInsets.all(15.0),
-                    //color: Colors.grey[200],
                     padding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                     decoration: BoxDecoration(
                       color: const Color(0xFFFFFFFF),
@@ -203,16 +220,27 @@ class HomepageState extends State<Homepage> {
                       borderRadius: BorderRadius.circular(30),
                     ),
                     child: ListTile(
-                      title: Text(
-                        publicThoughtsList.elementAt(index).email +
-                            ' ' +
-                            publicThoughtsList
-                                .elementAt(index)
-                                .timestamp
-                                .toLocal()
-                                .toString(),
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
+                      title: FlatButton.icon(
+                          onPressed: () {
+                            gotoProfile(
+                                publicThoughtsList.elementAt(index).uid);
+                          },
+                          icon: Image.network(
+                            publicThoughtsList.elementAt(index).profilePic,
+                            scale: 10,
+                          ),
+                          label: Expanded(
+                            child: Text(
+                              publicThoughtsList.elementAt(index).email +
+                                  ' ' +
+                                  publicThoughtsList
+                                      .elementAt(index)
+                                      .timestamp
+                                      .toLocal()
+                                      .toString(),
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          )),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -226,22 +254,80 @@ class HomepageState extends State<Homepage> {
             )
           : (meme
               ? ListView.builder(
-                  itemCount: 0,
+                  itemCount: memesList.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Container(
-                      child: Text('Memes'),
-                    );
+                      child: Column(
+                    children: <Widget>[
+                      ListTile(
+                        onTap: (){gotoProfile(memesList[index].ownerID);},
+                          leading: CircleAvatar(
+                            backgroundImage: CachedNetworkImageProvider(
+                                memesList[index].ownerPic),
+                            backgroundColor: Colors.grey,
+                          ),
+                          title: GestureDetector(
+                            child: Text(memesList[index].ownerName),
+                            onTap: (){}
+                            ),
+                          subtitle: Text(DateFormat("MMM dd-yyyy 'at' HH:mm:ss")
+                              .format(memesList[index].timestamp)),
+                          ),
+                        Container(
+                          child: CachedNetworkImage(
+                          imageUrl: memesList[index].imgUrl,
+                          fit: BoxFit.fitWidth,
+                          placeholder: (context, url) =>
+                              CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error_outline),
+                      ),
+                        )
+                    ],
+                  ),
+                );
                   },
                 )
               : snapshots
                   ? ListView.builder(
-                      itemCount: 0,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Container(
-                          child: Text('SnapShots'),
-                        );
-                      },
-                    )
+                  itemCount: imageList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Container(
+                      child: Column(
+                    children: <Widget>[
+                      ListTile(
+                        onTap: (){gotoProfile(imageList[index].ownerID);},
+                          leading: imageList[index].ownerPic.contains('http') ? CircleAvatar(
+                            backgroundImage: CachedNetworkImageProvider(
+                                imageList[index].imageURL,
+                                ),
+                            backgroundColor: Colors.grey,
+                            ) 
+                            :
+                            Icon(Icons.error_outline)
+                            ,
+                          title: GestureDetector(
+                            child: Text(imageList[index].createdBy),
+                            onTap: (){}
+                            ),
+                          subtitle: Text(DateFormat("MMM dd-yyyy 'at' HH:mm:ss")
+                              .format(imageList[index].lastUpdatedAt)),
+                          ),
+                        Container(
+                          child: CachedNetworkImage(
+                          imageUrl: imageList[index].imageURL,
+                          fit: BoxFit.fitWidth,
+                          placeholder: (context, url) =>
+                              CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.error_outline),
+                      ),
+                        )
+                    ],
+                  ),
+                );
+                  },
+                )
                   : ListView.builder(
                       itemCount: 0,
                       itemBuilder: (BuildContext context, int index) {
@@ -296,11 +382,11 @@ class HomepageState extends State<Homepage> {
 
   void myFriendsRequest() async {
     print('myFriendRequest() called');
-    List<FriendRequests> friendRequests = await friendService.getFriendRequests(user.friendRequestRecieved);
-     Navigator.push(
+    List<FriendRequests> friendRequests =
+        await friendService.getFriendRequests(user.friendRequestRecieved);
+    Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => NotificationPage(user, friendRequests)));
   }
-
 }
