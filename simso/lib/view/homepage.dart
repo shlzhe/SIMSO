@@ -7,8 +7,6 @@ import 'package:simso/model/entities/thought-model.dart';
 import 'package:simso/model/services/ilimit-service.dart';
 import 'package:simso/model/services/ipicture-service.dart';
 import 'package:simso/model/services/itouch-service.dart';
-import 'package:simso/view/my-memes-page.dart';
-import 'package:simso/view/my-snapshot-page.dart';
 import 'package:simso/view/navigation-drawer.dart';
 import 'package:simso/view/profile-page.dart';
 import 'package:unicorndial/unicorndial.dart';

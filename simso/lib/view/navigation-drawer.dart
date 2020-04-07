@@ -2,13 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:google_sign_in/google_sign_in.dart';
 import '../service-locator.dart';
-import '../supported-languages.dart';
 //model imports
 import '../model/entities/globals.dart' as globals;
-import '../model/entities/local-user.dart';
 import '../model/entities/friend-model.dart';
 import '../model/entities/user-model.dart';
 import '../model/services/ifriend-service.dart';
@@ -17,7 +14,6 @@ import '../model/entities/song-model.dart';
 import '../model/services/ipicture-service.dart';
 import '../model/services/isong-service.dart';
 import '../model/services/iuser-service.dart';
-
 //view imports
 import '../view/friends-page.dart';
 import '../view/homepage.dart';
