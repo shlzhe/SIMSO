@@ -124,6 +124,7 @@ class EditThoughtPageState extends State<EditThoughtPage> {
           parentButton: Icon(
             Icons.delete,
           ),
+          //childButtons: childButtons,
           onMainButtonPressed: () => controller.deleteThought(),
         ),
         appBar: AppBar(

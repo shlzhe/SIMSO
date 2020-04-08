@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../service-locator.dart';
+import '../model/entities/user-model.dart';
 import '../model/entities/thought-model.dart';
 import '../model/services/idictionary-service.dart';
 import '../view/my-thoughts-page.dart';
@@ -10,6 +11,8 @@ import '../view/mydialog.dart';
 
 class MyThoughtsController {
   MyThoughtsPageState state;
+  UserModel newUser = UserModel();
+  String userID;
   List<Thought> myThoughtsList;
   IDictionaryService _dictionaryService = locator<IDictionaryService>();
 

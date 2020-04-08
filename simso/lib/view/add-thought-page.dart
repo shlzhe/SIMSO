@@ -23,13 +23,17 @@ class AddThoughtPageState extends State<AddThoughtPage> {
 
   UserModel user;
   Thought thought;
+  Thought
+      thoughtCopy; //will eventually add deep copy, but for now just new thoughts
+
+  //bool entry = false; //keep, there was something I liked about this snippet of code from Hiep
 
   var formKey = GlobalKey<FormState>();
 
   AddThoughtPageState(this.user) {
     controller =
         AddThoughtController(this);
-    thought = Thought.empty();
+    thoughtCopy = Thought.empty();
   }
 
   void stateChanged(Function f) {

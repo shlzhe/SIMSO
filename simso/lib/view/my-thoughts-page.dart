@@ -26,6 +26,8 @@ class MyThoughtsPageState extends State<MyThoughtsPage> {
   UserModel user;
   List<Thought> myThoughtsList;
   
+  //bool entry = false; //keep, there was something I liked about this snippet of code from Hiep
+
   var formKey = GlobalKey<FormState>();
 
   MyThoughtsPageState(this.user, this.myThoughtsList) {
@@ -143,6 +145,8 @@ class MyThoughtsPageState extends State<MyThoughtsPage> {
               return Container(
                 padding: EdgeInsets.all(15.0),
                 child: Container(
+                  //padding: EdgeInsets.all(15.0),
+                  //color: Colors.grey[200],
                   padding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   decoration: BoxDecoration(
                     color: const Color(0xFFFFFFFF),
