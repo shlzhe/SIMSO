@@ -24,8 +24,6 @@ class AddThoughtPageState extends State<AddThoughtPage> {
   UserModel user;
   Thought thought;
 
-  //bool entry = false; //keep, there was something I liked about this snippet of code from Hiep
-
   var formKey = GlobalKey<FormState>();
 
   AddThoughtPageState(this.user) {

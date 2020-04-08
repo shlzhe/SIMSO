@@ -2,19 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:simso/model/entities/song-model.dart';
 import '../service-locator.dart';
-//import '../model/entities/user-model.dart';
 import '../model/entities/thought-model.dart';
-//import '../model/entities/dictionary-word-model.dart';
 import '../model/services/ithought-service.dart';
 import '../view/mydialog.dart';
-import '../view/homepage.dart';
 import '../view/add-thought-page.dart';
 import '../view/my-thoughts-page.dart';
 
 class AddThoughtController {
   AddThoughtPageState state;
-  //UserModel newUser = UserModel();
-  //String userID;
   IThoughtService _thoughtService = locator<IThoughtService>();
   List<SongModel> songlist;
 
@@ -32,9 +27,6 @@ class AddThoughtController {
     state.thought.email = state.user.email;
   }
 
-  
-
-
   void save() async {
     if (!state.formKey.currentState.validate()) {
       return;
@@ -44,10 +36,7 @@ class AddThoughtController {
     state.thought.timestamp = DateTime.now();    
 
     try {
-      
-        //from add button, new thought
         await _thoughtService.addThought(state.thought);
-      
       
       //prep to exit page
       List<Thought> myThoughtsList =
@@ -71,17 +60,5 @@ class AddThoughtController {
     
     
   }
-
-  //keep void entry function below, I liked this snippet of code but can't remember why right now
-  /*
-    void entry(String newValue) {
-      print("entry(" + newValue + ") called.");
-    if (newValue!=null){
-      state.entry = true;
-    }
-    if (newValue=='') state.entry = false;
-    state.stateChanged((){});
-  }
-  */
 
 }
