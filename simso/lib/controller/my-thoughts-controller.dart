@@ -11,8 +11,8 @@ import '../view/mydialog.dart';
 
 class MyThoughtsController {
   MyThoughtsPageState state;
-  UserModel newUser = UserModel();
-  String userID;
+  //UserModel newUser = UserModel();
+  //String userID;
   List<Thought> myThoughtsList;
   IDictionaryService _dictionaryService = locator<IDictionaryService>();
 

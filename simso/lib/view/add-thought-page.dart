@@ -23,8 +23,6 @@ class AddThoughtPageState extends State<AddThoughtPage> {
 
   UserModel user;
   Thought thought;
-  Thought
-      thoughtCopy; //will eventually add deep copy, but for now just new thoughts
 
   //bool entry = false; //keep, there was something I liked about this snippet of code from Hiep
 
@@ -33,7 +31,7 @@ class AddThoughtPageState extends State<AddThoughtPage> {
   AddThoughtPageState(this.user) {
     controller =
         AddThoughtController(this);
-    thoughtCopy = Thought.empty();
+    thought = Thought.empty();
   }
 
   void stateChanged(Function f) {
