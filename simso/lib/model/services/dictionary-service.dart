@@ -160,6 +160,7 @@ class DictionaryService extends IDictionaryService {
 
   @override
   Future<List<DictionaryWord>> getDictionary() async {
+    print("Firebase thought-service.dart getDictionary() called");
     try {
       var dictionaryWordList = <DictionaryWord>[];
       QuerySnapshot querySnapshot = await Firestore.instance
