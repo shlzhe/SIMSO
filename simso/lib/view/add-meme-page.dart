@@ -3,7 +3,6 @@ import 'package:unicorndial/unicorndial.dart';
 import '../model/entities/user-model.dart';
 import '../model/entities/meme-model.dart';
 import '../view/design-constants.dart';
-import '../view/navigation-drawer.dart';
 import '../controller/add-meme-controller.dart';
 
 class AddMemePage extends StatefulWidget {
@@ -57,7 +56,7 @@ class AddMemePageState extends State<AddMemePage> {
                       icon: Icon(Icons.delete), onPressed: controller.deleteMeme,
                   )],
           title: Text(
-            'Snapshot',
+            'Memes',
             style: TextStyle(
                 fontFamily: 'Quicksand',
                 fontSize: 30.0,
