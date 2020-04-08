@@ -1,21 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:simso/model/entities/song-model.dart';
 import 'package:simso/model/entities/user-model.dart';
+import 'package:simso/model/services/imeme-service.dart';
+import 'package:simso/model/services/ipicture-service.dart';
 import 'package:simso/model/services/isong-service.dart';
 import 'package:simso/model/services/ithought-service.dart';
 import 'package:simso/model/services/iuser-service.dart';
 import 'package:simso/service-locator.dart';
 import 'package:simso/view/music-feed.dart';
 import 'package:simso/view/new-content.dart';
+import 'package:simso/view/profile-page.dart';
 
 class NewContentPageController{
   NewContentPageState state;
   NewContentPageController(this.state);
   
-  final ISongService _songService = locator<ISongService>();
-  final IUserService _userService = locator<IUserService>();
+  final ISongService songService = locator<ISongService>();
+  final IUserService userService = locator<IUserService>();
+  final IMemeService memeService = locator<IMemeService>();
+  final IImageService imageService = locator<IImageService>();
   final IThoughtService thoughtService = locator<IThoughtService>();
-  void snapshots() {
+
+  void snapshots() async{
+    state.memesList=[];
+    state.publicThoughtsList = [];
+    state.imageList = await imageService.contentSnaps(state.friends, state.user);
     if (state.snapshots == false){
       state.meme = false;
       state.thoughts = false;
@@ -38,8 +47,8 @@ class NewContentPageController{
     List<UserModel> allUserList;
     try {
       print("GET SONGS & USERS");
-      allSongList = await _songService.getAllSongList();
-      allUserList = await _userService.readAllUser();
+      allSongList = await songService.getAllSongList();
+      allUserList = await userService.readAllUser();
     } catch (e) {
       allSongList = <SongModel>[];
 
@@ -59,7 +68,9 @@ class NewContentPageController{
   }
 
   void thoughts() async {
-    state.publicThoughtsList = await thoughtService.contentThoughtList(state.friends, state.user.friends, state.user.language);
+    state.memesList=[];
+    state.imageList = [];
+    state.publicThoughtsList = await thoughtService.contentThoughtList(state.friends, state.user, state.user.language);
     if (state.thoughts == false){
       state.meme = false;
       state.thoughts = true;
@@ -70,7 +81,10 @@ class NewContentPageController{
     state.stateChanged((){});
   }
 
-  void meme() {
+  void meme() async{
+    state.publicThoughtsList = [];
+    state.imageList = [];
+    state.memesList = await memeService.contentMemeList(state.friends, state.user);
     if (state.meme == false){
       state.meme = true;
       state.thoughts = false;

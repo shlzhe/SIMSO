@@ -76,8 +76,9 @@ class AddPhotoController {
         state.formKey.currentState.save();
         print('saved');
         state.imageCopy.createdBy = state.user.email;
+        state.imageCopy.ownerPic = state.user.profilePic;
+        state.imageCopy.ownerID = state.user.uid;
         state.imageCopy.lastUpdatedAt = DateTime.now();
-
         // check firebase addbook to determine whether successful or not
         try {
           if (state.image == null) {

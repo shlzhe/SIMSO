@@ -32,7 +32,7 @@ class MyFirebase{
       for (DocumentSnapshot doc in querySnapshot.documents){
      
       print('messages Collection is not empty');
-      messageCollection.add(Message.deserialize(doc.data));
+      messageCollection.add(Message.deserialize(doc.data, doc.documentID));
     }
     return messageCollection;
     }
@@ -51,7 +51,7 @@ class MyFirebase{
         for (DocumentSnapshot doc in querySnapshot.documents){
      
           print('FilteredMessages is not empty');
-          filteredMessages.add(Message.deserialize(doc.data));
+          filteredMessages.add(Message.deserialize(doc.data, doc.documentID));
     }
           //SORTED FILTEREDMESSAGES BASED ON COUNTER
           filteredMessages.sort((a, b)=> a.counter.compareTo(b.counter));

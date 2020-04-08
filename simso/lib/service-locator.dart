@@ -1,7 +1,10 @@
+import 'package:simso/model/services/message-service.dart';
+
 import 'model/services/friend-service.dart';
 import 'model/services/ifriend-service.dart';
 import 'package:simso/model/services/limit-service.dart';
 import 'model/services/ilimit-service.dart';
+import 'model/services/imessage-service.dart';
 import 'model/services/itimer-service.dart';
 import 'model/services/itouch-service.dart';
 import 'model/services/iuser-service.dart';
@@ -36,4 +39,5 @@ setupServiceLocator() {
   locator.registerLazySingleton<IFriendService>(() => FriendService());
   locator.registerLazySingleton<ILimitService>(() => LimitService());
   locator.registerLazySingleton<IDictionaryService>(() => DictionaryService());
+  locator.registerLazySingleton<IMessageService>(() => MessageService());
 }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:simso/model/entities/message-model.dart';
+import 'package:simso/model/entities/meme-model.dart';
 import 'package:simso/model/entities/myfirebase.dart';
 import 'package:simso/model/entities/song-model.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/model/services/ilimit-service.dart';
+import 'package:simso/model/services/imeme-service.dart';
 import 'package:simso/model/services/isong-service.dart';
 import 'package:simso/model/services/ithought-service.dart';
 import 'package:simso/model/services/itimer-service.dart';
@@ -14,7 +15,9 @@ import 'package:simso/view/add-photo-page.dart';
 import 'package:simso/view/homepage.dart';
 import 'package:simso/view/mainChat-page.dart';
 import 'package:simso/view/music-feed.dart';
+import 'package:simso/view/my-memes-page.dart';
 import 'package:simso/view/new-content.dart';
+import 'package:simso/view/profile-page.dart';
 import '../view/add-music-page.dart';
 import '../view/add-thought-page.dart';
 import '../model/entities/globals.dart' as globals;
@@ -31,6 +34,7 @@ class HomepageController {
   final ISongService _songService = locator<ISongService>();
   final IUserService _userService = locator<IUserService>();
   final IThoughtService thoughtService = locator<IThoughtService>();
+  final IMemeService memeService = locator<IMemeService>();
 
   HomepageController(this.state, this.timerService, this.touchService,
       this.limitService, this.songList);
@@ -49,12 +53,9 @@ class HomepageController {
     }
   }
 
-  Future addMemes() async {
-    Navigator.push(
-        state.context,
-        MaterialPageRoute(
-          builder: null,
-        ));
+  Future navigateToMemes() async {
+    List<Meme> myMemesList= await memeService.getMemes(state.user.uid);
+    Navigator.push(state.context, MaterialPageRoute(builder: (context)=>MyMemesPage(state.user, myMemesList)));
   }
 
   Future addThought() async {
@@ -172,7 +173,10 @@ class HomepageController {
         MaterialPageRoute(builder: (context) => NewContentPage(state.user)));
   }
 
-  void snapshots() {
+  void snapshots() async{
+    state.memesList=[];
+    state.publicThoughtsList = [];
+    state.imageList = await state.imageService.contentSnaps(state.friends, state.user);
     if (state.snapshots == false) {
       state.meme = false;
       state.thoughts = false;
@@ -216,7 +220,9 @@ class HomepageController {
   }
 
   void thoughts() async {
-    state.publicThoughtsList = await thoughtService.contentThoughtList(state.friends, state.user.friends, state.user.language);
+    state.memesList=[];
+    state.imageList = [];
+    state.publicThoughtsList = await thoughtService.contentThoughtList(state.friends, state.user, state.user.language);
     if (state.thoughts == false){
       state.meme = false;
       state.thoughts = true;
@@ -227,7 +233,10 @@ class HomepageController {
     state.stateChanged(() {});
   }
 
-  void meme() {
+  void meme() async{
+    state.publicThoughtsList = [];
+    state.imageList = [];
+    state.memesList = await memeService.contentMemeList(state.friends, state.user);
     if (state.meme == false) {
       state.meme = true;
       state.thoughts = false;
@@ -236,4 +245,10 @@ class HomepageController {
       state.stateChanged(() {});
     }
   }
+
+  void gotoProfile(String uid) {
+    Navigator.push(state.context, MaterialPageRoute(
+      builder: (context)=> ProfilePage(state.user, true)));
+  }
+
 }

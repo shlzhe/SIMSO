@@ -2,13 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:google_sign_in/google_sign_in.dart';
 import '../service-locator.dart';
-import '../supported-languages.dart';
 //model imports
 import '../model/entities/globals.dart' as globals;
-import '../model/entities/local-user.dart';
 import '../model/entities/friend-model.dart';
 import '../model/entities/user-model.dart';
 import '../model/services/ifriend-service.dart';
@@ -17,11 +14,9 @@ import '../model/entities/song-model.dart';
 import '../model/services/ipicture-service.dart';
 import '../model/services/isong-service.dart';
 import '../model/services/iuser-service.dart';
-
 //view imports
 import '../view/friends-page.dart';
 import '../view/homepage.dart';
-import '../view/login-page.dart';
 import '../view/recommend-friends-page.dart';
 import '../view/time-management-page.dart';
 import '../view/design-constants.dart';
@@ -37,7 +32,6 @@ import 'limit-reached-dialog.dart';
 class MyDrawer extends StatelessWidget {
   final UserModel user;
   final BuildContext context;
-  final LocalUser localUserFunction = LocalUser();
   final IFriendService friendService = locator<IFriendService>();
   final ISongService _songService = locator<ISongService>();
   final IImageService _imageService = locator<IImageService>();
@@ -87,15 +81,6 @@ class MyDrawer extends StatelessWidget {
 
 
   void signOut() async {
-    String readInData;
-    String credential;
-    try {
-      readInData = await localUserFunction.readLocalUser();
-      credential = await localUserFunction.readCredential();
-      int i = readInData.indexOf(' ');
-      user.email = readInData.substring(0, i);
-      user.password = readInData.substring(i + 1);
-    } catch (error) {}
     FirebaseAuth.instance.signOut(); //Email/pass sign out
     GoogleSignIn().signOut();
     //Display confirmation dialog box after user clicking on "Sign Out" button
@@ -127,17 +112,7 @@ class MyDrawer extends StatelessWidget {
                 //Close Drawer, then go back to Front Page
                 Navigator.pop(context); //Close Dialog box
                 Navigator.pop(context); //Close Drawer
-                //Navigator.pop(state.context);  //Close Home Page
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LoginPage(
-                        localUserFunction: localUserFunction,
-                        credential: credential == 'true' ? credential : null,
-                        email: credential == 'true' ? user.email : null,
-                        password: credential == "true" ? user.password : null,
-                      ),
-                    ));
+                Navigator.pop(context); //Close homepage return to Login
               },
             ),
             RaisedButton(

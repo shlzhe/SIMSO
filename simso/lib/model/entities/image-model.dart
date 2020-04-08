@@ -4,6 +4,8 @@ class ImageModel {
   String imageURL;
   String summary;
   String createdBy;
+  String ownerPic;
+  String ownerID;
   DateTime lastUpdatedAt; // created or revised
   List<dynamic> sharedWith;
 
@@ -14,6 +16,8 @@ class ImageModel {
     this.createdBy,
     this.lastUpdatedAt,
     this.sharedWith,
+    this.ownerPic,
+    this.ownerID,
   });
 
   // empty book obj
@@ -22,6 +26,8 @@ class ImageModel {
     this.imageURL = '';
     this.summary = '';
     this.createdBy = '';
+    this.ownerPic = '';
+    this.ownerID = '';
     this.sharedWith = <dynamic>[];
   }
 
@@ -32,6 +38,8 @@ class ImageModel {
     this.summary = b.summary;
     this.lastUpdatedAt = b.lastUpdatedAt;
     this.createdBy = b.createdBy;
+    this.ownerPic = b.ownerPic;
+    this.ownerID = b.ownerID;
     // is an array or list in Dart
     // so deep copy of contents not just addr ref
     // create empty list 1st, add all contents from b obj,
@@ -46,6 +54,8 @@ class ImageModel {
       IMAGEURL: imageURL,
       SUMMARY: summary,
       CREATEDBY: createdBy,
+      OWNERPIC: ownerPic,
+      OWNERID: ownerID,
       // timestamp is allowed as well
       LASTUPDATEDAT: lastUpdatedAt,
       // list is array, acceptable by firestore
@@ -59,6 +69,8 @@ class ImageModel {
       imageURL: data[ImageModel.IMAGEURL],
       summary: data[ImageModel.SUMMARY],
       createdBy: data[ImageModel.CREATEDBY],
+      ownerPic: data[OWNERPIC],
+      ownerID: data[OWNERID],
       sharedWith: data[ImageModel.SHAREDWITH],
     );
     if (data[ImageModel.LASTUPDATEDAT] != null) {
@@ -72,6 +84,8 @@ class ImageModel {
   }
 
   static const IMAGE_COLLECTION = 'images';
+  static const OWNERPIC = 'ownerPic';
+  static const OWNERID = 'ownerID';
   static const TITLE = 'title';
   static const IMAGEURL = 'imageURL';
   static const SUMMARY = 'summary';
