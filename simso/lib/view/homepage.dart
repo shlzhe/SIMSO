@@ -21,6 +21,8 @@ import '../model/entities/friendRequest-model.dart';
 import 'package:simso/model/services/ifriend-service.dart';
 import 'package:simso/view/notification-page.dart';
 
+import 'emoji-container.dart';
+
 class Homepage extends StatefulWidget {
   final UserModel user;
   final List<SongModel> songlist;
@@ -243,6 +245,13 @@ class HomepageState extends State<Homepage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(publicThoughtsList.elementAt(index).text),
+                          EmojiContainer(
+                            this.context, 
+                            this.user, 
+                            mediaTypes.thought.index, 
+                            publicThoughtsList[index].thoughtId, 
+                            publicThoughtsList[index].uid, 
+                          )
                         ],
                       ),
                     ),
@@ -270,17 +279,24 @@ class HomepageState extends State<Homepage> {
                             ),
                           subtitle: Text(DateFormat("MMM dd-yyyy 'at' HH:mm:ss")
                               .format(memesList[index].timestamp)),
-                          ),
-                        Container(
-                          child: CachedNetworkImage(
-                          imageUrl: memesList[index].imgUrl,
-                          fit: BoxFit.fitWidth,
-                          placeholder: (context, url) =>
-                              CircularProgressIndicator(),
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.error_outline),
+                        ),
+                      Container(
+                        child: CachedNetworkImage(
+                        imageUrl: memesList[index].imgUrl,
+                        fit: BoxFit.fitWidth,
+                        placeholder: (context, url) =>
+                            CircularProgressIndicator(),
+                        errorWidget: (context, url, error) =>
+                            Icon(Icons.error_outline),
+                        ),
                       ),
-                        )
+                      EmojiContainer(
+                        this.context, 
+                        this.user, 
+                        mediaTypes.meme.index, 
+                        memesList[index].memeId, 
+                        memesList[index].ownerID, 
+                      )
                     ],
                   ),
                 );
@@ -310,16 +326,23 @@ class HomepageState extends State<Homepage> {
                             ),
                           subtitle: Text(DateFormat("MMM dd-yyyy 'at' HH:mm:ss")
                               .format(imageList[index].lastUpdatedAt)),
-                          ),
+                        ),
                         Container(
                           child: CachedNetworkImage(
-                          imageUrl: imageList[index].imageURL,
-                          fit: BoxFit.fitWidth,
-                          placeholder: (context, url) =>
-                              CircularProgressIndicator(),
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.error_outline),
-                      ),
+                            imageUrl: imageList[index].imageURL,
+                            fit: BoxFit.fitWidth,
+                            placeholder: (context, url) =>
+                                CircularProgressIndicator(),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error_outline),
+                          ),
+                        ),
+                        EmojiContainer(
+                          this.context, 
+                          this.user, 
+                          mediaTypes.snapshot.index, 
+                          imageList[index].imageId, 
+                          imageList[index].ownerID, 
                         )
                     ],
                   ),

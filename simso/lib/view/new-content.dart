@@ -12,6 +12,8 @@ import 'package:simso/service-locator.dart';
 import 'package:simso/view/design-constants.dart';
 import 'package:simso/view/profile-page.dart';
 
+import 'emoji-container.dart';
+
 class NewContentPage extends StatefulWidget {
   final UserModel user;
   NewContentPage(this.user);
@@ -106,6 +108,13 @@ class NewContentPageState extends State<NewContentPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(publicThoughtsList.elementAt(index).text),
+                          EmojiContainer(
+                            this.context, 
+                            this.user, 
+                            mediaTypes.thought.index, 
+                            publicThoughtsList[index].thoughtId, 
+                            publicThoughtsList[index].uid, 
+                          )
                         ],
                       ),
                     ),
@@ -143,7 +152,14 @@ class NewContentPageState extends State<NewContentPage> {
                           errorWidget: (context, url, error) =>
                               Icon(Icons.error_outline),
                       ),
-                        )
+                        ),
+                      EmojiContainer(
+                        this.context, 
+                        this.user, 
+                        mediaTypes.meme.index, 
+                        memesList[index].memeId, 
+                        memesList[index].ownerID, 
+                      )
                     ],
                   ),
                 );
@@ -183,6 +199,13 @@ class NewContentPageState extends State<NewContentPage> {
                           errorWidget: (context, url, error) =>
                               Icon(Icons.error_outline),
                       ),
+                        ),
+                        EmojiContainer(
+                          this.context, 
+                          this.user, 
+                          mediaTypes.snapshot.index, 
+                          imageList[index].imageId, 
+                          imageList[index].ownerID, 
                         )
                     ],
                   ),
