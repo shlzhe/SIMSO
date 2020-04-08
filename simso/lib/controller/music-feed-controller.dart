@@ -69,7 +69,7 @@ class MusicFeedController {
   }
 
  void thoughts() async {
-    state.publicThoughtsList = await thoughtService.contentThoughtList(state.friends, state.user.friends, state.user.language);
+    state.publicThoughtsList = await thoughtService.contentThoughtList(state.friends, state.user, state.user.language);
     if (state.thoughts == false){
       state.meme = false;
       state.thoughts = true;

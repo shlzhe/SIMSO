@@ -1,5 +1,6 @@
 import 'package:simso/model/entities/image-model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:simso/model/entities/user-model.dart';
 import 'ipicture-service.dart';
 
 int imageNum = 0;
@@ -78,5 +79,40 @@ class ImageService extends IImageService {
         .document(image.imageId)
         .setData(image
             .serialize()); // serialized for keymap val, if book exist, corresponding book updated
+  }
+
+  @override
+  Future<List<ImageModel>> contentSnaps(bool friends, UserModel user) async{
+    var data = <ImageModel>[];
+    var snapshotsList = <ImageModel>[];
+    try {
+      QuerySnapshot queryMeme = await Firestore.instance
+          .collection(ImageModel.IMAGE_COLLECTION)
+          .orderBy(ImageModel.LASTUPDATEDAT)
+          .getDocuments();
+      for (DocumentSnapshot doc in queryMeme.documents) {
+        data.add(ImageModel.deserialize(doc.data, doc.documentID));
+      }
+      data.removeWhere((element) => element.ownerID==user.uid.toString());
+      if(!friends){ //new content remove friends content
+        try{
+          for (var i in user.friends){
+            data.removeWhere((element) => element.ownerID==i.toString());
+          }
+        }catch(error){print(error);}
+        return data;
+      }
+      else{
+        try{
+          for (var i in user.friends){//friends content remove public content
+            var temp = data.where((element) => element.ownerID==i.toString());
+            snapshotsList.addAll(temp);
+          }
+        }catch(error){print(error);}
+      }
+      return snapshotsList;
+    }catch(error){
+      return data;
+    }
   }
 }
