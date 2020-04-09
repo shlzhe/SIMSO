@@ -1,3 +1,4 @@
+import 'package:emoji_picker/emoji_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:simso/model/entities/message-model.dart';
@@ -13,8 +14,27 @@ class EmojiContainer extends StatelessWidget {
   final String mediaUid;
   final IMessageService messageService = locator<IMessageService>();
 
-  emojiClicked(String emoji) {
-    sendEmoji(emoji);
+  emojiClicked() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget> [EmojiPicker(
+            rows: 3,
+            columns: 7,
+            numRecommended: 10,
+            onEmojiSelected: (emoji, category) {
+              print(emoji.toString());
+              sendEmoji(emoji.emoji);
+              Navigator.pop(context);
+            },
+          ),]
+        );
+      }
+    );
   }
 
   sendEmoji(String emoji) async {
@@ -44,38 +64,10 @@ class EmojiContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          SizedBox(
-            width: 75,
-            child: FlatButton(
-              onPressed: () { emojiClicked('👍'); },
-              child: Text('👍', style: TextStyle(fontSize: 22),),
-            ),
-          ),
-          SizedBox(
-            width: 75,
-            child: FlatButton(
-              onPressed: () { emojiClicked('❤️'); },
-              child: Text('❤️', style: TextStyle(fontSize: 22),),
-            ),
-          ),
-          SizedBox(
-            width: 75,
-            child: FlatButton(
-              onPressed: () { emojiClicked('👏'); },
-              child: Text('👏', style: TextStyle(fontSize: 22),),
-            ),
-          ),
-          SizedBox(
-            width: 75,
-            child: FlatButton(
-              onPressed: () { emojiClicked('😲'); },
-              child: Text('😲', style: TextStyle(fontSize: 22),),
-            ),
-          ),
-      ],)
+      child: FlatButton(
+        child: Text('❤️', style: TextStyle(fontSize: 20),),
+        onPressed: () { emojiClicked(); },
+      )
     );
   }
 }

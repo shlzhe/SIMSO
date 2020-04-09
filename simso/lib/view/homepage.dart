@@ -254,16 +254,20 @@ class HomepageState extends State<Homepage> {
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(publicThoughtsList.elementAt(index).text),
-                          EmojiContainer(
-                            this.context, 
-                            this.user, 
-                            mediaTypes.thought.index, 
-                            publicThoughtsList[index].thoughtId, 
-                            publicThoughtsList[index].uid, 
-                          )
+                          Text(
+                            publicThoughtsList.elementAt(index).text, 
+                            style: TextStyle(fontSize: 24),
+                          ),
                         ],
                       ),
+                      trailing: 
+                        EmojiContainer(
+                          this.context, 
+                          this.user, 
+                          mediaTypes.thought.index, 
+                          publicThoughtsList[index].thoughtId, 
+                          publicThoughtsList[index].uid, 
+                        ),
                     ),
                   ),
                 );
@@ -289,6 +293,14 @@ class HomepageState extends State<Homepage> {
                             ),
                           subtitle: Text(DateFormat("MMM dd-yyyy 'at' HH:mm:ss")
                               .format(memesList[index].timestamp)),
+                          trailing: 
+                            EmojiContainer(
+                              this.context, 
+                              this.user, 
+                              mediaTypes.meme.index, 
+                              memesList[index].memeId, 
+                              memesList[index].ownerID, 
+                            ),
                         ),
                       Container(
                         child: CachedNetworkImage(
@@ -300,13 +312,6 @@ class HomepageState extends State<Homepage> {
                             Icon(Icons.error_outline),
                         ),
                       ),
-                      EmojiContainer(
-                        this.context, 
-                        this.user, 
-                        mediaTypes.meme.index, 
-                        memesList[index].memeId, 
-                        memesList[index].ownerID, 
-                      )
                     ],
                   ),
                 );
@@ -336,6 +341,14 @@ class HomepageState extends State<Homepage> {
                             ),
                           subtitle: Text(DateFormat("MMM dd-yyyy 'at' HH:mm:ss")
                               .format(imageList[index].lastUpdatedAt)),
+                          trailing: 
+                            EmojiContainer(
+                              this.context, 
+                              this.user, 
+                              mediaTypes.snapshot.index, 
+                              imageList[index].imageId, 
+                              imageList[index].ownerID, 
+                            ),
                         ),
                         Container(
                           child: CachedNetworkImage(
@@ -347,13 +360,6 @@ class HomepageState extends State<Homepage> {
                                 Icon(Icons.error_outline),
                           ),
                         ),
-                        EmojiContainer(
-                          this.context, 
-                          this.user, 
-                          mediaTypes.snapshot.index, 
-                          imageList[index].imageId, 
-                          imageList[index].ownerID, 
-                        )
                     ],
                   ),
                 );
