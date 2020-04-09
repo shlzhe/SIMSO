@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 import 'package:simso/model/entities/message-model.dart';
 import 'package:simso/model/entities/user-model.dart';
 
@@ -38,25 +39,58 @@ class MyFirebase{
     }
 
     static Future<List<Message>> getFilteredMessages(String sender, String receiver) async {
-       var filteredMessages = <Message>[];      
-       QuerySnapshot querySnapshot = await Firestore.instance.collection('messages')
-        .where('sender',isEqualTo: sender)
+    var filteredMessages = <Message>[];  //all messages 
+
+    //COLLECT MESSAGES THAT SENDER SENT TO RECEIVER
+    QuerySnapshot querySnapshot1 = await Firestore.instance
+        .collection('messages')
+        .where('sender', isEqualTo: sender)
         .where('receiver', isEqualTo: receiver)
         .getDocuments();
-       
-         if (querySnapshot == null || querySnapshot.documents.length ==0){
-            print('Empty filteredMessages');
-            return filteredMessages;
-    }
-        for (DocumentSnapshot doc in querySnapshot.documents){
-     
-          print('FilteredMessages is not empty');
-          filteredMessages.add(Message.deserialize(doc.data, doc.documentID));
-    }
-          //SORTED FILTEREDMESSAGES BASED ON COUNTER
-          filteredMessages.sort((a, b)=> a.counter.compareTo(b.counter));
 
-          return filteredMessages;
+    if (querySnapshot1 == null || querySnapshot1.documents.length == 0) {
+      print('Empty senderToReceiver');
     }
+    for (DocumentSnapshot doc in querySnapshot1.documents) {
+      print('senderToReceiver is not empty');
+      filteredMessages.add(Message.deserialize(doc.data, doc.documentID));
+    }
+    //COLLECTION MESSAGE THAT RECEIVER SENT TO SENDER
+    QuerySnapshot querySnapshot2 = await Firestore.instance
+        .collection('messages')
+        .where('sender', isEqualTo: receiver)
+        .where('receiver', isEqualTo: sender)
+        .getDocuments();
+   
+    if (querySnapshot2 == null || querySnapshot2 .documents.length == 0) {
+      print('Empty receiverToSender');
+    }
+    for (DocumentSnapshot doc in querySnapshot2.documents) {
+      print('receiverToSender is not empty');
+      filteredMessages.add(Message.deserialize(doc.data, doc.documentID));
+    }
+    Message tempMessage;
+    var currentDateTime;
+    var nextDateTime;
+    List<StringSink> dateTimes;
+    //SORTED FILTEREDMESSAGES BASED ON COUNTER
+   
+    filteredMessages.sort((a,b){
+      DateTime aMessage = new DateFormat('MM-dd-yyyy - HH:mm:ss').parse(a.time);
+      DateTime bMessage = new DateFormat('MM-dd-yyyy - HH:mm:ss').parse(b.time);
+    
+      return aMessage.compareTo(bMessage);
+    });
+
+
+    for(int i=0; i<filteredMessages.length -1 ; i++) {
+      print('BEFORE: ' + '${filteredMessages[i].time}');
+      tempMessage=null;
+      currentDateTime = new DateFormat('MM-dd-yyyy - HH:mm:ss').parse(filteredMessages[i].time);
+      nextDateTime  = new DateFormat('MM-dd-yyyy - HH:mm:ss').parse(filteredMessages[i+1].time);
+    }
+      return filteredMessages;
+    }
+
     
   }
