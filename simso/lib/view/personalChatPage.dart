@@ -35,7 +35,7 @@ class PersonalChatPageState extends State<PersonalChatPage> {
             ? EdgeInsets.only(top: 8, bottom: 8, left: 150)
             : EdgeInsets.only(top: 8, bottom: 8, right: 150),
         decoration: BoxDecoration(
-          color: isMe ? DesignConstants.blueGreyish : DesignConstants.blueLight,
+          color: isMe ? Colors.white : DesignConstants.blueGreyish,
           borderRadius: isMe
               ? BorderRadius.only(
                   topLeft: Radius.circular(15),
@@ -49,9 +49,11 @@ class PersonalChatPageState extends State<PersonalChatPage> {
         child: Column(
           children: <Widget>[
             SizedBox(height: 8),
-            Text(message.time, style: TextStyle(fontStyle: FontStyle.italic)),
+            Text(message.time, style : isMe ? TextStyle(color: DesignConstants.blueGreyish ,fontStyle: FontStyle.italic)
+                                            : TextStyle(color: DesignConstants.blue ,fontStyle: FontStyle.italic)),
             Text(message.text,
-                style: TextStyle(color: DesignConstants.yellow, fontSize: 20)),
+                style: isMe  ? TextStyle(color: DesignConstants.blue, fontSize: 20)   
+                             : TextStyle(color: DesignConstants.yellow, fontSize: 20)),
           ],
         ));
   }
