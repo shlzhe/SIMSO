@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/semantics.dart';
 import 'package:simso/model/entities/message-model.dart';
+import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/model/services/imessage-service.dart';
 
 class MessageService implements IMessageService {
@@ -57,6 +59,7 @@ class MessageService implements IMessageService {
         return null;
       });
   }
-
+  
+  
   
 }

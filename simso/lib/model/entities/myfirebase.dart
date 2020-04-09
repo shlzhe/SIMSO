@@ -55,8 +55,8 @@ class MyFirebase{
     }
           //SORTED FILTEREDMESSAGES BASED ON COUNTER
           filteredMessages.sort((a, b)=> a.counter.compareTo(b.counter));
-
           return filteredMessages;
     }
+
     
   }
