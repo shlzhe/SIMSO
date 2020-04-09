@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 import 'package:simso/model/entities/message-model.dart';
 
 import 'package:simso/model/services/imessage-service.dart';
@@ -7,9 +8,6 @@ class MessageService implements IMessageService {
   @override
   Future<List<Message>> getFilteredMessages(String sender, String receiver) async {
     var filteredMessages = <Message>[];  //all messages 
-    var senderToReceiver = <Message>[];  
-    var receiverToSender = <Message>[];
-
 
     //COLLECT MESSAGES THAT SENDER SENT TO RECEIVER
     QuerySnapshot querySnapshot1 = await Firestore.instance
@@ -39,18 +37,27 @@ class MessageService implements IMessageService {
       print('receiverToSender is not empty');
       filteredMessages.add(Message.deserialize(doc.data, doc.documentID));
     }
-
+    Message tempMessage;
+    var currentDateTime;
+    var nextDateTime;
+    List<StringSink> dateTimes;
     //SORTED FILTEREDMESSAGES BASED ON COUNTER
-    filteredMessages.sort((a, b) => a.counter.compareTo(b.counter));
+   
+    filteredMessages.sort((a,b){
+      DateTime aMessage = new DateFormat('MM-dd-yyyy - HH:mm:ss').parse(a.time);
+      DateTime bMessage = new DateFormat('MM-dd-yyyy - HH:mm:ss').parse(b.time);
+    
+      return aMessage.compareTo(bMessage);
+    });
 
-     //SORTED FILTERED BASED ON TIMESTAMP
-          /*
-          var newDateTime = new DateFormat('MM-dd-yyyy - HH:mm:ss').parse(formattedDate);
-          DateTime sampleDT = new DateFormat('MM-dd-yyyy - HH:mm:ss').parse('04-30-2019 - 19:24:22');
-          if(sampleDT.isBefore(newDateTime)){print('sampleDT is before newDateTime');}
-          else {print('sampleDT is after newDateTime');}
-          */
-          return filteredMessages;
+
+    for(int i=0; i<filteredMessages.length -1 ; i++) {
+      print('BEFORE: ' + '${filteredMessages[i].time}');
+      tempMessage=null;
+      currentDateTime = new DateFormat('MM-dd-yyyy - HH:mm:ss').parse(filteredMessages[i].time);
+      nextDateTime  = new DateFormat('MM-dd-yyyy - HH:mm:ss').parse(filteredMessages[i+1].time);
+    }
+      return filteredMessages;
     
   }
 
