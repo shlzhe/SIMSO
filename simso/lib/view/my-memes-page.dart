@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:unicorndial/unicorndial.dart';
 import '../model/entities/user-model.dart';
 import '../model/entities/meme-model.dart';
 import '../view/design-constants.dart';
 import '../view/navigation-drawer.dart';
 import '../controller/my-memes-controller.dart';
-import '../controller/my-thoughts-controller.dart' as addthought;
 import 'package:cached_network_image/cached_network_image.dart';
 
 class MyMemesPage extends StatefulWidget {
   final UserModel user;
-  List<Meme> myMemesList;
+  final List<Meme> myMemesList;
 
   MyMemesPage(this.user, this.myMemesList);
 
@@ -45,7 +43,7 @@ class MyMemesPageState extends State<MyMemesPage> {
     this.context = context;
     return Scaffold(
         floatingActionButton: FloatingActionButton(
-          child: Text("Add Memes"),
+          child: Icon(Icons.add),
           onPressed: controller.addMeme,
           ),
         appBar: AppBar(
