@@ -5,11 +5,14 @@ import 'package:intl/intl.dart';
 import 'package:simso/model/entities/message-model.dart';
 import 'package:simso/model/entities/myfirebase.dart';
 import 'package:simso/model/entities/user-model.dart';
+import 'package:simso/model/services/imessage-service.dart';
 import 'package:simso/model/services/itimer-service.dart';
 import 'package:simso/model/services/itouch-service.dart';
 import 'package:simso/view/design-constants.dart';
 import 'package:simso/view/mainChat-page.dart';
 import 'package:simso/view/personalChatPage.dart';
+
+import '../service-locator.dart';
 
 class PersonalChatPageController {
   PersonalChatPageState state;
@@ -24,7 +27,7 @@ class PersonalChatPageController {
   PersonalChatPageController (this.state);
   TextEditingController c;
 
-  
+  final IMessageService messageService = locator<IMessageService>();
   
   
  
@@ -127,22 +130,27 @@ class PersonalChatPageController {
     } catch (e) {
       throw e.toString();
     }
-    int counter=0;
+    int counter = 0;
+    bool isLike = false;
+    bool unread = true;
     //------------------------------------------------------------------------
     if(filteredMessages.length == 0) counter=1;
     else counter=filteredMessages.length + 1;
-    //Adding a new DocumentReference to messages
-    Firestore.instance.collection('messages').document().
-      setData({
-        'isLike': 'false',
-        'receiver': '${state.userList[state.index].uid}',
-        'sender': '${state.user.uid}',
-        'text': '$newValue',
-        'time': '$formattedDate',
-        'unread': 'true',
-        'counter': counter.toInt(),
-      });
-   
+    var messages = await messageService.getFilteredMessages(state.user.uid, state.userList[state.index].uid);
+    var count = 1;
+    if (messages.length > 0)
+      count = messages.length + 1;
+    var message = Message (
+      isLike: false,
+      receiver: '${state.userList[state.index].uid}',
+      counter: count,
+      sender: '${state.user.uid}',
+      text: '$newValue',
+      time: '$formattedDate',
+      unread: true
+    );
+    await messageService.addMessage(message);
+   //****************************************/
     //UPDATE FILTEREDMESSAGE
     try {
       //Stuff in userList

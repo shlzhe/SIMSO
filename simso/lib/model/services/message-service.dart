@@ -46,6 +46,7 @@ class MessageService implements IMessageService {
 
   @override
   Future<void> addMessage(Message message) async {
+    print('addMessage called');
     await Firestore.instance.collection('messages')
       .add(message.serialize())
       .then((docRef) {

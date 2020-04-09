@@ -24,7 +24,7 @@
   static const SENDER = 'sender';
   static const TEXT = 'text';
   static const TIME = 'time';
-  static const UNREAD = 'true';
+  static const UNREAD = 'unread';
   static const COUNTER ='counter';
 
   Message.deserialize(Map<String, dynamic> doc, String docID){
