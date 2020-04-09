@@ -187,19 +187,29 @@ class HomepageState extends State<Homepage> {
         title: Text('Home Page'),
         backgroundColor: DesignConstants.blue,
         actions: <Widget>[
-          IconButton(
-            onPressed: controller.newContent,
-            icon: Icon(
-              Icons.search,
-              size: 25,
-            ),
-            iconSize: 200,
-            color: DesignConstants.yellow,
-          ),
-          IconButton(
+          Row(
+            children: <Widget>[
+              IconButton(
+                onPressed: controller.newContent,
+                icon: Icon(
+                  Icons.search,
+                  size: 25,
+                ),
+                iconSize: 200,
+                color: DesignConstants.yellow,
+              ),
+           IconButton(
             icon: Icon(Icons.notifications),
             onPressed: myFriendsRequest,
           ),
+          
+
+        ],
+        
+          ),
+           
+         
+         
         ],
       ),
       drawer: MyDrawer(context, user),

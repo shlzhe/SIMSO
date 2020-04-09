@@ -29,7 +29,7 @@ class EmojiContainer extends StatelessWidget {
       counter: count,
       sender: this.user.uid,
       text: '${user.username} reacted to your ${mediaString.toString().substring(mediaString.toString().indexOf('.')+1)}: $emoji',
-      time: DateFormat('MM-dd-yyyy - HH:mm:ss').format(DateTime.now()),
+      time:  DateFormat('MM-dd-yyyy - HH:mm:ss').format(DateTime.now()),
       unread: true
     );
 

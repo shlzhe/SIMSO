@@ -122,6 +122,7 @@ class PersonalChatPageController {
     var now=DateTime.now();
     String formattedDate = DateFormat('MM-dd-yyyy - HH:mm:ss').format(now);
     
+
      //UPDATE FILTEREDMESSAGE
     try {
       //Stuff in userList
@@ -130,12 +131,10 @@ class PersonalChatPageController {
     } catch (e) {
       throw e.toString();
     }
-    int counter = 0;
-    bool isLike = false;
-    bool unread = true;
+    //int counter = 0;
     //------------------------------------------------------------------------
-    if(filteredMessages.length == 0) counter=1;
-    else counter=filteredMessages.length + 1;
+    //if(filteredMessages.length == 0) counter=1;
+    //else counter=filteredMessages.length + 1;
     var messages = await messageService.getFilteredMessages(state.user.uid, state.userList[state.index].uid);
     var count = 1;
     if (messages.length > 0)

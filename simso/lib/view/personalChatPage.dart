@@ -33,7 +33,7 @@ class PersonalChatPageState extends State<PersonalChatPage> {
         padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
         margin: isMe
             ? EdgeInsets.only(top: 8, bottom: 8, left: 150)
-            : EdgeInsets.only(top: 8, bottom: 8, left: 150),
+            : EdgeInsets.only(top: 8, bottom: 8, right: 150),
         decoration: BoxDecoration(
           color: isMe ? DesignConstants.blueGreyish : DesignConstants.blueLight,
           borderRadius: isMe
