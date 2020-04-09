@@ -50,15 +50,15 @@ class EmojiContainer extends StatelessWidget {
           SizedBox(
             width: 75,
             child: FlatButton(
-              onPressed: () { emojiClicked('❤️'); },
-              child: Text('❤️', style: TextStyle(fontSize: 22),),
+              onPressed: () { emojiClicked('👍'); },
+              child: Text('👍', style: TextStyle(fontSize: 22),),
             ),
           ),
           SizedBox(
             width: 75,
             child: FlatButton(
-              onPressed: () { emojiClicked('👍'); },
-              child: Text('👍', style: TextStyle(fontSize: 22),),
+              onPressed: () { emojiClicked('❤️'); },
+              child: Text('❤️', style: TextStyle(fontSize: 22),),
             ),
           ),
           SizedBox(
