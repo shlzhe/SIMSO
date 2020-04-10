@@ -155,24 +155,6 @@ class HomepageState extends State<Homepage> {
       ),
     );
 
-    childButtons.add(
-      UnicornButton(
-        hasLabel: true,
-        labelText: "Messenger",
-        labelFontSize: 10,
-        currentButton: FloatingActionButton(
-          heroTag: "Messenger",
-          backgroundColor: Colors.white,
-          mini: true,
-          child: Icon(
-            Icons.textsms,
-            color: Colors.black,
-          ),
-          onPressed: controller.mainChatScreen,
-        ),
-      ),
-    );
-
     return Scaffold(
       floatingActionButton: UnicornDialer(
         backgroundColor: Colors.transparent,
@@ -198,18 +180,18 @@ class HomepageState extends State<Homepage> {
                 iconSize: 200,
                 color: DesignConstants.yellow,
               ),
+               IconButton(
+            icon: Icon(Icons.textsms),
+            onPressed: controller.mainChatScreen,
+            color: DesignConstants.yellow,
+          ),
            IconButton(
             icon: Icon(Icons.notifications),
             onPressed: myFriendsRequest,
           ),
-          
-
-        ],
-        
+        ],        
           ),
-           
-         
-         
+       
         ],
       ),
       drawer: MyDrawer(context, user),
