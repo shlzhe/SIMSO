@@ -177,7 +177,7 @@ class HomepageState extends State<Homepage> {
                   Icons.search,
                   size: 25,
                 ),
-                iconSize: 200,
+               
                 color: DesignConstants.yellow,
               ),
                IconButton(
@@ -188,6 +188,7 @@ class HomepageState extends State<Homepage> {
            IconButton(
             icon: Icon(Icons.notifications),
             onPressed: myFriendsRequest,
+            color: DesignConstants.yellow,
           ),
         ],        
           ),
