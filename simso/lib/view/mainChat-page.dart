@@ -158,7 +158,9 @@ class MainChatPageState extends State<MainChatPage> {
             label: Text('Friends'),
             textColor: DesignConstants.blue,
             onPressed: controller.showFriends,
-            )
+            ),
+          
+          
           //-----------------------------------------------------------------------   
           ]    
       ),

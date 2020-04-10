@@ -84,7 +84,7 @@ class MyFirebase{
 
 
     for(int i=0; i<filteredMessages.length -1 ; i++) {
-      print('BEFORE: ' + '${filteredMessages[i].time}');
+      //print('BEFORE: ' + '${filteredMessages[i].time}');
       tempMessage=null;
       currentDateTime = new DateFormat('MM-dd-yyyy - HH:mm:ss').parse(filteredMessages[i].time);
       nextDateTime  = new DateFormat('MM-dd-yyyy - HH:mm:ss').parse(filteredMessages[i+1].time);

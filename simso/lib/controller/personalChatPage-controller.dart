@@ -9,7 +9,6 @@ import 'package:simso/model/services/imessage-service.dart';
 import 'package:simso/model/services/itimer-service.dart';
 import 'package:simso/model/services/itouch-service.dart';
 import 'package:simso/view/design-constants.dart';
-import 'package:simso/view/mainChat-page.dart';
 import 'package:simso/view/personalChatPage.dart';
 
 import '../service-locator.dart';
@@ -169,5 +168,16 @@ class PersonalChatPageController {
 
   }
 
-  
+  favMessage(Message message) async {
+    print('favMessage clicked');
+    //Update message 
+    await messageService.updateFavorite(message);
+    //Retrieve filteredMessages and update its value on UI
+    var updatedFilteredMsg = await messageService.getFilteredMessages(state.user.uid, state.userList[state.index].uid);
+    state.stateChanged((){
+       state.filteredMessages=List.from(updatedFilteredMsg);
+    });
+    
+  }
+
 }
