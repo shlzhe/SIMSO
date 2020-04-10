@@ -4,10 +4,31 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../model/entities/user-model.dart';
 import '../controller/profile-page-controller.dart';
 
+import 'package:intl/intl.dart';
+import '../view/navigation-drawer.dart';
+import 'package:simso/model/entities/image-model.dart';
+import 'package:simso/model/entities/meme-model.dart';
+import 'package:simso/model/entities/song-model.dart';
+import 'package:simso/model/entities/thought-model.dart';
+import 'package:simso/model/services/ilimit-service.dart';
+import 'package:simso/model/services/ipicture-service.dart';
+import 'package:simso/model/services/itouch-service.dart';
+
+import 'package:simso/controller/homepage-controller.dart';
+import 'package:simso/model/services/itimer-service.dart';
+import 'package:simso/model/services/iuser-service.dart';
+import '../service-locator.dart';
+import 'design-constants.dart';
+
+import 'package:simso/model/services/ifriend-service.dart';
+
+
 class ProfilePage extends StatefulWidget {
+  
   final UserModel user;
   final bool visit;
   ProfilePage(this.user, this.visit);
+
 
   @override
   State<StatefulWidget> createState() {
@@ -23,8 +44,27 @@ class ProfilePageState extends State<ProfilePage> {
   var formKey = GlobalKey<FormState>();
   BuildContext context;
 
+  // IUserSice imageService = locator<IImageService>();
+  // final IFriendService friendService = locator<IFriendService>();
+  bool meme = false;
+  bool music = false;
+  bool snapshots = false;
+  bool thoughts = true;
+  bool friends = true;
+  // List<Thought> publicThoughtsList = [];
+
+
+  List<UserModel> visitUser;
+  List<ImageModel> imageList =[];
+  List<SongModel> songlist;
+  List<Meme> memesList;
+  String returnedID;
+  var idController = TextEditingController();
+  // var formKey = GlobalKey<FormState>();
+
   ProfilePageState(this.user, this.visit) {
-    controller = ProfilePageController(this);
+    controller = ProfilePageController(this, this.user);
+
   }
 
   void stateChanged(Function fn) {
@@ -40,8 +80,8 @@ class ProfilePageState extends State<ProfilePage> {
         backgroundColor: DesignConstants.blue,
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.notifications),
-            onPressed: () {},
+            icon: Icon(Icons.message),
+            onPressed: controller.mainChatScreen,
           ),
           visit == false
               ? IconButton(
@@ -51,6 +91,7 @@ class ProfilePageState extends State<ProfilePage> {
               : Container(),
         ],
       ),
+      // drawer: MyDrawer(context, user),
       body: ListView(children: <Widget>[
         Container(
           padding: EdgeInsets.all(10),
@@ -114,6 +155,48 @@ class ProfilePageState extends State<ProfilePage> {
           textAlign: (TextAlign.center),
         ),
       ]),
+      
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            RaisedButton(
+              child: Text(
+                'Thoughts',
+                style: TextStyle(color: DesignConstants.yellow),
+              ),
+              onPressed: controller.myThoughts,
+              color:
+                  thoughts ? DesignConstants.blueLight : DesignConstants.blue,
+            ),
+            RaisedButton(
+              child: Text(
+                'Memes',
+                style: TextStyle(color: DesignConstants.yellow),
+              ),
+              onPressed: controller.myMeme,
+              color: meme ? DesignConstants.blueLight : DesignConstants.blue,
+            ),
+            RaisedButton(
+              child: Text(
+                'SnapShots',
+                style: TextStyle(color: DesignConstants.yellow),
+              ),
+              onPressed: controller.mySnapshots,
+              color:
+                  snapshots ? DesignConstants.blueLight : DesignConstants.blue,
+            ),
+            RaisedButton(
+              child: Text(
+                'Music',
+                style: TextStyle(color: DesignConstants.yellow),
+              ),
+              onPressed: controller.myMusic,
+              color: music ? DesignConstants.blueLight : DesignConstants.blue,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
