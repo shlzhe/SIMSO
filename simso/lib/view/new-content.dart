@@ -12,6 +12,8 @@ import 'package:simso/service-locator.dart';
 import 'package:simso/view/design-constants.dart';
 import 'package:simso/view/profile-page.dart';
 
+import 'emoji-container.dart';
+
 class NewContentPage extends StatefulWidget {
   final UserModel user;
   NewContentPage(this.user);
@@ -105,9 +107,20 @@ class NewContentPageState extends State<NewContentPage> {
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(publicThoughtsList.elementAt(index).text),
+                          Text(
+                            publicThoughtsList.elementAt(index).text, 
+                            style: TextStyle(fontSize: 24),
+                          ),
                         ],
                       ),
+                      trailing: 
+                        EmojiContainer(
+                          this.context, 
+                          this.user, 
+                          mediaTypes.thought.index, 
+                          publicThoughtsList[index].thoughtId, 
+                          publicThoughtsList[index].uid, 
+                        ),
                     ),
                   ),
                 );
@@ -133,6 +146,14 @@ class NewContentPageState extends State<NewContentPage> {
                             ),
                           subtitle: Text(DateFormat("MMM dd-yyyy 'at' HH:mm:ss")
                               .format(memesList[index].timestamp)),
+                          trailing: 
+                            EmojiContainer(
+                              this.context, 
+                              this.user, 
+                              mediaTypes.meme.index, 
+                              memesList[index].memeId, 
+                              memesList[index].ownerID, 
+                            ),
                           ),
                           Container(
                           child: CachedNetworkImage(
@@ -143,7 +164,7 @@ class NewContentPageState extends State<NewContentPage> {
                           errorWidget: (context, url, error) =>
                               Icon(Icons.error_outline),
                       ),
-                        )
+                        ),
                     ],
                   ),
                 );
@@ -173,6 +194,14 @@ class NewContentPageState extends State<NewContentPage> {
                             ),
                           subtitle: Text(DateFormat("MMM dd-yyyy 'at' HH:mm:ss")
                               .format(imageList[index].lastUpdatedAt)),
+                          trailing: 
+                            EmojiContainer(
+                              this.context, 
+                              this.user, 
+                              mediaTypes.snapshot.index, 
+                              imageList[index].imageId, 
+                              imageList[index].ownerID, 
+                            ),
                           ),
                         Container(
                           child: CachedNetworkImage(
@@ -183,7 +212,7 @@ class NewContentPageState extends State<NewContentPage> {
                           errorWidget: (context, url, error) =>
                               Icon(Icons.error_outline),
                       ),
-                        )
+                        ),
                     ],
                   ),
                 );

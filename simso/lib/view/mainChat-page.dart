@@ -52,11 +52,7 @@ class MainChatPageState extends State<MainChatPage> {
       appBar: AppBar(
         title: Text('SimSo Together'),
         backgroundColor: DesignConstants.blue,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back), 
-          onPressed: controller.backButton,
-          ),
-          
+       
       ),
       body: new Center(
         child: Padding(
@@ -97,7 +93,7 @@ class MainChatPageState extends State<MainChatPage> {
                                         
                               ],
                             ),
-                            onTap: ()=>controller.onTap(index),
+                            onTap: ()=>controller.onTapPublishMode(index),
                           )
                           
                           );
@@ -105,19 +101,13 @@ class MainChatPageState extends State<MainChatPage> {
                  )),
            //-----------------------------------------------------------------------
           //FRIEND MODE
-            friendFlag == false ? 
-            RaisedButton.icon(
-            icon: Icon(Icons.local_florist), 
-            label: Text('Friends'),
-            textColor: DesignConstants.blue,
-            onPressed: controller.showFriends,
-            )
-            :
-            //else
+           
+            friendFlag == true && friendList !=null  ?   //if friendmode is true
             Expanded(
                child: 
+               
                ListView.builder(
-                 itemCount: userList[currentIndex].friends.length, 
+                 itemCount: friendList.length, 
                  itemBuilder: (BuildContext context, int index){
                    return Container(
                      padding: EdgeInsets.all(5.0),
@@ -126,26 +116,33 @@ class MainChatPageState extends State<MainChatPage> {
                      
                     ListTile(
                           leading: CachedNetworkImage(
-                            imageUrl: userList[index].profilePic == null ? '': userList[index].profilePic,
+                            imageUrl: friendList[index].profilePic == null ? '': friendList[index].profilePic,
                             placeholder: (context, url)=>CircularProgressIndicator(),
                             errorWidget: (context, url, error)=> Icon(Icons.tag_faces),
                             ),
-                            title: Text(userList[index].username,), 
+                            title: Text(friendList[index].username,), 
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                                children: <Widget>[
-                                Text(userList[index].email),
-                                Text(userList[index].city == null ? '': userList[index].city),        
+                                Text(friendList[index].email),
+                                Text(friendList[index].city == null ? '': friendList[index].city),        
                               ],
                             ),
-                            onTap: ()=>controller.onTap(index),
+                            onTap: ()=>controller.onTapFriendMode(index),
                           )
                           
                           );
                  }
-                 )),
+                 )) 
+                 : //else no friends
+            RaisedButton.icon(
+            icon: Icon(Icons.local_florist), 
+            label: Text('Friends'),
+            textColor: DesignConstants.blue,
+            onPressed: controller.showFriends,
+            )
           //-----------------------------------------------------------------------
-          
+        
           
           ],
       

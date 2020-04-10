@@ -1,44 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:simso/model/entities/message-model.dart';
-import 'package:simso/model/entities/user-model.dart';
 
-class MyFirebase{
-  static Future<List<UserModel>> getUsers() async{
+import 'package:simso/model/services/imessage-service.dart';
 
-    QuerySnapshot querySnapshot = await Firestore.instance.collection('users')
-      .getDocuments();
-    var userList = <UserModel>[];
-    if (querySnapshot == null || querySnapshot.documents.length ==0){
-      print('Empty userList');
-      return userList;
-    }
-    for (DocumentSnapshot doc in querySnapshot.documents){
-      print('Users Collection is not empty');
-      userList.add(UserModel.deserialize(doc.data));
-    }
-
-    return userList;
-
-    }
-
-    static Future<List<Message>> getMessages(String sender) async{
-      QuerySnapshot querySnapshot = await Firestore.instance.collection('messages')
-        .where('sender',isEqualTo: sender).getDocuments();
-        var messageCollection = <Message>[];
-      if (querySnapshot == null || querySnapshot.documents.length ==0){
-      print('Empty messageCollection');
-      return messageCollection;
-    }
-      for (DocumentSnapshot doc in querySnapshot.documents){
-     
-      print('messages Collection is not empty');
-      messageCollection.add(Message.deserialize(doc.data, doc.documentID));
-    }
-    return messageCollection;
-    }
-
-    static Future<List<Message>> getFilteredMessages(String sender, String receiver) async {
+class MessageService implements IMessageService {
+  @override
+  Future<List<Message>> getFilteredMessages(String sender, String receiver) async {
     var filteredMessages = <Message>[];  //all messages 
 
     //COLLECT MESSAGES THAT SENDER SENT TO RECEIVER
@@ -90,7 +58,41 @@ class MyFirebase{
       nextDateTime  = new DateFormat('MM-dd-yyyy - HH:mm:ss').parse(filteredMessages[i+1].time);
     }
       return filteredMessages;
-    }
-
     
   }
+
+  @override
+  Future<List<Message>> getMessages(String sender) async {
+    QuerySnapshot querySnapshot = await Firestore.instance
+        .collection('messages')
+        .where('sender', isEqualTo: sender)
+        .getDocuments();
+    var messageCollection = <Message>[];
+    if (querySnapshot == null || querySnapshot.documents.length == 0) {
+      print('Empty messageCollection');
+      return messageCollection;
+    }
+    for (DocumentSnapshot doc in querySnapshot.documents) {
+      print('messages Collection is not empty');
+      messageCollection.add(Message.deserialize(doc.data, doc.documentID));
+    }
+    return messageCollection;
+  }
+
+  @override
+  Future<void> addMessage(Message message) async {
+    print('addMessage called');
+    await Firestore.instance.collection('messages')
+      .add(message.serialize())
+      .then((docRef) {
+        message.documentID = docRef.documentID;
+      })
+      .catchError((onError) {
+        print(onError);
+        return null;
+      });
+  }
+  
+  
+  
+}
