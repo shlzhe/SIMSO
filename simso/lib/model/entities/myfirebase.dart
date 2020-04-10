@@ -69,10 +69,7 @@ class MyFirebase{
       print('receiverToSender is not empty');
       filteredMessages.add(Message.deserialize(doc.data, doc.documentID));
     }
-    Message tempMessage;
-    var currentDateTime;
-    var nextDateTime;
-    List<StringSink> dateTimes;
+   
     //SORTED FILTEREDMESSAGES BASED ON COUNTER
    
     filteredMessages.sort((a,b){
@@ -83,14 +80,25 @@ class MyFirebase{
     });
 
 
-    for(int i=0; i<filteredMessages.length -1 ; i++) {
-      //print('BEFORE: ' + '${filteredMessages[i].time}');
-      tempMessage=null;
-      currentDateTime = new DateFormat('MM-dd-yyyy - HH:mm:ss').parse(filteredMessages[i].time);
-      nextDateTime  = new DateFormat('MM-dd-yyyy - HH:mm:ss').parse(filteredMessages[i+1].time);
-    }
       return filteredMessages;
     }
 
+  static Future<List<Message>> getUnreadMessages(String currentUID) async {
+    QuerySnapshot querySnapshot = await Firestore.instance
+        .collection('messages')
+        .where('receiver', isEqualTo: currentUID)
+        .where('unread',isEqualTo: true)
+        .getDocuments();
+    var messageCollection = <Message>[];
+    if (querySnapshot == null || querySnapshot.documents.length == 0) {
+      print('No unread message');
+      return messageCollection;
+    }
+    for (DocumentSnapshot doc in querySnapshot.documents) {
+      print('Have unread messages');
+      messageCollection.add(Message.deserialize(doc.data, doc.documentID));
+    }
+    return messageCollection;
+  }
     
   }

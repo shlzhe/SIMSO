@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 import 'package:simso/model/entities/image-model.dart';
 import 'package:simso/model/entities/meme-model.dart';
+import 'package:simso/model/entities/message-model.dart';
+import 'package:simso/model/entities/myfirebase.dart';
 import 'package:simso/model/entities/song-model.dart';
 import 'package:simso/model/entities/thought-model.dart';
 import 'package:simso/model/services/ilimit-service.dart';
@@ -20,7 +22,6 @@ import 'design-constants.dart';
 import '../model/entities/friendRequest-model.dart';
 import 'package:simso/model/services/ifriend-service.dart';
 import 'package:simso/view/notification-page.dart';
-
 import 'emoji-container.dart';
 
 class Homepage extends StatefulWidget {
@@ -58,7 +59,7 @@ class HomepageState extends State<Homepage> {
   String returnedID;
   var idController = TextEditingController();
   var formKey = GlobalKey<FormState>();
-
+  List<Message> unreadMessage;
   HomepageState(this.user) {
     controller = HomepageController(this, this.timerService, this.touchService,
         this.limitService, this.songlist);
@@ -66,8 +67,12 @@ class HomepageState extends State<Homepage> {
     controller.setupTouchCounter();
     controller.getLimits();
     controller.thoughts();
+    controller.getUnreadMessages();
   }
+   updateUnreadMessage(){
 
+   }
+   
   gotoProfile(String uid) async {
     UserModel visitUser = await userService.readUser(uid);
     Navigator.push(context,
@@ -78,7 +83,9 @@ class HomepageState extends State<Homepage> {
     setState(f);
   }
 
+  
   @override
+  
   Widget build(BuildContext context) {
     this.context = context;
     var childButtons = List<UnicornButton>();
@@ -154,8 +161,9 @@ class HomepageState extends State<Homepage> {
         ),
       ),
     );
-
+    
     return Scaffold(
+      
       floatingActionButton: UnicornDialer(
         backgroundColor: Colors.transparent,
         parentButtonBackground: Colors.blueGrey[300],
@@ -165,6 +173,7 @@ class HomepageState extends State<Homepage> {
         ),
         childButtons: childButtons,
       ),
+      
       appBar: AppBar(
         title: Text('Home Page'),
         backgroundColor: DesignConstants.blue,
@@ -180,11 +189,47 @@ class HomepageState extends State<Homepage> {
                
                 color: DesignConstants.yellow,
               ),
-               IconButton(
-            icon: Icon(Icons.textsms),
-            onPressed: controller.mainChatScreen,
-            color: DesignConstants.yellow,
-          ),
+          //=======
+          Stack(children: <Widget>[
+                 IconButton(
+                    icon: Icon(Icons.textsms),
+                    iconSize: 40,
+                    onPressed: controller.mainChatScreen,
+                    color: DesignConstants.yellow,
+                    ),
+                   
+                  Container(
+                    
+                    width:30,
+                    height: 30,
+                    alignment: Alignment.topRight,
+                    margin: EdgeInsets.only(top:5),
+                    child: Container(
+                      width: 80,
+                      height: 25,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.red,
+                        border: Border.all(color:Colors.white,width:1)),
+                    
+                    child: Padding(
+                      padding: const EdgeInsets.all(0),
+                      child: 
+                      Center(
+                        child: unreadMessage == null? Text('...'): Text(unreadMessage.length.toString(), style: TextStyle( fontSize:15)),
+                      )
+
+                    )
+                      
+                    ),
+                  )
+
+                 ],
+                                
+                ),
+
+          //=======
+          
            IconButton(
             icon: Icon(Icons.notifications),
             onPressed: myFriendsRequest,
@@ -253,6 +298,7 @@ class HomepageState extends State<Homepage> {
               },
             )
           : (meme
+          
               ? ListView.builder(
                   itemCount: memesList.length,
                   itemBuilder: (BuildContext context, int index) {
