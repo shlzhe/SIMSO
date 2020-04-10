@@ -55,11 +55,12 @@ class MainChatPageState extends State<MainChatPage> {
        
       ),
       body: new Center(
+        
         child: Padding(
-          padding: const EdgeInsets.all(8.0),   //Top center raise buttin
+          padding: const EdgeInsets.all(8.0),   //Top center raise button
+          
           child: Column(  
           children: <Widget>[  
-      
           //PUBLIC MODE
        publicFlag==false?  new RaisedButton.icon(        //if...
             icon: Icon(Icons.public), 
@@ -75,8 +76,16 @@ class MainChatPageState extends State<MainChatPage> {
                  itemCount: userList.length,
                  itemBuilder: (BuildContext context, int index){
                    return Container(
-                     padding: EdgeInsets.all(5.0),
-                     height: 100,
+                    height:100,
+                    padding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFFFFF),
+                      border: Border.all(
+                        color: DesignConstants.blue,
+                        width: 4,
+                      ),
+                      borderRadius: BorderRadius.circular(30),
+                    ),   
                     child: 
                     ListTile(
                           leading: CachedNetworkImage(
@@ -102,18 +111,27 @@ class MainChatPageState extends State<MainChatPage> {
            //-----------------------------------------------------------------------
           //FRIEND MODE
            
-            friendFlag == true && friendList !=null  ?   //if friendmode is true
+            friendFlag == true && friendList !=null  ?
+               //if friendmode is true
             Expanded(
+              
                child: 
                
                ListView.builder(
                  itemCount: friendList.length, 
                  itemBuilder: (BuildContext context, int index){
                    return Container(
-                     padding: EdgeInsets.all(5.0),
-                     height: 100, 
-                    child: 
-                     
+                    height:100,
+                    padding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFFFFF),
+                      border: Border.all(
+                        color: DesignConstants.blue,
+                        width: 4,
+                      ),
+                      borderRadius: BorderRadius.circular(30),
+                    ),   
+                    child:       
                     ListTile(
                           leading: CachedNetworkImage(
                             imageUrl: friendList[index].profilePic == null ? '': friendList[index].profilePic,
@@ -141,18 +159,12 @@ class MainChatPageState extends State<MainChatPage> {
             textColor: DesignConstants.blue,
             onPressed: controller.showFriends,
             )
-          //-----------------------------------------------------------------------
-        
-          
-          ],
-      
+          //-----------------------------------------------------------------------   
+          ]    
       ),
         ),
         
-      )
-     
-     
-      
+      )   
     );
-}
+  }
 }
