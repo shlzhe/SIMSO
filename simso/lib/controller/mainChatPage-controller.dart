@@ -262,4 +262,10 @@ for(int i = 0; i< filteredMessages.length; i++){
           ));
     }
   }
+   var unreadMessages;
+  Future<List<Message>> getUnreadMessages() async {
+    print('getUnreadMessages() in mainChatPage');
+    unreadMessages = await MyFirebase.getUnreadMessages(state.user.uid);
+    return unreadMessages;
+  }
 }

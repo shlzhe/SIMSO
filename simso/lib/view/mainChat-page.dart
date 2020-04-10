@@ -37,15 +37,16 @@ class MainChatPageState extends State<MainChatPage> {
   int currentIndex;         //Hold index on users collection in DB of current user
   MainChatPageState(this.user,this.userList,this.currentIndex) {
     controller = MainChatPageController(this);
-  
+    
   }
-
+  
   void stateChanged(Function f) {
     setState(f);
   }
  
   @override
   Widget build(BuildContext context) {
+    controller.getUnreadMessages();
     this.context = context;
     return Scaffold(
     
@@ -144,6 +145,7 @@ class MainChatPageState extends State<MainChatPage> {
                                children: <Widget>[
                                 Text(friendList[index].email),
                                 Text(friendList[index].city == null ? '': friendList[index].city),        
+                                
                               ],
                             ),
                             onTap: ()=>controller.onTapFriendMode(index),

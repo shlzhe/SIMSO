@@ -69,9 +69,6 @@ class HomepageState extends State<Homepage> {
     controller.thoughts();
     controller.getUnreadMessages();
   }
-   updateUnreadMessage(){
-
-   }
    
   gotoProfile(String uid) async {
     UserModel visitUser = await userService.readUser(uid);
@@ -85,11 +82,15 @@ class HomepageState extends State<Homepage> {
 
   
   @override
-  
   Widget build(BuildContext context) {
     this.context = context;
     var childButtons = List<UnicornButton>();
-
+   final IconButton messageIcon = IconButton(
+                    icon: Icon(Icons.textsms),
+                    iconSize: 40,
+                    onPressed: controller.mainChatScreen,
+                    color: DesignConstants.yellow,
+                    );
     childButtons.add(
       UnicornButton(
         hasLabel: true,
@@ -191,15 +192,10 @@ class HomepageState extends State<Homepage> {
               ),
           //=======
           Stack(children: <Widget>[
-                 IconButton(
-                    icon: Icon(Icons.textsms),
-                    iconSize: 40,
-                    onPressed: controller.mainChatScreen,
-                    color: DesignConstants.yellow,
-                    ),
+              
+                  messageIcon,
                    
-                  Container(
-                    
+                  Container( 
                     width:30,
                     height: 30,
                     alignment: Alignment.topRight,
@@ -207,18 +203,23 @@ class HomepageState extends State<Homepage> {
                     child: Container(
                       width: 80,
                       height: 25,
+
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.red,
+                        color: controller.unreadMessages==null? DesignConstants.blue : Colors.red,
                         border: Border.all(color:Colors.white,width:1)),
                     
                     child: Padding(
                       padding: const EdgeInsets.all(0),
                       child: 
+                      controller.unreadMessages == null ?   
                       Center(
-                        child: unreadMessage == null? Text('...'): Text(unreadMessage.length.toString(), style: TextStyle( fontSize:15)),
+                        child: Text('0')
                       )
-
+                      : 
+                       Center(
+                        child: Text(controller.unreadMessages.length.toString(), style: TextStyle( fontSize:15)),
+                      )
                     )
                       
                     ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:simso/model/entities/meme-model.dart';
+import 'package:simso/model/entities/message-model.dart';
 import 'package:simso/model/entities/myfirebase.dart';
 import 'package:simso/model/entities/song-model.dart';
 import 'package:simso/model/entities/user-model.dart';
@@ -39,6 +40,7 @@ class HomepageController {
   final IThoughtService thoughtService = locator<IThoughtService>();
   final IMemeService memeService = locator<IMemeService>();
   var unreadMessages;
+  
   HomepageController(this.state, this.timerService, this.touchService,
       this.limitService, this.songList);
 
@@ -249,14 +251,6 @@ class HomepageController {
       fontSize: 16,
     );
     
-  }
-
-  Future<void> updateUnreadMessage() async {
-    unreadMessages = await MyFirebase.getUnreadMessages(state.user.uid);
-     print('${unreadMessages.length}');
-    state.stateChanged((){
-        state.unreadMessage = List.from(unreadMessages);
-    });
   }
     
 }
