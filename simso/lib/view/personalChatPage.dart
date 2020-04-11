@@ -261,12 +261,7 @@ class PersonalChatPageState extends State<PersonalChatPage> {
           //Text('${filteredMessages.length}'),
           Row(
             children: <Widget>[
-              IconButton(
-                  icon: Icon(
-                    Icons.photo,
-                    color: DesignConstants.yellow,
-                  ),
-                  onPressed: () {}),
+              
               IconButton(
                 icon: Icon(
                   Icons.send,
