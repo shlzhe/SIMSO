@@ -130,6 +130,7 @@ class MainChatPageController {
       );
       
     }
+//LABEL NEW MESSAGES
 //-----------------------------------------------
     var checkUnreadList = List<bool>();
     for(int i = 0; i<state.friendList.length;i++){
@@ -140,6 +141,30 @@ class MainChatPageController {
       state.checkUnreadList = List.from(checkUnreadList);
     });
 //-----------------------------------------------
+  
+//-----------------------------------------------
+   List<String> latestMessages =  List<String>();
+   List<String> latestDateTime = List<String>();
+
+    for(int i = 0; i<state.friendList.length;i++){
+        var messageCollection =   await MyFirebase.getFilteredMessages(state.user.uid, state.friendList[i].uid);
+        if(messageCollection == null || messageCollection.length == 0)
+        {
+          latestMessages.add('start chatting');
+          latestDateTime.add('');
+        } else{
+          latestMessages.add(messageCollection[messageCollection.length -1].text);
+          latestDateTime.add(messageCollection[messageCollection.length -1].time);
+        }
+    state.stateChanged((){
+      state.latestMessages = List.from(latestMessages);
+      state.latestDateTime = List.from(latestDateTime);
+    });
+    
+
+    }
+//-----------------------------------------------
+
   }
 
   onTapPublishMode(int index) async {

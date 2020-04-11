@@ -43,6 +43,8 @@ class MainChatPageState extends State<MainChatPage> {
     controller.getUnreadMessages();
   }
   bool checkUnread;
+  List<String> latestMessages =  List<String>();
+  List<String> latestDateTime = List<String>();
   void stateChanged(Function f) {
     setState(f);
   }
@@ -104,7 +106,7 @@ class MainChatPageState extends State<MainChatPage> {
                                 Text(userList[index].email),
                                 Text(userList[index].city == null ? '': userList[index].city),
                                 checkUnreadListPublic.length == userList.length ?
-                                checkUnreadListPublic[index]==false ? Text('') : Text('NEW')
+                                checkUnreadListPublic[index]==false ? Text('') : Text('NEW',style: TextStyle(color:DesignConstants.red),)
                                 : Text('') 
                               ],
                             ),
@@ -129,7 +131,7 @@ class MainChatPageState extends State<MainChatPage> {
                    controller.friendIndex(friendList[index].uid);
                    
                    return Container(
-                    height:100,
+                    height:120,
                     padding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                     decoration: BoxDecoration(
                       color: const Color(0xFFFFFFFF),
@@ -154,8 +156,14 @@ class MainChatPageState extends State<MainChatPage> {
                                children: <Widget>[
                                 Text(friendList[index].email),
                                 Text(friendList[index].city == null ? '': friendList[index].city),        
-                                checkUnreadList.length == friendList.length ?
-                                checkUnreadList[index]==false ? Text('UTD') : Text('NEW')
+                                checkUnreadList.length == friendList.length && checkUnreadList.length == latestMessages.length ?
+                                checkUnreadList[index]==false ? Text('${latestMessages[index].substring(0,15)}...',style: TextStyle(fontStyle: FontStyle.italic,color:DesignConstants.blue),) 
+                                                                      : Text('${latestMessages[index].substring(0,15)}...',style: TextStyle(fontStyle: FontStyle.italic,color:DesignConstants.red),)
+                                : Text(''),
+
+                                checkUnreadList.length == friendList.length && checkUnreadList.length == latestDateTime.length ?
+                                checkUnreadList[index]==false ? Text('<${latestDateTime[index]}>',style: TextStyle(fontStyle: FontStyle.italic,color:DesignConstants.blue),) 
+                                                                      : Text('<${latestDateTime[index]}>',style: TextStyle(fontStyle: FontStyle.italic,color:DesignConstants.blue),)
                                 : Text('')
                               ],
                           
