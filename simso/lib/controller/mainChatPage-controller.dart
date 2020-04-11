@@ -52,18 +52,20 @@ class MainChatPageController {
       textColor: DesignConstants.yellow,
       fontSize: 16,
     );
-/*    
+    
   //-----------------------------------------------
     var checkUnreadList = List<bool>();
+    
     for(int i = 0; i<state.userList.length;i++){
     var checkUnread = await MyFirebase.checkUnreadMessage(state.user.uid, state.userList[i].uid);
         checkUnreadList.add(checkUnread);
     }
+
     state.stateChanged((){
       state.checkUnreadListPublic = List.from(checkUnreadList);
     });
 //-----------------------------------------------
-*/
+
 
 //-----------------------------------------------
    List<String> latestMessages =  List<String>();
