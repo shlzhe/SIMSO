@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:simso/controller/mainChatPage-controller.dart';
+import 'package:simso/model/entities/myfirebase.dart';
 import 'package:simso/model/services/itouch-service.dart';
 import 'package:flutter/material.dart';
 import 'package:simso/model/services/itimer-service.dart';
@@ -35,18 +36,19 @@ class MainChatPageState extends State<MainChatPage> {
   bool publicFlag = false;      //True when public button is clicked
   bool friendFlag = false;      //True when friends button is clicked
   int currentIndex;         //Hold index on users collection in DB of current user
+  var checkUnreadList = List<bool>();
+  var checkUnreadListPublic = List<bool>();
   MainChatPageState(this.user,this.userList,this.currentIndex) {
     controller = MainChatPageController(this);
-    
+    controller.getUnreadMessages();
   }
-  
+  bool checkUnread;
   void stateChanged(Function f) {
     setState(f);
   }
- 
+  List<bool>unread=[];
   @override
   Widget build(BuildContext context) {
-    controller.getUnreadMessages();
     this.context = context;
     return Scaffold(
     
@@ -76,6 +78,7 @@ class MainChatPageState extends State<MainChatPage> {
                ListView.builder(
                  itemCount: userList.length,
                  itemBuilder: (BuildContext context, int index){
+                   
                    return Container(
                     height:100,
                     padding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
@@ -100,7 +103,9 @@ class MainChatPageState extends State<MainChatPage> {
                                children: <Widget>[
                                 Text(userList[index].email),
                                 Text(userList[index].city == null ? '': userList[index].city),
-                                        
+                                checkUnreadListPublic.length == userList.length ?
+                                checkUnreadListPublic[index]==false ? Text('') : Text('NEW')
+                                : Text('') 
                               ],
                             ),
                             onTap: ()=>controller.onTapPublishMode(index),
@@ -121,6 +126,8 @@ class MainChatPageState extends State<MainChatPage> {
                ListView.builder(
                  itemCount: friendList.length, 
                  itemBuilder: (BuildContext context, int index){
+                   controller.friendIndex(friendList[index].uid);
+                   
                    return Container(
                     height:100,
                     padding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
@@ -131,7 +138,8 @@ class MainChatPageState extends State<MainChatPage> {
                         width: 4,
                       ),
                       borderRadius: BorderRadius.circular(30),
-                    ),   
+                    ),  
+                     
                     child:       
                     ListTile(
                           leading: CachedNetworkImage(
@@ -140,13 +148,17 @@ class MainChatPageState extends State<MainChatPage> {
                             errorWidget: (context, url, error)=> Icon(Icons.tag_faces),
                             ),
                             title: Text(friendList[index].username,), 
+                           
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                                children: <Widget>[
                                 Text(friendList[index].email),
                                 Text(friendList[index].city == null ? '': friendList[index].city),        
-                                
+                                checkUnreadList.length == friendList.length ?
+                                checkUnreadList[index]==false ? Text('UTD') : Text('NEW')
+                                : Text('')
                               ],
+                          
                             ),
                             onTap: ()=>controller.onTapFriendMode(index),
                           )

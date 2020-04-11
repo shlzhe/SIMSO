@@ -91,14 +91,34 @@ class MyFirebase{
         .getDocuments();
     var messageCollection = <Message>[];
     if (querySnapshot == null || querySnapshot.documents.length == 0) {
-      print('No unread message');
+      //print('No unread message');
       return messageCollection;
     }
     for (DocumentSnapshot doc in querySnapshot.documents) {
-      print('Have unread messages');
+      //print('Have unread messages');
       messageCollection.add(Message.deserialize(doc.data, doc.documentID));
     }
     return messageCollection;
+  }
+
+
+  static Future<bool> checkUnreadMessage(String currentUID, String simUID) async {
+    QuerySnapshot querySnapshot = await Firestore.instance
+        .collection('messages')
+        .where('receiver', isEqualTo: currentUID)
+        .where('sender', isEqualTo: simUID)
+        .where('unread', isEqualTo: true)
+        .getDocuments();
+    var messageCollection = <Message>[];
+    if (querySnapshot == null || querySnapshot.documents.length == 0) {
+      //print('No unread message with $simUID');
+      return false;
+    }
+    for (DocumentSnapshot doc in querySnapshot.documents) {
+      //print('Have unread messages with $simUID');
+      messageCollection.add(Message.deserialize(doc.data, doc.documentID));
+    }
+    return true;
   }
     
   }
