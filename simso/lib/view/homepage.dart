@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:simso/model/entities/image-model.dart';
 import 'package:simso/model/entities/meme-model.dart';
@@ -20,6 +21,8 @@ import 'design-constants.dart';
 import '../model/entities/friendRequest-model.dart';
 import 'package:simso/model/services/ifriend-service.dart';
 import 'package:simso/view/notification-page.dart';
+
+import 'emoji-container.dart';
 
 class Homepage extends StatefulWidget {
   final UserModel user;
@@ -185,19 +188,29 @@ class HomepageState extends State<Homepage> {
         title: Text('Home Page'),
         backgroundColor: DesignConstants.blue,
         actions: <Widget>[
-          IconButton(
-            onPressed: controller.newContent,
-            icon: Icon(
-              Icons.search,
-              size: 25,
-            ),
-            iconSize: 200,
-            color: DesignConstants.yellow,
-          ),
-          IconButton(
+          Row(
+            children: <Widget>[
+              IconButton(
+                onPressed: controller.newContent,
+                icon: Icon(
+                  Icons.search,
+                  size: 25,
+                ),
+                iconSize: 200,
+                color: DesignConstants.yellow,
+              ),
+           IconButton(
             icon: Icon(Icons.notifications),
             onPressed: myFriendsRequest,
           ),
+          
+
+        ],
+        
+          ),
+           
+         
+         
         ],
       ),
       drawer: MyDrawer(context, user),
@@ -223,10 +236,17 @@ class HomepageState extends State<Homepage> {
                             gotoProfile(
                                 publicThoughtsList.elementAt(index).uid);
                           },
-                          icon: Image.network(
-                            publicThoughtsList.elementAt(index).profilePic,
-                            scale: 10,
-                          ),
+                          icon: publicThoughtsList.elementAt(index).profilePic != '' ?Builder(builder: (BuildContext context){
+                            try{
+                              return Container(
+                                width: 35,
+                                height: 35,
+                                child: Image.network(publicThoughtsList.elementAt(index).profilePic));
+                            }on PlatformException{
+                              return Icon(Icons.error_outline);
+                            }
+                          }):
+                          Icon(Icons.error_outline),
                           label: Expanded(
                             child: Text(
                               publicThoughtsList.elementAt(index).email +
@@ -242,9 +262,20 @@ class HomepageState extends State<Homepage> {
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(publicThoughtsList.elementAt(index).text),
+                          Text(
+                            publicThoughtsList.elementAt(index).text, 
+                            style: TextStyle(fontSize: 24),
+                          ),
                         ],
                       ),
+                      trailing: 
+                        EmojiContainer(
+                          this.context, 
+                          this.user, 
+                          mediaTypes.thought.index, 
+                          publicThoughtsList[index].thoughtId, 
+                          publicThoughtsList[index].uid, 
+                        ),
                     ),
                   ),
                 );
@@ -270,17 +301,25 @@ class HomepageState extends State<Homepage> {
                             ),
                           subtitle: Text(DateFormat("MMM dd-yyyy 'at' HH:mm:ss")
                               .format(memesList[index].timestamp)),
-                          ),
-                        Container(
-                          child: CachedNetworkImage(
-                          imageUrl: memesList[index].imgUrl,
-                          fit: BoxFit.fitWidth,
-                          placeholder: (context, url) =>
-                              CircularProgressIndicator(),
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.error_outline),
+                          trailing: 
+                            EmojiContainer(
+                              this.context, 
+                              this.user, 
+                              mediaTypes.meme.index, 
+                              memesList[index].memeId, 
+                              memesList[index].ownerID, 
+                            ),
+                        ),
+                      Container(
+                        child: CachedNetworkImage(
+                        imageUrl: memesList[index].imgUrl,
+                        fit: BoxFit.fitWidth,
+                        placeholder: (context, url) =>
+                            CircularProgressIndicator(),
+                        errorWidget: (context, url, error) =>
+                            Icon(Icons.error_outline),
+                        ),
                       ),
-                        )
                     ],
                   ),
                 );
@@ -310,17 +349,25 @@ class HomepageState extends State<Homepage> {
                             ),
                           subtitle: Text(DateFormat("MMM dd-yyyy 'at' HH:mm:ss")
                               .format(imageList[index].lastUpdatedAt)),
-                          ),
+                          trailing: 
+                            EmojiContainer(
+                              this.context, 
+                              this.user, 
+                              mediaTypes.snapshot.index, 
+                              imageList[index].imageId, 
+                              imageList[index].ownerID, 
+                            ),
+                        ),
                         Container(
                           child: CachedNetworkImage(
-                          imageUrl: imageList[index].imageURL,
-                          fit: BoxFit.fitWidth,
-                          placeholder: (context, url) =>
-                              CircularProgressIndicator(),
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.error_outline),
-                      ),
-                        )
+                            imageUrl: imageList[index].imageURL,
+                            fit: BoxFit.fitWidth,
+                            placeholder: (context, url) =>
+                                CircularProgressIndicator(),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error_outline),
+                          ),
+                        ),
                     ],
                   ),
                 );
