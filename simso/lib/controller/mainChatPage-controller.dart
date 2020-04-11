@@ -52,7 +52,7 @@ class MainChatPageController {
       textColor: DesignConstants.yellow,
       fontSize: 16,
     );
-    
+/*    
   //-----------------------------------------------
     var checkUnreadList = List<bool>();
     for(int i = 0; i<state.userList.length;i++){
@@ -63,7 +63,30 @@ class MainChatPageController {
       state.checkUnreadListPublic = List.from(checkUnreadList);
     });
 //-----------------------------------------------
- 
+*/
+
+//-----------------------------------------------
+   List<String> latestMessages =  List<String>();
+   List<String> latestDateTime = List<String>();
+
+    for(int i = 0; i<state.userList.length;i++){
+        var messageCollection =   await MyFirebase.getFilteredMessages(state.user.uid, state.userList[i].uid);
+        if(messageCollection == null || messageCollection.length == 0)
+        {
+          latestMessages.add('start chatting');
+          latestDateTime.add('');
+        } else{
+          latestMessages.add(messageCollection[messageCollection.length -1].text);
+          latestDateTime.add(messageCollection[messageCollection.length -1].time);
+        }
+    state.stateChanged((){
+      state.latestMessages = List.from(latestMessages);
+      state.latestDateTime = List.from(latestDateTime);
+    });
+    
+
+    }
+//-----------------------------------------------
 
   }
  var myFriends = <UserModel>[]; 
@@ -186,7 +209,7 @@ for(int i = 0; i< filteredMessages.length; i++){
     //GET ALL MESSAGES WITH SENDER = CURRENT USER UID
     
       //Create a Collecion where sender is current user ONLY
-      print('([Main Chat] $i:${filteredMessages[i].text}');
+      //print('([Main Chat] $i:${filteredMessages[i].text}');
 
     
   }

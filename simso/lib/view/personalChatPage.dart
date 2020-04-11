@@ -107,6 +107,11 @@ class PersonalChatPageState extends State<PersonalChatPage> {
   bool publicFlag = false;
   List<UserModel> userList;
   List<Message> filteredMessages;
+  var checkUnreadList = List<bool>();
+  var checkUnreadListPublic = List<bool>();
+  List<String> latestMessages =  List<String>();
+  List<String> latestDateTime = List<String>();
+  List<UserModel>friendList;
   PersonalChatPageState(
       this.user, this.index, this.userList, this.filteredMessages) {
     controller = PersonalChatPageController(this);
@@ -143,6 +148,7 @@ class PersonalChatPageState extends State<PersonalChatPage> {
     return Scaffold(
       backgroundColor: DesignConstants.blue,
       appBar: AppBar(
+        
         elevation: 0.0,
         centerTitle: true,
         title: new Row(
@@ -200,6 +206,13 @@ class PersonalChatPageState extends State<PersonalChatPage> {
 
           Column(
         children: <Widget>[
+          IconButton(
+            icon: Icon(Icons.check),  
+            iconSize: 30,
+            color: Colors.yellow,
+            onPressed: controller.checkAllRead,
+            ),
+          Text('Click to check all read', style: TextStyle(color:Colors.yellow,fontStyle: FontStyle.italic)),
           Expanded(
             child: Container(
               decoration: BoxDecoration(
@@ -222,7 +235,7 @@ class PersonalChatPageState extends State<PersonalChatPage> {
                           color: DesignConstants.yellow, fontSize: 20)),
             ),
           ),
-
+          
           Form(
             key: formKey,
             child: TextFormField(

@@ -106,7 +106,7 @@ class MainChatPageState extends State<MainChatPage> {
                                 Text(userList[index].email),
                                 Text(userList[index].city == null ? '': userList[index].city),
                                 checkUnreadListPublic.length == userList.length ?
-                                checkUnreadListPublic[index]==false ? Text('') : Text('NEW',style: TextStyle(color:DesignConstants.red),)
+                                checkUnreadListPublic[index]==false ? Text('') : Text('NEW MESSAGE',style: TextStyle(color:DesignConstants.red),)
                                 : Text('') 
                               ],
                             ),
@@ -155,7 +155,12 @@ class MainChatPageState extends State<MainChatPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                                children: <Widget>[
                                 Text(friendList[index].email),
-                                Text(friendList[index].city == null ? '': friendList[index].city),        
+                                Text(friendList[index].city == null ? '': friendList[index].city),  
+                                checkUnreadList.length == friendList.length ?
+                                checkUnreadList[index]==false ? Text('') : Text('NEW MESSAGE',style: TextStyle(color:DesignConstants.red),)
+                                : Text('') 
+                                /*
+
                                 checkUnreadList.length == friendList.length && checkUnreadList.length == latestMessages.length ?
                                 checkUnreadList[index]==false ? Text('${latestMessages[index].substring(0,15)}...',style: TextStyle(fontStyle: FontStyle.italic,color:DesignConstants.blue),) 
                                                                       : Text('${latestMessages[index].substring(0,15)}...',style: TextStyle(fontStyle: FontStyle.italic,color:DesignConstants.red),)
@@ -165,6 +170,7 @@ class MainChatPageState extends State<MainChatPage> {
                                 checkUnreadList[index]==false ? Text('<${latestDateTime[index]}>',style: TextStyle(fontStyle: FontStyle.italic,color:DesignConstants.blue),) 
                                                                       : Text('<${latestDateTime[index]}>',style: TextStyle(fontStyle: FontStyle.italic,color:DesignConstants.blue),)
                                 : Text('')
+                                */
                               ],
                           
                             ),

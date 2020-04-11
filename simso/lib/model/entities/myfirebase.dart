@@ -49,10 +49,10 @@ class MyFirebase{
         .getDocuments();
 
     if (querySnapshot1 == null || querySnapshot1.documents.length == 0) {
-      print('Empty senderToReceiver');
+      //print('Empty senderToReceiver');
     }
     for (DocumentSnapshot doc in querySnapshot1.documents) {
-      print('senderToReceiver is not empty');
+      //print('senderToReceiver is not empty');
       filteredMessages.add(Message.deserialize(doc.data, doc.documentID));
     }
     //COLLECTION MESSAGE THAT RECEIVER SENT TO SENDER
@@ -63,7 +63,7 @@ class MyFirebase{
         .getDocuments();
    
     if (querySnapshot2 == null || querySnapshot2 .documents.length == 0) {
-      print('Empty receiverToSender');
+      //print('Empty receiverToSender');
     }
     for (DocumentSnapshot doc in querySnapshot2.documents) {
       print('receiverToSender is not empty');
@@ -119,6 +119,27 @@ class MyFirebase{
       messageCollection.add(Message.deserialize(doc.data, doc.documentID));
     }
     return true;
+  }
+
+
+
+
+  static Future<void> updateUnreadMessage(String currentUID,String otherUID) async {
+    //Get document ID of unread msg
+    QuerySnapshot querySnapshot = await Firestore.instance
+        .collection('messages')
+        .where('sender', isEqualTo: otherUID)
+        .where('receiver', isEqualTo: currentUID)
+        .where('unread', isEqualTo: true)
+        .getDocuments();
+    if (querySnapshot == null || querySnapshot.documents.length == 0) {
+      print('Read all messages');
+    }
+    for (DocumentSnapshot doc in querySnapshot.documents) {
+      Firestore.instance.collection('messages').document(doc.documentID).updateData({'unread': false});
+     
+   }
+    
   }
     
   }

@@ -9,6 +9,7 @@ import 'package:simso/model/services/imessage-service.dart';
 import 'package:simso/model/services/itimer-service.dart';
 import 'package:simso/model/services/itouch-service.dart';
 import 'package:simso/view/design-constants.dart';
+import 'package:simso/view/mainChat-page.dart';
 import 'package:simso/view/personalChatPage.dart';
 
 import '../service-locator.dart';
@@ -105,7 +106,7 @@ class PersonalChatPageController {
     }
     return null;
   }
-
+  var myFriends = <UserModel>[]; 
   Future<void> saveTextMessage(String newValue) async {  //newValue is validated input text msg
     print('saveTextMessage() called');
     
@@ -148,6 +149,28 @@ class PersonalChatPageController {
       unread: true
     );
     await messageService.addMessage(message);
+   try {
+      userList = await MyFirebase.getUsers();
+    } catch (e) {
+      throw e.toString();
+    }
+      state.userList=List.from(userList);
+
+      //DESERIALIZE FRIENDS DATA AND STORE IN A LIST<USERMODEL> ARRAY------------------
+     
+      for(int i = 0; i< state.user.friends.length; i++){
+        QuerySnapshot querySnapshot = await Firestore.instance.collection('users')
+        .where('UID',isEqualTo: state.user.friends[i])
+        .getDocuments();
+        for (DocumentSnapshot doc in querySnapshot.documents){
+              myFriends.add(UserModel.deserialize(doc.data));
+         }
+      }
+        //Update myFriends in UI
+  
+                state.stateChanged((){
+                  state.friendList=List.from(myFriends);
+                });
    //****************************************/
     //UPDATE FILTEREDMESSAGE
     try {
@@ -166,6 +189,49 @@ class PersonalChatPageController {
      print('[personal chat UI]: ${state.filteredMessages[i].text}');
    }
 
+   //Change all received messages to unread=false
+   await MyFirebase.updateUnreadMessage(state.user.uid, state.userList[state.index].uid);
+  
+
+   //-------
+   //LABEL NEW MESSAGES
+   //-----------------------------------------------
+    var checkUnreadList = List<bool>();
+    for(int i = 0; i<state.friendList.length;i++){
+    var checkUnread = await MyFirebase.checkUnreadMessage(state.user.uid, state.friendList[i].uid);
+        checkUnreadList.add(checkUnread);
+    }
+    state.stateChanged((){
+      state.checkUnreadList = List.from(checkUnreadList);
+    });
+//-----------------------------------------------
+  
+//-----------------------------------------------
+   List<String> latestMessages =  List<String>();
+   List<String> latestDateTime = List<String>();
+
+    for(int i = 0; i<state.friendList.length;i++){
+        var messageCollection =   await MyFirebase.getFilteredMessages(state.user.uid, state.friendList[i].uid);
+        if(messageCollection == null || messageCollection.length == 0)
+        {
+          latestMessages.add('start chatting');
+          latestDateTime.add('');
+        } else{
+          latestMessages.add(messageCollection[messageCollection.length -1].text);
+          latestDateTime.add(messageCollection[messageCollection.length -1].time);
+        }
+    state.stateChanged((){
+      state.latestMessages = List.from(latestMessages);
+      state.latestDateTime = List.from(latestDateTime);
+    });
+    
+
+    }
+//-----------------------------------------------
+   
+
+   //-------
+
   }
 
   favMessage(Message message) async {
@@ -179,5 +245,49 @@ class PersonalChatPageController {
     });
     
   }
+
+
+  Future<void> checkAllRead() async {
+    //Showing toast message
+    Fluttertoast.showToast(
+      msg: "All meassages are read",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIos: 1,
+      backgroundColor: DesignConstants.red,
+      textColor: DesignConstants.yellow,
+      fontSize: 16,
+    );
+   
+     //Change all received messages to unread=false
+   await MyFirebase.updateUnreadMessage(state.user.uid, state.userList[state.index].uid);
+  }
+
+
+
+  Future<void> backToMainChat() async {
+   //Retrieve all SimSo users
+    try {
+      //Stuff in userList
+      userList = await MyFirebase.getUsers();
+    } catch (e) {
+      throw e.toString();
+    }
+
+    //Find current index of current user
+    int currentIndex = 0;
+    for (int i = 0; i < userList.length; i++) {
+      if (userList[i].uid == state.user.uid) //Found index of current user
+      {
+        currentIndex = i;
+        break;
+      } else
+        currentIndex++;
+    }
+     if(state.publicFlag!=false)
+    {  
+      
+
+  }}
 
 }
