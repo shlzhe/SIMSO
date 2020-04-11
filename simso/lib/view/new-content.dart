@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:simso/controller/new-content-page-controller.dart';
 import 'package:simso/model/entities/image-model.dart';
@@ -88,10 +89,17 @@ class NewContentPageState extends State<NewContentPage> {
                             gotoProfile(
                                 publicThoughtsList.elementAt(index).uid);
                           },
-                          icon: Image.network(
-                            publicThoughtsList.elementAt(index).profilePic,
-                            scale: 10,
-                          ),
+                          icon: publicThoughtsList.elementAt(index).profilePic != '' ?Builder(builder: (BuildContext context){
+                            try{
+                              return Container(
+                                width: 35,
+                                height: 35,
+                                child: Image.network(publicThoughtsList.elementAt(index).profilePic));
+                            }on PlatformException{
+                              return Icon(Icons.error_outline);
+                            }
+                          }):
+                          Icon(Icons.error_outline),
                           label: Expanded(
                             child: Text(
                               publicThoughtsList.elementAt(index).email +
