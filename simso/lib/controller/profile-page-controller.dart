@@ -89,53 +89,103 @@ class ProfilePageController {
         ));
   }
 
-  void myThoughts() async {
-    List<Thought> myThoughtsList =
-        await _thoughtService.getThoughts(user.uid.toString());
+  void goTo(int index) async {
+  // setState(() {
+  //   _selectedIndex = index;
+    if(index == 0) {
+      List<Thought> myThoughtsList =
+        await _thoughtService.getThoughts(user.uid.toString()); 
+      Navigator.push(
+          state.context,
+          MaterialPageRoute(
+              builder: (context) => MyThoughtsPage(state.user, myThoughtsList)));
+      checkLimits();
+    }
+    if(index == 1) {
+      List<Meme> myMemesList =
+        await memeService.getMemes(user.uid.toString());
+      Navigator.push(
+          state.context, MaterialPageRoute(builder: (context) => MyMemesPage(state.user, myMemesList)));
+      checkLimits();
+    }
+    if(index == 2) {
+      List<ImageModel> imagelist;
+      try {
+        imagelist = await _imageService.getImage(state.user.email);
+      } catch (e) {
+        imagelist = <ImageModel>[];
+      }
 
-    Navigator.push(
+      Navigator.push(
+          state.context, MaterialPageRoute(builder: (context) => SnapshotPage(state.user, imagelist)));
+      checkLimits();
+      }
+      if(index == 3) {
+        print('music');
+        List<SongModel> songlist;
+      try {
+        songlist = await _songService.getSong(state.user.email);
+      } catch (e) {
+        songlist = <SongModel>[];
+      }
+      Navigator.push(
         state.context,
         MaterialPageRoute(
-            builder: (context) => MyThoughtsPage(state.user, myThoughtsList)));
-    checkLimits();
-  }
-
-  void myMeme() async {
-    List<Meme> myMemesList =
-        await memeService.getMemes(user.uid.toString());
-    Navigator.push(
-        state.context, MaterialPageRoute(builder: (context) => MyMemesPage(state.user, myMemesList)));
-    checkLimits();
-  }
-
-  void mySnapshots() async {
-    List<ImageModel> imagelist;
-    try {
-      imagelist = await _imageService.getImage(state.user.email);
-    } catch (e) {
-      imagelist = <ImageModel>[];
+          builder: (context) => MyMusic(state.user, songlist),
+        ),
+      );
+      checkLimits();
     }
+  
+}
 
-    Navigator.push(
-        state.context, MaterialPageRoute(builder: (context) => SnapshotPage(state.user, imagelist)));
-    checkLimits();
-  }
+  // void myThoughts() async {
+  //   List<Thought> myThoughtsList =
+  //       await _thoughtService.getThoughts(user.uid.toString());
 
-  void myMusic() async {
-    List<SongModel> songlist;
-    try {
-      songlist = await _songService.getSong(state.user.email);
-    } catch (e) {
-      songlist = <SongModel>[];
-    }
-    Navigator.push(
-      state.context,
-      MaterialPageRoute(
-        builder: (context) => MyMusic(state.user, songlist),
-      ),
-    );
-    checkLimits();
-  }
+  //   Navigator.push(
+  //       state.context,
+  //       MaterialPageRoute(
+  //           builder: (context) => MyThoughtsPage(state.user, myThoughtsList)));
+  //   checkLimits();
+  // }
+
+  // void myMeme() async {
+  //   List<Meme> myMemesList =
+  //       await memeService.getMemes(user.uid.toString());
+  //   Navigator.push(
+  //       state.context, MaterialPageRoute(builder: (context) => MyMemesPage(state.user, myMemesList)));
+  //   checkLimits();
+  // }
+
+  // void mySnapshots() async {
+  //   List<ImageModel> imagelist;
+  //   try {
+  //     imagelist = await _imageService.getImage(state.user.email);
+  //   } catch (e) {
+  //     imagelist = <ImageModel>[];
+  //   }
+
+  //   Navigator.push(
+  //       state.context, MaterialPageRoute(builder: (context) => SnapshotPage(state.user, imagelist)));
+  //   checkLimits();
+  // }
+
+  // void myMusic() async {
+  //   List<SongModel> songlist;
+  //   try {
+  //     songlist = await _songService.getSong(state.user.email);
+  //   } catch (e) {
+  //     songlist = <SongModel>[];
+  //   }
+  //   Navigator.push(
+  //     state.context,
+  //     MaterialPageRoute(
+  //       builder: (context) => MyMusic(state.user, songlist),
+  //     ),
+  //   );
+  //   checkLimits();
+  // }
 
     void checkLimits() async {
     var timeLimitReached = (globals.getDate(globals.limit.overrideThruDate).difference(DateTime.now()).inDays != 0

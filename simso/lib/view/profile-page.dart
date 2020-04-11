@@ -27,8 +27,8 @@ class ProfilePage extends StatefulWidget {
   
   final UserModel user;
   final bool visit;
-  ProfilePage(this.user, this.visit);
 
+  ProfilePage(this.user, this.visit);
 
   @override
   State<StatefulWidget> createState() {
@@ -49,7 +49,7 @@ class ProfilePageState extends State<ProfilePage> {
   bool meme = false;
   bool music = false;
   bool snapshots = false;
-  bool thoughts = true;
+  bool thoughts = false;
   bool friends = true;
   // List<Thought> publicThoughtsList = [];
 
@@ -70,6 +70,9 @@ class ProfilePageState extends State<ProfilePage> {
   void stateChanged(Function fn) {
     setState(fn);
   }
+
+  int _selectedIndex = 0;
+
 
   @override
   Widget build(BuildContext context) {
@@ -156,46 +159,30 @@ class ProfilePageState extends State<ProfilePage> {
         ),
       ]),
       
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            RaisedButton(
-              child: Text(
-                'Thoughts',
-                style: TextStyle(color: DesignConstants.yellow),
-              ),
-              onPressed: controller.myThoughts,
-              color:
-                  thoughts ? DesignConstants.blueLight : DesignConstants.blue,
-            ),
-            RaisedButton(
-              child: Text(
-                'Memes',
-                style: TextStyle(color: DesignConstants.yellow),
-              ),
-              onPressed: controller.myMeme,
-              color: meme ? DesignConstants.blueLight : DesignConstants.blue,
-            ),
-            RaisedButton(
-              child: Text(
-                'SnapShots',
-                style: TextStyle(color: DesignConstants.yellow),
-              ),
-              onPressed: controller.mySnapshots,
-              color:
-                  snapshots ? DesignConstants.blueLight : DesignConstants.blue,
-            ),
-            RaisedButton(
-              child: Text(
-                'Music',
-                style: TextStyle(color: DesignConstants.yellow),
-              ),
-              onPressed: controller.myMusic,
-              color: music ? DesignConstants.blueLight : DesignConstants.blue,
-            ),
-          ],
-        ),
+      bottomNavigationBar: BottomNavigationBar(
+        unselectedItemColor: DesignConstants.blue,
+        currentIndex: _selectedIndex,
+        selectedItemColor: DesignConstants.blue,
+        onTap: controller.goTo,
+          type: BottomNavigationBarType.fixed,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bubble_chart),
+            title: Text('My Thoughts'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.photo_size_select_actual),
+            title: Text('My Memes'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.mood),
+            title: Text('My Snapshots'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.music_note),
+            title: Text('My Music'),
+          ),
+        ],
       ),
     );
   }
