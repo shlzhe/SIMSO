@@ -141,25 +141,6 @@ class HomepageController {
     //Retrieve User Model from friendListUID
     //friendListUID only contains friend UIDs
 
-/*
-  List<Message> messageCollection;
- 
-
-  try {
-      //Stuff in userList
-      messageCollection = await MyFirebase.getMessages(state.user.uid);
-    } catch (e) {
-      throw e.toString();
-    }
-  for(int i = 0; i< messageCollection.length; i++){
-    //GET ALL MESSAGES WITH SENDER = CURRENT USER UID
-    if(messageCollection[i].sender == userList[currentIndex].uid) {
-      //Create a Collecion where sender is current user ONLY
-      print('Testing $i:${messageCollection[i].text}');
-
-    }   
-  }
- */
 
     print('USER CURRENT INDEX: $currentIndex');
     //Navigate MainChatScreen Page

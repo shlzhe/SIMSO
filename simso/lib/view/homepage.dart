@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:simso/model/entities/image-model.dart';
 import 'package:simso/model/entities/meme-model.dart';
@@ -192,18 +193,22 @@ class HomepageState extends State<Homepage> {
         title: Text('Home Page'),
         backgroundColor: DesignConstants.blue,
         actions: <Widget>[
-          IconButton(
-            onPressed: controller.newContent,
-            icon: Icon(
-              Icons.search,
-              size: 25,
-            ),
-            iconSize: 200,
-            color: DesignConstants.yellow,
-          ),
-          IconButton(
-            icon: Icon(Icons.notifications),
-            onPressed: myFriendsRequest,
+          Row(
+            children: <Widget>[
+              IconButton(
+                onPressed: controller.newContent,
+                icon: Icon(
+                  Icons.search,
+                  size: 25,
+                ),
+                iconSize: 200,
+                color: DesignConstants.yellow,
+              ),
+              IconButton(
+                icon: Icon(Icons.notifications),
+                onPressed: myFriendsRequest,
+              ),
+            ],
           ),
         ],
       ),
@@ -230,10 +235,23 @@ class HomepageState extends State<Homepage> {
                             gotoProfile(
                                 publicThoughtsList.elementAt(index).uid);
                           },
-                          icon: Image.network(
-                            publicThoughtsList.elementAt(index).profilePic,
-                            scale: 10,
-                          ),
+                          icon: publicThoughtsList
+                                      .elementAt(index)
+                                      .profilePic !=
+                                  ''
+                              ? Builder(builder: (BuildContext context) {
+                                  try {
+                                    return Container(
+                                        width: 35,
+                                        height: 35,
+                                        child: Image.network(publicThoughtsList
+                                            .elementAt(index)
+                                            .profilePic));
+                                  } on PlatformException {
+                                    return Icon(Icons.error_outline);
+                                  }
+                                })
+                              : Icon(Icons.error_outline),
                           label: Expanded(
                             child: Text(
                               publicThoughtsList.elementAt(index).email +
@@ -249,15 +267,18 @@ class HomepageState extends State<Homepage> {
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(publicThoughtsList.elementAt(index).text),
-                          EmojiContainer(
-                            this.context,
-                            this.user,
-                            mediaTypes.thought.index,
-                            publicThoughtsList[index].thoughtId,
-                            publicThoughtsList[index].uid,
-                          )
+                          Text(
+                            publicThoughtsList.elementAt(index).text,
+                            style: TextStyle(fontSize: 24),
+                          ),
                         ],
+                      ),
+                      trailing: EmojiContainer(
+                        this.context,
+                        this.user,
+                        mediaTypes.thought.index,
+                        publicThoughtsList[index].thoughtId,
+                        publicThoughtsList[index].uid,
                       ),
                     ),
                   ),
@@ -286,6 +307,13 @@ class HomepageState extends State<Homepage> {
                             subtitle: Text(
                                 DateFormat("MMM dd-yyyy 'at' HH:mm:ss")
                                     .format(memesList[index].timestamp)),
+                            trailing: EmojiContainer(
+                              this.context,
+                              this.user,
+                              mediaTypes.meme.index,
+                              memesList[index].memeId,
+                              memesList[index].ownerID,
+                            ),
                           ),
                           Container(
                             child: CachedNetworkImage(
@@ -297,13 +325,16 @@ class HomepageState extends State<Homepage> {
                                   Icon(Icons.error_outline),
                             ),
                           ),
-                          EmojiContainer(
-                            this.context,
-                            this.user,
-                            mediaTypes.meme.index,
-                            memesList[index].memeId,
-                            memesList[index].ownerID,
-                          )
+                          Container(
+                            child: CachedNetworkImage(
+                              imageUrl: memesList[index].imgUrl,
+                              fit: BoxFit.fitWidth,
+                              placeholder: (context, url) =>
+                                  CircularProgressIndicator(),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error_outline),
+                            ),
+                          ),
                         ],
                       ),
                     );
@@ -311,56 +342,54 @@ class HomepageState extends State<Homepage> {
                 )
               : snapshots
                   ? ListView.builder(
-                      itemCount: imageList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Container(
-                          child: Column(
-                            children: <Widget>[
-                              ListTile(
-                                onTap: () {
-                                  gotoProfile(imageList[index].ownerID);
-                                },
-                                leading:
-                                    imageList[index].ownerPic.contains('http')
-                                        ? CircleAvatar(
-                                            backgroundImage:
-                                                CachedNetworkImageProvider(
-                                              imageList[index].ownerPic,
-                                            ),
-                                            backgroundColor: Colors.grey,
-                                          )
-                                        : Icon(Icons.error_outline),
-                                title: GestureDetector(
-                                    child: Text(imageList[index].createdBy),
-                                    onTap: () {}),
-                                subtitle: Text(DateFormat(
-                                        "MMM dd-yyyy 'at' HH:mm:ss")
-                                    .format(imageList[index].lastUpdatedAt)),
-                              ),
-                              Container(
-                                child: CachedNetworkImage(
-                                  imageUrl: imageList[index].imageURL,
-                                  fit: BoxFit.fitWidth,
-                                  placeholder: (context, url) =>
-                                      CircularProgressIndicator(),
-                                  errorWidget: (context, url, error) =>
-                                      Icon(Icons.error_outline),
+                  itemCount: imageList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Container(
+                      child: Column(
+                    children: <Widget>[
+                      ListTile(
+                        onTap: (){gotoProfile(imageList[index].ownerID);},
+                          leading: imageList[index].ownerPic.contains('http') ? CircleAvatar(
+                            backgroundImage: CachedNetworkImageProvider(
+                                imageList[index].ownerPic,
                                 ),
-                              ),
-                              EmojiContainer(
-                                this.context,
-                                this.user,
-                                mediaTypes.snapshot.index,
-                                imageList[index].imageId,
-                                imageList[index].ownerID,
-                              )
-                            ],
+                            backgroundColor: Colors.grey,
+                            ) 
+                            :
+                            Icon(Icons.error_outline)
+                            ,
+                          title: GestureDetector(
+                            child: Text(imageList[index].createdBy),
+                            onTap: (){}
+                            ),
+                          subtitle: Text(DateFormat("MMM dd-yyyy 'at' HH:mm:ss")
+                              .format(imageList[index].lastUpdatedAt)),
+                          trailing: 
+                            EmojiContainer(
+                              this.context, 
+                              this.user, 
+                              mediaTypes.snapshot.index, 
+                              imageList[index].imageId, 
+                              imageList[index].ownerID, 
+                            ),
+                        ),
+                        Container(
+                          child: CachedNetworkImage(
+                            imageUrl: imageList[index].imageURL,
+                            fit: BoxFit.fitWidth,
+                            placeholder: (context, url) =>
+                                CircularProgressIndicator(),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error_outline),
                           ),
-                        );
-                      },
-                    )
-                  : music
-                      ? ListView.builder(
+                        ),
+                    ],
+                  ),
+                );
+                  },
+                )
+                    
+                      : music ? ListView.builder(
                           itemCount: allSongsList.length,
                           itemBuilder: (context, index) => Container(
                             child: Container(

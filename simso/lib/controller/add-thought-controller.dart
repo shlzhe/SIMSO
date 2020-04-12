@@ -41,7 +41,8 @@ class AddThoughtController {
     }
     state.formKey.currentState.save();
     state.thoughtCopy.uid = state.user.uid;
-    state.thoughtCopy.timestamp = DateTime.now();    
+    state.thoughtCopy.timestamp = DateTime.now();
+    state.thoughtCopy.profilePic = state.user.profilePic; 
 
     try {
       
