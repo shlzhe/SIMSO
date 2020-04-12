@@ -149,6 +149,7 @@ class MusicFeedState extends State<MusicFeed> {
                                                             MaterialPageRoute(
                                                               builder: (context) =>
                                                                   ProfilePage(
+                                                                    user,
                                                                       user,
                                                                       visit),
                                                             ),
@@ -171,6 +172,7 @@ class MusicFeedState extends State<MusicFeed> {
                                                             MaterialPageRoute(
                                                               builder: (context) =>
                                                                   ProfilePage(
+                                                                    user,
                                                                       users,
                                                                       visit),
                                                             ),
@@ -195,6 +197,7 @@ class MusicFeedState extends State<MusicFeed> {
                                                             MaterialPageRoute(
                                                               builder: (context) =>
                                                                   ProfilePage(
+                                                                    user,
                                                                       user,
                                                                       visit),
                                                             ),
@@ -218,6 +221,7 @@ class MusicFeedState extends State<MusicFeed> {
                                                             MaterialPageRoute(
                                                               builder: (context) =>
                                                                   ProfilePage(
+                                                                    user,
                                                                       users,
                                                                       visit),
                                                             ),

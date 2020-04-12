@@ -10,6 +10,7 @@ import 'package:simso/service-locator.dart';
 import 'package:simso/view/music-feed.dart';
 import 'package:simso/view/new-content.dart';
 import 'package:simso/view/profile-page.dart';
+import 'package:simso/model/entities/thought-model.dart';
 
 class NewContentPageController{
   NewContentPageState state;
@@ -70,7 +71,13 @@ class NewContentPageController{
   void thoughts() async {
     state.memesList=[];
     state.imageList = [];
-    state.publicThoughtsList = await thoughtService.contentThoughtList(state.friends, state.user, state.user.language);
+    state.publicThoughtsList = await thoughtService.contentThoughtList(state.friends, state.user);
+
+      for(Thought thought in state.publicThoughtsList){
+        thought.text = await thoughtService.translateThought(state.user.language, thought.text);
+    }
+
+
     if (state.thoughts == false){
       state.meme = false;
       state.thoughts = true;

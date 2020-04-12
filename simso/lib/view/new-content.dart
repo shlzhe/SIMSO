@@ -37,10 +37,11 @@ class NewContentPageState extends State<NewContentPage> {
   List<Thought> publicThoughtsList = [];
   List<Meme> memesList = [];
   List<ImageModel>imageList=[];
+  
   gotoProfile(String uid) async {
     UserModel visitUser = await userService.readUser(uid);
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => ProfilePage(visitUser, true)));
+        MaterialPageRoute(builder: (context) => ProfilePage(user, visitUser, true)));
   }
 
   void stateChanged(Function f) {

@@ -5,25 +5,28 @@ import '../model/entities/user-model.dart';
 import '../controller/profile-page-controller.dart';
 
 class ProfilePage extends StatefulWidget {
-  final UserModel user;
+  final UserModel visitUser;
+  final UserModel currentUser;
   final bool visit;
-  ProfilePage(this.user, this.visit);
+  ProfilePage(this.currentUser, this.visitUser, this.visit);
 
   @override
   State<StatefulWidget> createState() {
-    return ProfilePageState(user, visit);
+    return ProfilePageState(currentUser, visitUser, visit);
   }
 }
 
 class ProfilePageState extends State<ProfilePage> {
-  UserModel user;
+  UserModel visitUser;
   UserModel ogUser;
+  UserModel currentUser;
+
   bool visit;
   ProfilePageController controller;
   var formKey = GlobalKey<FormState>();
   BuildContext context;
 
-  ProfilePageState(this.user, this.visit) {
+  ProfilePageState(this.currentUser, this.visitUser, this.visit) {
     controller = ProfilePageController(this);
   }
 
@@ -32,11 +35,11 @@ class ProfilePageState extends State<ProfilePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {  
     this.context = context;
     return Scaffold(
       appBar: AppBar(
-        title: Text(user.username + ' Profile'),
+        title: Text(visitUser.username + ' Profile'),
         backgroundColor: DesignConstants.blue,
         actions: <Widget>[
           IconButton(
@@ -57,8 +60,8 @@ class ProfilePageState extends State<ProfilePage> {
           width: 70,
           height: 120,
           child: CachedNetworkImage(
-            imageUrl: user.profilePic != null && user.profilePic != ''
-                ? user.profilePic
+            imageUrl: visitUser.profilePic != null && visitUser.profilePic != ''
+                ? visitUser.profilePic
                 : DesignConstants.profile,
             placeholder: (context, url) => CircularProgressIndicator(),
             errorWidget: (context, url, error) => Icon(Icons.account_circle),
@@ -71,30 +74,30 @@ class ProfilePageState extends State<ProfilePage> {
         ),
         Text(''),
         Text(
-          'Email: ' + user.email,
+          'Email: ' + visitUser.email,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           textAlign: (TextAlign.center),
         ),
         Text(
-          'Username: ' + user.username,
+          'Username: ' + visitUser.username,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           textAlign: (TextAlign.center),
         ),
-        if (user.age == 0)
+        if (visitUser.age == 0)
           Text(
             'Age: ',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             textAlign: (TextAlign.center),
           ),
-        if (user.age != 0)
+        if (visitUser.age != 0)
           Text(
-            'Age: ' + user.age.toString(),
+            'Age: ' + visitUser.age.toString(),
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             textAlign: (TextAlign.center),
           ),
-        user.gender != null
+        visitUser.gender != null
             ? Text(
-                'Gender: ' + user.gender,
+                'Gender: ' + visitUser.gender,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 textAlign: (TextAlign.center),
               )
@@ -104,15 +107,96 @@ class ProfilePageState extends State<ProfilePage> {
                 textAlign: (TextAlign.center),
               ),
         Text(
-          'City: ' + user.city,
+          'City: ' + visitUser.city,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           textAlign: (TextAlign.center),
         ),
         Text(
-          'Bio: ' + user.aboutme,
+          'Bio: ' + visitUser.aboutme,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           textAlign: (TextAlign.center),
         ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+                        Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                RaisedButton(
+                  shape: new RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(18.0),
+                      side: BorderSide(color: Colors.black)),
+                  color: Colors.white,
+                  padding: EdgeInsets.all(10.0),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons.music_note),
+                      Text("Songs")
+                    ],
+                  ),
+                  onPressed: () => {},
+                ),
+              ],
+            ),
+                        Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                RaisedButton(
+                  shape: new RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(18.0),
+                      side: BorderSide(color: Colors.black)),
+                  color: Colors.white,
+                  padding: EdgeInsets.all(10.0),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons.mood),
+                      Text("Memes")
+                    ],
+                  ),
+                  onPressed: () => {},
+                ),
+              ],
+            ),
+                        Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                RaisedButton(
+                  shape: new RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(18.0),
+                      side: BorderSide(color: Colors.black)),
+                  color: Colors.white,
+                  padding: EdgeInsets.all(10.0),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons.camera),
+                      Text("Snapshots")
+                    ],
+                  ),
+                  onPressed: () => {},
+                ),
+              ],
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                RaisedButton(
+                  shape: new RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(18.0),
+                      side: BorderSide(color: Colors.black)),
+                  color: Colors.white,
+                  padding: EdgeInsets.all(10.0),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons.bubble_chart),
+                      Text("Thoughts")
+                    ],
+                  ),
+                  onPressed: controller.thoughtsPage,
+                ),
+              ],
+            ),
+          ],
+        )
       ]),
     );
   }

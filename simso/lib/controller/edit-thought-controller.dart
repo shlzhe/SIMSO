@@ -36,7 +36,7 @@ class EditThoughtController {
     try {
       _thoughtService.deleteThought(state.thought.thoughtId);
       List<Thought> myThoughtsList =
-          await _thoughtService.getThoughts(state.user.uid.toString());
+          await _thoughtService.getThoughts(state.user.uid);
       await Navigator.push(
           state.context,
           MaterialPageRoute(
@@ -68,7 +68,7 @@ class EditThoughtController {
 
       //prep to exit page
       List<Thought> myThoughtsList =
-          await _thoughtService.getThoughts(state.user.uid.toString());
+          await _thoughtService.getThoughts(state.user.uid);
       await Navigator.push(
           state.context,
           MaterialPageRoute(

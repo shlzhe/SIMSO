@@ -6,5 +6,6 @@ abstract class IThoughtService {
   Future<void> addThought(Thought thought);
   Future<void> updateThought(Thought thought);
   Future<void> deleteThought(String uid);
-  Future<List<Thought>> contentThoughtList(bool friends, UserModel user, String langPref);
+  Future<List<Thought>> contentThoughtList(bool friends, UserModel user);
+  Future<String> translateThought(String langPref, String text);
 }

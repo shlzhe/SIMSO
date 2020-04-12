@@ -3,6 +3,7 @@ import 'package:simso/model/entities/meme-model.dart';
 import 'package:simso/model/entities/myfirebase.dart';
 import 'package:simso/model/entities/song-model.dart';
 import 'package:simso/model/entities/user-model.dart';
+import 'package:simso/model/entities/thought-model.dart';
 import 'package:simso/model/services/ilimit-service.dart';
 import 'package:simso/model/services/imeme-service.dart';
 import 'package:simso/model/services/isong-service.dart';
@@ -156,7 +157,7 @@ class HomepageController {
 
   void snapshots() async{
     state.memesList=[];
-    state.publicThoughtsList = [];
+    state.friendsThoughtsList = [];
     state.imageList = await state.imageService.contentSnaps(state.friends, state.user);
     if (state.snapshots == false) {
       state.meme = false;
@@ -203,7 +204,12 @@ class HomepageController {
   void thoughts() async {
     state.memesList=[];
     state.imageList = [];
-    state.publicThoughtsList = await thoughtService.contentThoughtList(state.friends, state.user, state.user.language);
+    state.friendsThoughtsList = await thoughtService.contentThoughtList(state.friends, state.user);
+    
+    for(Thought thought in state.friendsThoughtsList){
+        thought.text = await thoughtService.translateThought(state.user.language, thought.text);
+    }
+
     if (state.thoughts == false){
       state.meme = false;
       state.thoughts = true;
@@ -215,7 +221,7 @@ class HomepageController {
   }
 
   void meme() async{
-    state.publicThoughtsList = [];
+    state.friendsThoughtsList = [];
     state.imageList = [];
     state.memesList = await memeService.contentMemeList(state.friends, state.user);
     if (state.meme == false) {
@@ -227,9 +233,10 @@ class HomepageController {
     }
   }
 
-  void gotoProfile(String uid) {
+  void gotoProfile(String uid) async {
+    UserModel visitUser = await _userService.readUser(uid);
     Navigator.push(state.context, MaterialPageRoute(
-      builder: (context)=> ProfilePage(state.user, true)));
+      builder: (context)=> ProfilePage(state.user,visitUser, true)));
   }
 
 }

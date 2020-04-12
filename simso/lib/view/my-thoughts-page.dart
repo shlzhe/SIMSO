@@ -136,7 +136,7 @@ class MyThoughtsPageState extends State<MyThoughtsPage> {
           ),
           backgroundColor: DesignConstants.blue,
         ),
-        drawer: MyDrawer(context, user),
+        //drawer: MyDrawer(context, user),
         body: Container(
           color: DesignConstants.blueGreyish,
           child: ListView.builder(

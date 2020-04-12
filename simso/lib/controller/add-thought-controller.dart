@@ -52,7 +52,7 @@ class AddThoughtController {
       state.thought = state.thoughtCopy;
       //prep to exit page
       List<Thought> myThoughtsList =
-          await _thoughtService.getThoughts(state.user.uid.toString());
+          await _thoughtService.getThoughts(state.user.uid);
       await Navigator.push(
           state.context,
           MaterialPageRoute(

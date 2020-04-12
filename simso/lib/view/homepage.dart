@@ -21,7 +21,6 @@ import 'design-constants.dart';
 import '../model/entities/friendRequest-model.dart';
 import 'package:simso/model/services/ifriend-service.dart';
 import 'package:simso/view/notification-page.dart';
-
 import 'emoji-container.dart';
 
 class Homepage extends StatefulWidget {
@@ -43,13 +42,14 @@ class HomepageState extends State<Homepage> {
   ITouchService touchService = locator<ITouchService>();
   ILimitService limitService = locator<ILimitService>();
   IImageService imageService = locator<IImageService>();
+
   final IFriendService friendService = locator<IFriendService>();
   bool meme = false;
   bool music = false;
   bool snapshots = false;
   bool thoughts = true;
   bool friends = true;
-  List<Thought> publicThoughtsList = [];
+  List<Thought> friendsThoughtsList = [];
   HomepageController controller;
   UserModel user;
   List<UserModel> visitUser;
@@ -72,7 +72,7 @@ class HomepageState extends State<Homepage> {
   gotoProfile(String uid) async {
     UserModel visitUser = await userService.readUser(uid);
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => ProfilePage(visitUser, true)));
+        MaterialPageRoute(builder: (context) => ProfilePage(user, visitUser, true)));
   }
 
   void stateChanged(Function f) {
@@ -216,7 +216,7 @@ class HomepageState extends State<Homepage> {
       drawer: MyDrawer(context, user),
       body: thoughts
           ? ListView.builder(
-              itemCount: publicThoughtsList.length,
+              itemCount: friendsThoughtsList.length,
               itemBuilder: (BuildContext context, int index) {
                 return Container(
                   padding: EdgeInsets.all(5.0),
@@ -234,14 +234,14 @@ class HomepageState extends State<Homepage> {
                       title: FlatButton.icon(
                           onPressed: () {
                             gotoProfile(
-                                publicThoughtsList.elementAt(index).uid);
+                                friendsThoughtsList.elementAt(index).uid);
                           },
-                          icon: publicThoughtsList.elementAt(index).profilePic != '' ?Builder(builder: (BuildContext context){
+                          icon: friendsThoughtsList.elementAt(index).profilePic != '' ?Builder(builder: (BuildContext context){
                             try{
                               return Container(
                                 width: 35,
                                 height: 35,
-                                child: Image.network(publicThoughtsList.elementAt(index).profilePic));
+                                child: Image.network(friendsThoughtsList.elementAt(index).profilePic));
                             }on PlatformException{
                               return Icon(Icons.error_outline);
                             }
@@ -249,9 +249,9 @@ class HomepageState extends State<Homepage> {
                           Icon(Icons.error_outline),
                           label: Expanded(
                             child: Text(
-                              publicThoughtsList.elementAt(index).email +
+                              friendsThoughtsList.elementAt(index).email +
                                   ' ' +
-                                  publicThoughtsList
+                                  friendsThoughtsList
                                       .elementAt(index)
                                       .timestamp
                                       .toLocal()
@@ -263,7 +263,7 @@ class HomepageState extends State<Homepage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            publicThoughtsList.elementAt(index).text, 
+                            friendsThoughtsList.elementAt(index).text, 
                             style: TextStyle(fontSize: 24),
                           ),
                         ],
@@ -273,8 +273,8 @@ class HomepageState extends State<Homepage> {
                           this.context, 
                           this.user, 
                           mediaTypes.thought.index, 
-                          publicThoughtsList[index].thoughtId, 
-                          publicThoughtsList[index].uid, 
+                          friendsThoughtsList[index].thoughtId, 
+                          friendsThoughtsList[index].uid, 
                         ),
                     ),
                   ),
