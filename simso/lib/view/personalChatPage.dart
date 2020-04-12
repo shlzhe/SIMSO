@@ -29,39 +29,71 @@ class PersonalChatPage extends StatefulWidget {
 
 class PersonalChatPageState extends State<PersonalChatPage> {
   buildMessage(Message message, bool isMe) {
-    return Container(
-        padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
-        margin: isMe
-            ? EdgeInsets.only(top: 8, bottom: 8, left: 150)
-            : EdgeInsets.only(top: 8, bottom: 8, right: 150),
-        decoration: BoxDecoration(
-          color: isMe ? Colors.white : DesignConstants.blueGreyish,
-          borderRadius: isMe
-              ? BorderRadius.only(
-                  topLeft: Radius.circular(15),
-                  bottomLeft: Radius.circular(15),
-                )
-              : BorderRadius.only(
-                  topRight: Radius.circular(15),
-                  bottomRight: Radius.circular(15),
+    final Container msg = Container(
+                padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+                margin: isMe
+                    ? EdgeInsets.only(top: 8, bottom: 8, left: 150)
+                    : EdgeInsets.only(top: 8, bottom: 8),
+                width: MediaQuery.of(context).size.width * 0.75,
+               
+                decoration: BoxDecoration(
+                  color: isMe ? Colors.white : DesignConstants.blueGreyish,
+                  borderRadius: isMe
+                      ? BorderRadius.only(
+                          topLeft: Radius.circular(15),
+                          bottomLeft: Radius.circular(15),
+                        )
+                      : BorderRadius.only(
+                          topRight: Radius.circular(15),
+                          bottomRight: Radius.circular(15),
+                        ),
                 ),
-        ),
-        child: Column(
-          children: <Widget>[
-            SizedBox(height: 8),
-            Text(message.time, style : isMe ? TextStyle(color: DesignConstants.blueGreyish ,fontStyle: FontStyle.italic)
-                                            : TextStyle(color: DesignConstants.blue ,fontStyle: FontStyle.italic)),
-            Text(message.text,
-                style: isMe  ? TextStyle(color: DesignConstants.blue, fontSize: 20)   
-                             : TextStyle(color: DesignConstants.yellow, fontSize: 20)),
-          ],
-        ));
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(height: 8),
+                     !isMe ? CachedNetworkImage(
+                                    imageUrl: userList[index].profilePic == null ? '':userList[index].profilePic,
+                                    placeholder: (context, url)=>CircularProgressIndicator(),
+                                    errorWidget: (context, url, error)=> Icon(Icons.tag_faces),
+                                    fit: BoxFit.scaleDown, 
+                                    height:32,
+                                    )
+                           : CachedNetworkImage(
+                                    imageUrl: user.profilePic == null ? '': user.profilePic,
+                                    placeholder: (context, url)=>CircularProgressIndicator(),
+                                    errorWidget: (context, url, error)=> Icon(Icons.tag_faces),
+                                    fit: BoxFit.scaleDown, 
+                                    height:32,
+                                    ),
+                                  
+                    Text(message.time, style : isMe ? TextStyle(color: DesignConstants.blueGreyish ,fontStyle: FontStyle.italic)
+                                                    : TextStyle(color: DesignConstants.blue ,fontStyle: FontStyle.italic)),
+                    Text(message.text,
+                        style: isMe  ? TextStyle(color: DesignConstants.blue, fontSize: 20)   
+                                     : TextStyle(color: DesignConstants.yellow, fontSize: 20)),
+                  ],
+                ));
+    if(isMe){return msg;}   //Display message only if it is me
+    return Row(
+      children: <Widget>[
+              msg,    //Display message & iconbutton if it is other
+              IconButton(
+                  icon: message.isLike ? Icon(Icons.favorite)
+                                       : Icon(Icons.favorite_border),
+                  iconSize: 30,
+                  color: message.isLike ? Colors.red
+                                        : DesignConstants.blueLight,
+                  onPressed: ()=>controller.favMessage(message),
+                  )
+
+      ],
+    );
+           
+  
   }
 
   List<Message> messageCollecion;
-
   Message mesaage;
-
   BuildContext context;
   IUserService userService = locator<IUserService>();
   ITimerService timerService = locator<ITimerService>();
@@ -75,6 +107,11 @@ class PersonalChatPageState extends State<PersonalChatPage> {
   bool publicFlag = false;
   List<UserModel> userList;
   List<Message> filteredMessages;
+  var checkUnreadList = List<bool>();
+  var checkUnreadListPublic = List<bool>();
+  List<String> latestMessages =  List<String>();
+  List<String> latestDateTime = List<String>();
+  List<UserModel>friendList;
   PersonalChatPageState(
       this.user, this.index, this.userList, this.filteredMessages) {
     controller = PersonalChatPageController(this);
@@ -111,6 +148,7 @@ class PersonalChatPageState extends State<PersonalChatPage> {
     return Scaffold(
       backgroundColor: DesignConstants.blue,
       appBar: AppBar(
+        
         elevation: 0.0,
         centerTitle: true,
         title: new Row(
@@ -168,6 +206,13 @@ class PersonalChatPageState extends State<PersonalChatPage> {
 
           Column(
         children: <Widget>[
+          IconButton(
+            icon: Icon(Icons.check),  
+            iconSize: 30,
+            color: Colors.yellow,
+            onPressed: controller.checkAllRead,
+            ),
+          Text('Click to check all read', style: TextStyle(color:Colors.yellow,fontStyle: FontStyle.italic)),
           Expanded(
             child: Container(
               decoration: BoxDecoration(
@@ -190,7 +235,7 @@ class PersonalChatPageState extends State<PersonalChatPage> {
                           color: DesignConstants.yellow, fontSize: 20)),
             ),
           ),
-
+          
           Form(
             key: formKey,
             child: TextFormField(
@@ -216,12 +261,7 @@ class PersonalChatPageState extends State<PersonalChatPage> {
           //Text('${filteredMessages.length}'),
           Row(
             children: <Widget>[
-              IconButton(
-                  icon: Icon(
-                    Icons.photo,
-                    color: DesignConstants.yellow,
-                  ),
-                  onPressed: () {}),
+              
               IconButton(
                 icon: Icon(
                   Icons.send,

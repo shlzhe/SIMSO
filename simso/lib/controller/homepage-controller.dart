@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:simso/model/entities/meme-model.dart';
+import 'package:simso/model/entities/message-model.dart';
 import 'package:simso/model/entities/myfirebase.dart';
 import 'package:simso/model/entities/song-model.dart';
 import 'package:simso/model/entities/user-model.dart';
@@ -10,8 +12,10 @@ import 'package:simso/model/services/ithought-service.dart';
 import 'package:simso/model/services/itimer-service.dart';
 import 'package:simso/model/services/itouch-service.dart';
 import 'package:simso/model/services/iuser-service.dart';
+import 'package:simso/model/services/message-service.dart';
 import 'package:simso/service-locator.dart';
 import 'package:simso/view/add-photo-page.dart';
+import 'package:simso/view/design-constants.dart';
 import 'package:simso/view/homepage.dart';
 import 'package:simso/view/mainChat-page.dart';
 import 'package:simso/view/music-feed.dart';
@@ -35,7 +39,8 @@ class HomepageController {
   final IUserService _userService = locator<IUserService>();
   final IThoughtService thoughtService = locator<IThoughtService>();
   final IMemeService memeService = locator<IMemeService>();
-
+  var unreadMessages;
+  
   HomepageController(this.state, this.timerService, this.touchService,
       this.limitService, this.songList);
 
@@ -231,5 +236,21 @@ class HomepageController {
     Navigator.push(state.context, MaterialPageRoute(
       builder: (context)=> ProfilePage(state.user, true)));
   }
-
+  
+  void getUnreadMessages() async{
+    print('getUnreadMessages called');
+    unreadMessages = await MyFirebase.getUnreadMessages(state.user.uid);
+     //Showing toast message
+    Fluttertoast.showToast(
+      msg: "You have ${unreadMessages.length} unread messages",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIos: 1,
+      backgroundColor: DesignConstants.red,
+      textColor: DesignConstants.yellow,
+      fontSize: 16,
+    );
+    
+  }
+    
 }

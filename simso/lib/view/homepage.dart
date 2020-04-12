@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:simso/model/entities/image-model.dart';
 import 'package:simso/model/entities/meme-model.dart';
+import 'package:simso/model/entities/message-model.dart';
+import 'package:simso/model/entities/myfirebase.dart';
 import 'package:simso/model/entities/song-model.dart';
 import 'package:simso/model/entities/thought-model.dart';
 import 'package:simso/model/services/ilimit-service.dart';
@@ -21,7 +23,6 @@ import 'design-constants.dart';
 import '../model/entities/friendRequest-model.dart';
 import 'package:simso/model/services/ifriend-service.dart';
 import 'package:simso/view/notification-page.dart';
-
 import 'emoji-container.dart';
 
 class Homepage extends StatefulWidget {
@@ -59,7 +60,7 @@ class HomepageState extends State<Homepage> {
   String returnedID;
   var idController = TextEditingController();
   var formKey = GlobalKey<FormState>();
-
+  List<Message> unreadMessage;
   HomepageState(this.user) {
     controller = HomepageController(this, this.timerService, this.touchService,
         this.limitService, this.songlist);
@@ -67,8 +68,9 @@ class HomepageState extends State<Homepage> {
     controller.setupTouchCounter();
     controller.getLimits();
     controller.thoughts();
+    controller.getUnreadMessages();
   }
-
+   
   gotoProfile(String uid) async {
     UserModel visitUser = await userService.readUser(uid);
     Navigator.push(context,
@@ -79,11 +81,17 @@ class HomepageState extends State<Homepage> {
     setState(f);
   }
 
+  
   @override
   Widget build(BuildContext context) {
     this.context = context;
     var childButtons = List<UnicornButton>();
-
+   final IconButton messageIcon = IconButton(
+                    icon: Icon(Icons.textsms),
+                    iconSize: 40,
+                    onPressed: controller.mainChatScreen,
+                    color: DesignConstants.yellow,
+                    );
     childButtons.add(
       UnicornButton(
         hasLabel: true,
@@ -155,26 +163,9 @@ class HomepageState extends State<Homepage> {
         ),
       ),
     );
-
-    childButtons.add(
-      UnicornButton(
-        hasLabel: true,
-        labelText: "Messenger",
-        labelFontSize: 10,
-        currentButton: FloatingActionButton(
-          heroTag: "Messenger",
-          backgroundColor: Colors.white,
-          mini: true,
-          child: Icon(
-            Icons.textsms,
-            color: Colors.black,
-          ),
-          onPressed: controller.mainChatScreen,
-        ),
-      ),
-    );
-
+    
     return Scaffold(
+      
       floatingActionButton: UnicornDialer(
         backgroundColor: Colors.transparent,
         parentButtonBackground: Colors.blueGrey[300],
@@ -184,6 +175,7 @@ class HomepageState extends State<Homepage> {
         ),
         childButtons: childButtons,
       ),
+      
       appBar: AppBar(
         title: Text('Home Page'),
         backgroundColor: DesignConstants.blue,
@@ -196,21 +188,58 @@ class HomepageState extends State<Homepage> {
                   Icons.search,
                   size: 25,
                 ),
-                iconSize: 200,
+               
                 color: DesignConstants.yellow,
               ),
+          //=======
+          Stack(children: <Widget>[
+              
+                  messageIcon,
+                   
+                  Container( 
+                    width:30,
+                    height: 30,
+                    alignment: Alignment.topRight,
+                    margin: EdgeInsets.only(top:5),
+                    child: Container(
+                      width: 80,
+                      height: 25,
+
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: controller.unreadMessages==null? DesignConstants.blue : Colors.red,
+                        border: Border.all(color:Colors.white,width:1)),
+                    
+                    child: Padding(
+                      padding: const EdgeInsets.all(0),
+                      child: 
+                      controller.unreadMessages == null ?   
+                      Center(
+                        child: Text('0')
+                      )
+                      : 
+                       Center(
+                        child: Text(controller.unreadMessages.length.toString(), style: TextStyle( fontSize:15)),
+                      )
+                    )
+                      
+                    ),
+                  )
+
+                 ],
+                                
+                ),
+
+          //=======
+          
            IconButton(
             icon: Icon(Icons.notifications),
             onPressed: myFriendsRequest,
+            color: DesignConstants.yellow,
           ),
-          
-
-        ],
-        
+        ],        
           ),
-           
-         
-         
+       
         ],
       ),
       drawer: MyDrawer(context, user),
@@ -282,6 +311,7 @@ class HomepageState extends State<Homepage> {
               },
             )
           : (meme
+          
               ? ListView.builder(
                   itemCount: memesList.length,
                   itemBuilder: (BuildContext context, int index) {
