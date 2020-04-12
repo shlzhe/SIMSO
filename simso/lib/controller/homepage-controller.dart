@@ -21,6 +21,7 @@ import 'package:simso/view/profile-page.dart';
 import '../view/add-music-page.dart';
 import '../view/add-thought-page.dart';
 import '../model/entities/globals.dart' as globals;
+import 'package:audioplayers/audioplayers.dart';
 
 class HomepageController {
   HomepageState state;
@@ -47,15 +48,18 @@ class HomepageController {
         ));
     if (s != null) {
       print("ADD SONG TO LOCAL LIST");
-      state.songlist.add(s);
+      state.songs.add(s);
     } else {
       //print("ERROR ADDING SONG TO LOCAL LIST");
     }
   }
 
   Future navigateToMemes() async {
-    List<Meme> myMemesList= await memeService.getMemes(state.user.uid);
-    Navigator.push(state.context, MaterialPageRoute(builder: (context)=>MyMemesPage(state.user, myMemesList)));
+    List<Meme> myMemesList = await memeService.getMemes(state.user.uid);
+    Navigator.push(
+        state.context,
+        MaterialPageRoute(
+            builder: (context) => MyMemesPage(state.user, myMemesList)));
   }
 
   Future addThought() async {
@@ -173,10 +177,12 @@ class HomepageController {
         MaterialPageRoute(builder: (context) => NewContentPage(state.user)));
   }
 
-  void snapshots() async{
-    state.memesList=[];
+  void snapshots() async {
+    state.memesList = [];
     state.publicThoughtsList = [];
-    state.imageList = await state.imageService.contentSnaps(state.friends, state.user);
+    state.allSongsList = [];
+    state.imageList =
+        await state.imageService.contentSnaps(state.friends, state.user);
     if (state.snapshots == false) {
       state.meme = false;
       state.thoughts = false;
@@ -187,6 +193,11 @@ class HomepageController {
   }
 
   Future music() async {
+    state.memesList = [];
+    state.imageList = [];
+    state.allSongsList =
+        await _songService.contentSongList(state.friends, state.user);
+    state.allUsersList = await _userService.readAllUser();
     if (state.music == false) {
       state.stateChanged(() {
         state.meme = false;
@@ -195,35 +206,16 @@ class HomepageController {
         state.snapshots = false;
       });
     }
-    List<SongModel> allSongList;
-    List<UserModel> allUserList;
-    try {
-      print("GET SONGS & USERS");
-      allSongList = await _songService.getAllSongList();
-      allUserList = await _userService.readAllUser();
-    } catch (e) {
-      allSongList = <SongModel>[];
-
-      print("SONGLIST LENGTH: " + allSongList.length.toString());
-    }
-    print("SUCCEED IN GETTING SONGS & USERS");
-    Navigator.push(
-      state.context,
-      MaterialPageRoute(
-        builder: (context) => MusicFeed(
-          state.user,
-          allUserList,
-          allSongList,
-        ),
-      ),
-    );
+    state.stateChanged(() {});
   }
 
   void thoughts() async {
-    state.memesList=[];
+    state.memesList = [];
     state.imageList = [];
-    state.publicThoughtsList = await thoughtService.contentThoughtList(state.friends, state.user, state.user.language);
-    if (state.thoughts == false){
+    state.allSongsList = [];
+    state.publicThoughtsList = await thoughtService.contentThoughtList(
+        state.friends, state.user, state.user.language);
+    if (state.thoughts == false) {
       state.meme = false;
       state.thoughts = true;
       state.music = false;
@@ -233,10 +225,12 @@ class HomepageController {
     state.stateChanged(() {});
   }
 
-  void meme() async{
+  void meme() async {
     state.publicThoughtsList = [];
     state.imageList = [];
-    state.memesList = await memeService.contentMemeList(state.friends, state.user);
+    state.allSongsList = [];
+    state.memesList =
+        await memeService.contentMemeList(state.friends, state.user);
     if (state.meme == false) {
       state.meme = true;
       state.thoughts = false;
@@ -247,8 +241,34 @@ class HomepageController {
   }
 
   void gotoProfile(String uid) {
-    Navigator.push(state.context, MaterialPageRoute(
-      builder: (context)=> ProfilePage(state.user, true)));
+    Navigator.push(state.context,
+        MaterialPageRoute(builder: (context) => ProfilePage(state.user, true)));
   }
 
+  Future playpause(String songUrl) async {
+    print("GOTHERE");
+    AudioPlayer audioPlayer = AudioPlayer();
+    print("GOTHERE0");
+
+    int result = await audioPlayer.play(songUrl);
+
+    if (result == 1)
+      print("PLAY SUCCESS");
+    else
+      print("PLAY FAIL");
+      
+    print("GOTHERE1");
+
+    //  try {
+    // play() async {
+    // print("GOTHERE1");
+
+    //   int result = await audioPlayer.play(songUrl);
+    //   if (result == 1) {
+    //     print("Song Played Successfully");
+    //   }
+    //  }
+    // } catch (e) {
+    //   print("Song Play Error: " + e.toString());
+  }
 }

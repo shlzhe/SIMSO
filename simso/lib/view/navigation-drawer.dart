@@ -26,9 +26,6 @@ import '../view/profile-page.dart';
 import '../view/music-feed.dart';
 import 'limit-reached-dialog.dart';
 
-
-
-
 class MyDrawer extends StatelessWidget {
   final UserModel user;
   final BuildContext context;
@@ -37,6 +34,7 @@ class MyDrawer extends StatelessWidget {
   final IImageService _imageService = locator<IImageService>();
   final IUserService _userService = locator<IUserService>();
   final bool visit = false;
+  final bool friends = true;
   MyDrawer(this.context, this.user);
 
   void navigateHomepage() async {
@@ -55,9 +53,8 @@ class MyDrawer extends StatelessWidget {
     // Navigator.push(
     //     context, MaterialPageRoute(builder: (context) => ProfilePage(user,visit)));
     // checkLimits();
-    Navigator.push(context, MaterialPageRoute(
-      builder: (context) => ProfilePage(user, visit)
-    ));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => ProfilePage(user, visit)));
     checkLimits();
   }
 
@@ -65,12 +62,11 @@ class MyDrawer extends StatelessWidget {
     List<ImageModel> imagelist;
     try {
       imagelist = await _imageService.getImage(user.email);
-    } 
-    catch (e) {
+    } catch (e) {
       imagelist = <ImageModel>[];
     }
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => SnapshotPage(user, imagelist)));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => SnapshotPage(user, imagelist)));
   }
 
   void navigateAccountSettingPage() {
@@ -78,7 +74,6 @@ class MyDrawer extends StatelessWidget {
         MaterialPageRoute(builder: (context) => AccountSettingPage(user)));
     checkLimits();
   }
-
 
   void signOut() async {
     FirebaseAuth.instance.signOut(); //Email/pass sign out
@@ -156,8 +151,9 @@ class MyDrawer extends StatelessWidget {
     List<UserModel> allUserList;
     try {
       print("GET SONGS & USERS");
-      allSongList = await _songService.getAllSongList();
+      allSongList = await _songService.contentSongList(friends, user);
       allUserList = await _userService.readAllUser();
+      print("SONGLIST LENGTH: " + allSongList.length.toString());
     } catch (e) {
       allSongList = <SongModel>[];
 
@@ -243,11 +239,11 @@ class MyDrawer extends StatelessWidget {
             title: Text('Recommended Friends'),
             onTap: recommendFriends,
           ),
-          ListTile(
-            leading: Icon(Icons.music_note),
-            title: Text('Music Feed'),
-            onTap: navigateMusicFeed,
-          ),
+          // ListTile(
+          //   leading: Icon(Icons.music_note),
+          //   title: Text('Music Feed'),
+          //   onTap: navigateMusicFeed,
+          // ),
           ListTile(
             leading: Icon(Icons.settings),
             title: Text('Account Settings'),

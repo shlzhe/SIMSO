@@ -113,6 +113,30 @@ class ProfilePageState extends State<ProfilePage> {
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           textAlign: (TextAlign.center),
         ),
+        SizedBox(
+          height: 20,
+        ),
+        ButtonTheme(
+          minWidth: 100,
+          height: 60,
+          buttonColor: DesignConstants.blue,
+          child: Container(
+            padding: EdgeInsets.only(
+              left: 30,
+              right: 30,
+            ),
+            child: RaisedButton(
+              child: Text(
+                'My Music',
+                style: TextStyle(
+                  fontSize: 40,
+                  color: DesignConstants.yellow,
+                ),
+              ),
+              onPressed: controller.mymusic,
+            ),
+          ),
+        )
       ]),
     );
   }
