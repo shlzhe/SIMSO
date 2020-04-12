@@ -4,8 +4,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../model/entities/user-model.dart';
 import '../controller/profile-page-controller.dart';
 
-import 'package:intl/intl.dart';
-import '../view/navigation-drawer.dart';
 import 'package:simso/model/entities/image-model.dart';
 import 'package:simso/model/entities/meme-model.dart';
 import 'package:simso/model/entities/song-model.dart';
