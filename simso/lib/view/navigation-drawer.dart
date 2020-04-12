@@ -41,13 +41,7 @@ class MyDrawer extends StatelessWidget {
 
   void navigateHomepage() async {
     List<SongModel> songlist;
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => Homepage(
-                  user,
-                  songlist,
-                )));
+    Navigator.pop(context);
     checkLimits();
   }
 
