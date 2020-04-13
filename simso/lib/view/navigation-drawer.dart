@@ -44,8 +44,10 @@ class MyDrawer extends StatelessWidget {
   }
 
   void navigateProfile() {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => ProfilePage(user, visit)));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ProfilePage(user, user, visit)));
     checkLimits();
   }
 

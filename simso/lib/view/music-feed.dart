@@ -144,6 +144,7 @@ class MusicFeedState extends State<MusicFeed> {
                                                               builder: (context) =>
                                                                   ProfilePage(
                                                                       user,
+                                                                      user,
                                                                       visit),
                                                             ),
                                                           );
@@ -166,6 +167,7 @@ class MusicFeedState extends State<MusicFeed> {
                                                               builder: (context) =>
                                                                   ProfilePage(
                                                                       users,
+                                                                      null,
                                                                       visit),
                                                             ),
                                                           );
@@ -190,6 +192,7 @@ class MusicFeedState extends State<MusicFeed> {
                                                               builder: (context) =>
                                                                   ProfilePage(
                                                                       user,
+                                                                      null,
                                                                       visit),
                                                             ),
                                                           );
@@ -213,6 +216,7 @@ class MusicFeedState extends State<MusicFeed> {
                                                               builder: (context) =>
                                                                   ProfilePage(
                                                                       users,
+                                                                      null,
                                                                       visit),
                                                             ),
                                                           );

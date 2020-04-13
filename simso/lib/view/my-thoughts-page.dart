@@ -63,59 +63,8 @@ class MyThoughtsPageState extends State<MyThoughtsPage> {
       ),
     );
 
-    childButtons.add(
-      UnicornButton(
-        hasLabel: true,
-        labelText: "Add Photos",
-        labelFontSize: 10,
-        currentButton: FloatingActionButton(
-          heroTag: "Add Photos",
-          backgroundColor: Colors.white,
-          mini: true,
-          child: Icon(
-            Icons.camera,
-            color: Colors.black,
-          ),
-          onPressed: null,
-        ),
-      ),
-    );
 
-    childButtons.add(
-      UnicornButton(
-        hasLabel: true,
-        labelText: "Add Memes",
-        labelFontSize: 10,
-        currentButton: FloatingActionButton(
-          heroTag: "Add Memes",
-          backgroundColor: Colors.white,
-          mini: true,
-          child: Icon(
-            Icons.mood,
-            color: Colors.black,
-          ),
-          onPressed: null,
-        ),
-      ),
-    );
 
-    childButtons.add(
-      UnicornButton(
-        hasLabel: true,
-        labelText: "Add Music",
-        labelFontSize: 10,
-        currentButton: FloatingActionButton(
-          heroTag: "Add Music",
-          backgroundColor: Colors.white,
-          mini: true,
-          child: Icon(
-            Icons.music_note,
-            color: Colors.black,
-          ),
-          onPressed: null,
-        ),
-      ),
-    );
     return Scaffold(
         floatingActionButton: UnicornDialer(
           backgroundColor: Colors.transparent,
@@ -136,7 +85,7 @@ class MyThoughtsPageState extends State<MyThoughtsPage> {
           ),
           backgroundColor: DesignConstants.blue,
         ),
-        drawer: MyDrawer(context, user),
+        
         body: Container(
           color: DesignConstants.blueGreyish,
           child: ListView.builder(

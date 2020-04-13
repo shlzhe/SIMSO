@@ -23,19 +23,21 @@ import 'package:simso/model/services/ifriend-service.dart';
 
 class ProfilePage extends StatefulWidget {
   
-  final UserModel user;
+  final UserModel currentUser;
+  final UserModel visitUser;
   final bool visit;
 
-  ProfilePage(this.user, this.visit);
+  ProfilePage(this.currentUser, this.visitUser,this.visit);
 
   @override
   State<StatefulWidget> createState() {
-    return ProfilePageState(user, visit);
+    return ProfilePageState(currentUser, visitUser, visit);
   }
 }
 
 class ProfilePageState extends State<ProfilePage> {
-  UserModel user;
+  UserModel currentUser;
+  UserModel visitUser;
   UserModel ogUser;
   bool visit;
   ProfilePageController controller;
@@ -52,7 +54,7 @@ class ProfilePageState extends State<ProfilePage> {
   // List<Thought> publicThoughtsList = [];
 
 
-  List<UserModel> visitUser;
+  //List<UserModel> visitUser; I don't think this is used as a list
   List<ImageModel> imageList =[];
   List<SongModel> songlist;
   List<Meme> memesList;
@@ -60,8 +62,8 @@ class ProfilePageState extends State<ProfilePage> {
   var idController = TextEditingController();
   // var formKey = GlobalKey<FormState>();
 
-  ProfilePageState(this.user, this.visit) {
-    controller = ProfilePageController(this, this.user);
+  ProfilePageState(this.currentUser, this.visitUser, this.visit) {
+    controller = ProfilePageController(this, this.currentUser, this.visitUser);
 
   }
 
@@ -77,7 +79,7 @@ class ProfilePageState extends State<ProfilePage> {
     this.context = context;
     return Scaffold(
       appBar: AppBar(
-        title: Text(user.username + ' Profile'),
+        title: Text(visitUser.username + "'s Profile"),
         backgroundColor: DesignConstants.blue,
         actions: <Widget>[
           IconButton(
@@ -99,8 +101,8 @@ class ProfilePageState extends State<ProfilePage> {
           width: 70,
           height: 120,
           child: CachedNetworkImage(
-            imageUrl: user.profilePic != null && user.profilePic != ''
-                ? user.profilePic
+            imageUrl: visitUser.profilePic != null && visitUser.profilePic != ''
+                ? visitUser.profilePic
                 : DesignConstants.profile,
             placeholder: (context, url) => CircularProgressIndicator(),
             errorWidget: (context, url, error) => Icon(Icons.account_circle),
@@ -113,30 +115,30 @@ class ProfilePageState extends State<ProfilePage> {
         ),
         Text(''),
         Text(
-          'Email: ' + user.email,
+          'Email: ' + visitUser.email,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           textAlign: (TextAlign.center),
         ),
         Text(
-          'Username: ' + user.username,
+          'Username: ' + visitUser.username,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           textAlign: (TextAlign.center),
         ),
-        if (user.age == 0)
+        if (visitUser.age == 0)
           Text(
             'Age: ',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             textAlign: (TextAlign.center),
           ),
-        if (user.age != 0)
+        if (visitUser.age != 0)
           Text(
-            'Age: ' + user.age.toString(),
+            'Age: ' + visitUser.age.toString(),
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             textAlign: (TextAlign.center),
           ),
-        user.gender != null
+        visitUser.gender != null
             ? Text(
-                'Gender: ' + user.gender,
+                'Gender: ' + visitUser.gender,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 textAlign: (TextAlign.center),
               )
@@ -146,12 +148,12 @@ class ProfilePageState extends State<ProfilePage> {
                 textAlign: (TextAlign.center),
               ),
         Text(
-          'City: ' + user.city,
+          'City: ' + visitUser.city,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           textAlign: (TextAlign.center),
         ),
         Text(
-          'Bio: ' + user.aboutme,
+          'Bio: ' + visitUser.aboutme,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           textAlign: (TextAlign.center),
         ),

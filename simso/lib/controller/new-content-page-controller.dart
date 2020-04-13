@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:simso/model/entities/song-model.dart';
 import 'package:simso/model/entities/user-model.dart';
+import 'package:simso/model/entities/thought-model.dart';
 import 'package:simso/model/services/imeme-service.dart';
 import 'package:simso/model/services/ipicture-service.dart';
 import 'package:simso/model/services/isong-service.dart';
@@ -15,8 +16,8 @@ class NewContentPageController {
   NewContentPageState state;
   NewContentPageController(this.state);
 
-  final ISongService _songService = locator<ISongService>();
-  final IUserService _userService = locator<IUserService>();
+  final ISongService songService = locator<ISongService>();
+  final IUserService userService = locator<IUserService>();
   final IMemeService memeService = locator<IMemeService>();
   final IImageService imageService = locator<IImageService>();
   final IThoughtService thoughtService = locator<IThoughtService>();
@@ -40,8 +41,8 @@ class NewContentPageController {
     state.memesList = [];
     state.imageList = [];
     state.allSongsList =
-        await _songService.contentSongList(state.friends, state.user);
-    state.allUsersList = await _userService.readAllUser();
+        await songService.contentSongList(state.friends, state.user);
+    state.allUsersList = await userService.readAllUser();
     if (state.music == false) {
       state.stateChanged(() {
         state.meme = false;
@@ -56,8 +57,14 @@ class NewContentPageController {
   void thoughts() async {
     state.memesList = [];
     state.imageList = [];
-    state.publicThoughtsList = await thoughtService.contentThoughtList(
-        state.friends, state.user, state.user.language);
+    state.publicThoughtsList =
+        await thoughtService.contentThoughtList(state.friends, state.user);
+
+    for (Thought thought in state.publicThoughtsList) {
+      thought.text = await thoughtService.translateThought(
+          state.user.language, thought.text);
+    }
+
     if (state.thoughts == false) {
       state.meme = false;
       state.thoughts = true;

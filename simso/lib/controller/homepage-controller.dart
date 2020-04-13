@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:simso/model/entities/meme-model.dart';
 import 'package:simso/model/entities/message-model.dart';
+import 'package:simso/model/entities/thought-model.dart';
 import 'package:simso/model/entities/myfirebase.dart';
 import 'package:simso/model/entities/song-model.dart';
 import 'package:simso/model/entities/user-model.dart';
@@ -44,7 +45,7 @@ class HomepageController {
   final IThoughtService thoughtService = locator<IThoughtService>();
   final IMemeService memeService = locator<IMemeService>();
   var unreadMessages;
-  
+
   HomepageController(this.state, this.timerService, this.touchService,
       this.limitService, this.songList);
 
@@ -167,7 +168,7 @@ class HomepageController {
 
   void snapshots() async {
     state.memesList = [];
-    state.publicThoughtsList = [];
+    state.friendsThoughtsList = [];
     state.allSongsList = [];
     state.imageList =
         await state.imageService.contentSnaps(state.friends, state.user);
@@ -201,8 +202,14 @@ class HomepageController {
     state.memesList = [];
     state.imageList = [];
     state.allSongsList = [];
-    state.publicThoughtsList = await thoughtService.contentThoughtList(
-        state.friends, state.user, state.user.language);
+    state.friendsThoughtsList =
+        await thoughtService.contentThoughtList(state.friends, state.user);
+
+    for (Thought thought in state.friendsThoughtsList) {
+      thought.text = await thoughtService.translateThought(
+          state.user.language, thought.text);
+    }
+
     if (state.thoughts == false) {
       state.meme = false;
       state.thoughts = true;
@@ -214,7 +221,7 @@ class HomepageController {
   }
 
   void meme() async {
-    state.publicThoughtsList = [];
+    state.friendsThoughtsList = [];
     state.imageList = [];
     state.allSongsList = [];
     state.memesList =
@@ -226,11 +233,6 @@ class HomepageController {
       state.snapshots = false;
       state.stateChanged(() {});
     }
-  }
-
-  void gotoProfile(String uid) {
-    Navigator.push(state.context,
-        MaterialPageRoute(builder: (context) => ProfilePage(state.user, true)));
   }
 
   Future playpause(String songUrl, bool play) async {
@@ -303,36 +305,45 @@ class HomepageController {
         print("============== Pause Failed");
       }
     }
-
-    //AudioPlayer audioPlayer = new AudioPlayer();
-    //print("GOTHERE0");
-
-    //int result = await audioPlayer.play(songUrl);
-
-    // if (result == 1)
-    //   print("PLAY SUCCESS");
-    // else
-    //   print("PLAY FAIL");
-
-    //print("GOTHERE1");
-
-    //  try {
-    // play() async {
-    // print("GOTHERE1");
-
-    //   int result = await audioPlayer.play(songUrl);
-    //   if (result == 1) {
-    //     print("Song Played Successfully");
-    //   }
-    //  }
-    // } catch (e) {
-    //   print("Song Play Error: " + e.toString());
   }
-  
-  void getUnreadMessages() async{
+
+  //AudioPlayer audioPlayer = new AudioPlayer();
+  //print("GOTHERE0");
+
+  //int result = await audioPlayer.play(songUrl);
+
+  // if (result == 1)
+  //   print("PLAY SUCCESS");
+  // else
+  //   print("PLAY FAIL");
+
+  //print("GOTHERE1");
+
+  //  try {
+  // play() async {
+  // print("GOTHERE1");
+
+  //   int result = await audioPlayer.play(songUrl);
+  //   if (result == 1) {
+  //     print("Song Played Successfully");
+  //   }
+  //  }
+  // } catch (e) {
+  //   print("Song Play Error: " + e.toString());
+
+  void gotoProfile(String uid) async {
+    UserModel visitUser = await _userService.readUser(uid);
+    //clicking a persons name from homepage list
+    Navigator.push(
+        state.context,
+        MaterialPageRoute(
+            builder: (context) => ProfilePage(state.user, visitUser, true)));
+  }
+
+  void getUnreadMessages() async {
     print('getUnreadMessages called');
     unreadMessages = await MyFirebase.getUnreadMessages(state.user.uid);
-     //Showing toast message
+    //Showing toast message
     Fluttertoast.showToast(
       msg: "You have ${unreadMessages.length} unread messages",
       toastLength: Toast.LENGTH_SHORT,
@@ -342,7 +353,5 @@ class HomepageController {
       textColor: DesignConstants.yellow,
       fontSize: 16,
     );
-    
   }
-    
 }
