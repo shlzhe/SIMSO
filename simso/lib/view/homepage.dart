@@ -51,6 +51,7 @@ class HomepageState extends State<Homepage> {
   bool thoughts = true;
   bool friends = true;
   bool visit = false;
+  bool play = true;
   List<Thought> publicThoughtsList = [];
   HomepageController controller;
   UserModel user;
@@ -60,7 +61,10 @@ class HomepageState extends State<Homepage> {
   List<SongModel> allSongsList = [];
   List<UserModel> allUsersList = [];
   List<Meme> memesList;
+  int result;
   String returnedID;
+  String tempSongUrl;
+  String playerId;
   var idController = TextEditingController();
   var formKey = GlobalKey<FormState>();
 
@@ -342,54 +346,56 @@ class HomepageState extends State<Homepage> {
                 )
               : snapshots
                   ? ListView.builder(
-                  itemCount: imageList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      child: Column(
-                    children: <Widget>[
-                      ListTile(
-                        onTap: (){gotoProfile(imageList[index].ownerID);},
-                          leading: imageList[index].ownerPic.contains('http') ? CircleAvatar(
-                            backgroundImage: CachedNetworkImageProvider(
-                                imageList[index].ownerPic,
+                      itemCount: imageList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Container(
+                          child: Column(
+                            children: <Widget>[
+                              ListTile(
+                                onTap: () {
+                                  gotoProfile(imageList[index].ownerID);
+                                },
+                                leading:
+                                    imageList[index].ownerPic.contains('http')
+                                        ? CircleAvatar(
+                                            backgroundImage:
+                                                CachedNetworkImageProvider(
+                                              imageList[index].ownerPic,
+                                            ),
+                                            backgroundColor: Colors.grey,
+                                          )
+                                        : Icon(Icons.error_outline),
+                                title: GestureDetector(
+                                    child: Text(imageList[index].createdBy),
+                                    onTap: () {}),
+                                subtitle: Text(DateFormat(
+                                        "MMM dd-yyyy 'at' HH:mm:ss")
+                                    .format(imageList[index].lastUpdatedAt)),
+                                trailing: EmojiContainer(
+                                  this.context,
+                                  this.user,
+                                  mediaTypes.snapshot.index,
+                                  imageList[index].imageId,
+                                  imageList[index].ownerID,
                                 ),
-                            backgroundColor: Colors.grey,
-                            ) 
-                            :
-                            Icon(Icons.error_outline)
-                            ,
-                          title: GestureDetector(
-                            child: Text(imageList[index].createdBy),
-                            onTap: (){}
-                            ),
-                          subtitle: Text(DateFormat("MMM dd-yyyy 'at' HH:mm:ss")
-                              .format(imageList[index].lastUpdatedAt)),
-                          trailing: 
-                            EmojiContainer(
-                              this.context, 
-                              this.user, 
-                              mediaTypes.snapshot.index, 
-                              imageList[index].imageId, 
-                              imageList[index].ownerID, 
-                            ),
-                        ),
-                        Container(
-                          child: CachedNetworkImage(
-                            imageUrl: imageList[index].imageURL,
-                            fit: BoxFit.fitWidth,
-                            placeholder: (context, url) =>
-                                CircularProgressIndicator(),
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error_outline),
+                              ),
+                              Container(
+                                child: CachedNetworkImage(
+                                  imageUrl: imageList[index].imageURL,
+                                  fit: BoxFit.fitWidth,
+                                  placeholder: (context, url) =>
+                                      CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error_outline),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                    ],
-                  ),
-                );
-                  },
-                )
-                    
-                      : music ? ListView.builder(
+                        );
+                      },
+                    )
+                  : music
+                      ? ListView.builder(
                           itemCount: allSongsList.length,
                           itemBuilder: (context, index) => Container(
                             child: Container(
@@ -578,7 +584,8 @@ class HomepageState extends State<Homepage> {
                                         onPressed: () {
                                           setState(() {
                                             controller.playpause(
-                                                allSongsList[index].songURL);
+                                                allSongsList[index].songURL,
+                                                play);
                                           });
                                         },
                                         padding: EdgeInsets.all(0.0),

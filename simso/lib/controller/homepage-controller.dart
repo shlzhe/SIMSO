@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:simso/model/entities/meme-model.dart';
 import 'package:simso/model/entities/myfirebase.dart';
@@ -22,6 +24,7 @@ import '../view/add-music-page.dart';
 import '../view/add-thought-page.dart';
 import '../model/entities/globals.dart' as globals;
 import 'package:audioplayers/audioplayers.dart';
+import 'package:uuid/uuid.dart';
 
 class HomepageController {
   HomepageState state;
@@ -141,7 +144,6 @@ class HomepageController {
     //Retrieve User Model from friendListUID
     //friendListUID only contains friend UIDs
 
-
     print('USER CURRENT INDEX: $currentIndex');
     //Navigate MainChatScreen Page
     //Passing the userList array to MainChatScreen Page
@@ -226,19 +228,88 @@ class HomepageController {
         MaterialPageRoute(builder: (context) => ProfilePage(state.user, true)));
   }
 
-  Future playpause(String songUrl) async {
-    print("GOTHERE");
-    AudioPlayer audioPlayer = AudioPlayer();
-    print("GOTHERE0");
+  Future playpause(String songUrl, bool play) async {
+    AudioPlayer audioPlayer;
+    var uuid = Uuid();
+    //int result;
+    state.stateChanged(() {
+      if (play == true) {
+        state.play = false;
+      }
+      if (play == false) {
+        state.play = true;
+      }
+    });
 
-    int result = await audioPlayer.play(songUrl);
+    if (play && state.result == null) {
+      audioPlayer = new AudioPlayer(playerId: uuid.v4());
+      state.stateChanged(() {
+        state.tempSongUrl = songUrl;
+        state.playerId = audioPlayer.playerId;
+      });
+      state.result = await audioPlayer.play(songUrl);
+      if (state.result == 1) {
+        print("============== Play Success");
+      } else {
+        print("============== Play Failed");
+      }
+      // if (state.tempSongUrl == songUrl &&
+      //     audioPlayer.playerId == state.playerId &&
+      //     result != null) {
+      //   int result = await audioPlayer.resume();
+      //   if (result == 1) {
+      //     print("============== Resume Success");
+      //   } else {
+      //     print("============== Resume Failed");
+      //   }
+      // }
+      if (songUrl != state.tempSongUrl &&
+          audioPlayer.playerId != state.playerId &&
+          state.result == null) {
+        state.stateChanged(() {
+          state.tempSongUrl = songUrl;
+          state.playerId = audioPlayer.playerId;
+        });
+        state.result = await audioPlayer.play(songUrl);
+        if (state.result == 1) {
+          print("============== Play Success");
+        } else {
+          print("============== Play Failed");
+        }
+      }
+    } else if ((play && songUrl != state.tempSongUrl) ||
+        (!play && songUrl != state.tempSongUrl)) {
+      state.result = await audioPlayer.stop();
+      if (state.result == 1) {
+        print("============== Stop Success");
+      } else {
+        print("============== Stop Failed");
+      }
+      audioPlayer = new AudioPlayer(playerId: uuid.v4());
+      state.stateChanged(() {
+        state.play = true;
+        state.result = null;
+      });
+    } else {
+      state.result = await audioPlayer.pause();
+      if (state.result == 1) {
+        print("============== Pause Success");
+      } else {
+        print("============== Pause Failed");
+      }
+    }
 
-    if (result == 1)
-      print("PLAY SUCCESS");
-    else
-      print("PLAY FAIL");
-      
-    print("GOTHERE1");
+    //AudioPlayer audioPlayer = new AudioPlayer();
+    //print("GOTHERE0");
+
+    //int result = await audioPlayer.play(songUrl);
+
+    // if (result == 1)
+    //   print("PLAY SUCCESS");
+    // else
+    //   print("PLAY FAIL");
+
+    //print("GOTHERE1");
 
     //  try {
     // play() async {
