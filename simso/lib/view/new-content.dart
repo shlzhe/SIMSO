@@ -296,11 +296,7 @@ class NewContentPageState extends State<NewContentPage> {
                                                                             setState(() {
                                                                               visit = true;
                                                                             });
-                                                                            Navigator.of(context).push(
-                                                                              MaterialPageRoute(
-                                                                                builder: (context) => ProfilePage(users, visit),
-                                                                              ),
-                                                                            );
+                                                                           gotoProfile(users.uid);
                                                                           },
                                                                         )
                                                                   : users.uid ==
@@ -318,11 +314,7 @@ class NewContentPageState extends State<NewContentPage> {
                                                                             setState(() {
                                                                               visit = false;
                                                                             });
-                                                                            Navigator.of(context).push(
-                                                                              MaterialPageRoute(
-                                                                                builder: (context) => ProfilePage(user, visit),
-                                                                              ),
-                                                                            );
+                                                                          gotoProfile(user.uid);
                                                                           },
                                                                         )
                                                                       : FlatButton(
@@ -338,11 +330,7 @@ class NewContentPageState extends State<NewContentPage> {
                                                                             setState(() {
                                                                               visit = true;
                                                                             });
-                                                                            Navigator.of(context).push(
-                                                                              MaterialPageRoute(
-                                                                                builder: (context) => ProfilePage(users, visit),
-                                                                              ),
-                                                                            );
+                                                                          gotoProfile(users.uid);
                                                                           },
                                                                         )
                                                             ],
