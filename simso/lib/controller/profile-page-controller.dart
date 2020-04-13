@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import '../view/profile-page.dart';
 import '../view/account-setting-page.dart';
 import '../view/mainChat-page.dart';
+import '../view/visit-thoughts-page.dart';
 import '../view/my-thoughts-page.dart';
 import '../view/my-snapshot-page.dart';
 import '../view/my-memes-page.dart';
@@ -26,11 +27,11 @@ import 'package:simso/model/services/ithought-service.dart';
 import '../service-locator.dart';
 
 class ProfilePageController {
-
-  final UserModel user;
+  final UserModel currentUser;
+  final UserModel visitUser;
   BuildContext context;
   ProfilePageState state;
-  ProfilePageController(this.state, this.user);
+  ProfilePageController(this.state, this.currentUser, this.visitUser);
   List<UserModel> userList;
   UserModel newUser = UserModel();
 
@@ -44,13 +45,11 @@ class ProfilePageController {
 
   void accountSettings() async {
     Navigator.push(
-      state.context,
-      MaterialPageRoute(
-        builder: (context) => AccountSettingPage(
-              state.user,
-        )
-      )
-    );
+        state.context,
+        MaterialPageRoute(
+            builder: (context) => AccountSettingPage(
+                  state.currentUser,
+                )));
   }
 
   void mainChatScreen() async {
@@ -66,7 +65,8 @@ class ProfilePageController {
     //Find current index of current user
     int currentIndex = 0;
     for (int i = 0; i < userList.length; i++) {
-      if (userList[i].uid == state.user.uid) //Found index of current user
+      if (userList[i].uid ==
+          state.currentUser.uid) //Found index of current user
       {
         currentIndex = i;
         break;
@@ -80,125 +80,114 @@ class ProfilePageController {
     for (int i = 0; i < userList[currentIndex].friends.length; i++) {
       friendListUID.add(userList[currentIndex].friends[i]);
     }
-    
+
     Navigator.push(
         state.context,
         MaterialPageRoute(
           builder: (context) =>
-              MainChatPage(state.user, userList, currentIndex),
+              MainChatPage(state.currentUser, userList, currentIndex),
         ));
   }
 
   void goTo(int index) async {
-  // setState(() {
-  //   _selectedIndex = index;
-    if(index == 0) {
-      List<Thought> myThoughtsList =
-        await _thoughtService.getThoughts(user.uid.toString()); 
+    if (index == 0) {
+      List<Thought> thoughtsList = [];
+
+      if (state.currentUser.uid == state.visitUser.uid ||
+          state.visitUser == null) {
+        //user wants to visit their own thoughts
+        try {
+          thoughtsList =
+              await _thoughtService.getThoughts(state.currentUser.uid);
+          Navigator.push(
+              state.context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      MyThoughtsPage(state.currentUser, thoughtsList)));
+        } catch (e) {
+          print(e);
+        }
+      } else {
+        //user wants to visit another person's thoughts
+        try {
+          thoughtsList = await _thoughtService.getThoughts(state.visitUser.uid);
+
+          for (Thought thought in thoughtsList) {
+            thought.text = await _thoughtService.translateThought(
+                state.currentUser.language, thought.text);
+          }
+
+          Navigator.push(
+              state.context,
+              MaterialPageRoute(
+                  builder: (context) => VisitThoughtsPage(currentUser, visitUser, thoughtsList)));
+        } catch (e) {
+          print(e);
+        }
+      }
+    }
+    if (index == 1) {
+      List<Meme> myMemesList =
+          await memeService.getMemes(visitUser.uid.toString());
       Navigator.push(
           state.context,
           MaterialPageRoute(
-              builder: (context) => MyThoughtsPage(state.user, myThoughtsList)));
+              builder: (context) => MyMemesPage(state.visitUser, myMemesList)));
       checkLimits();
     }
-    if(index == 1) {
-      List<Meme> myMemesList =
-        await memeService.getMemes(user.uid.toString());
-      Navigator.push(
-          state.context, MaterialPageRoute(builder: (context) => MyMemesPage(state.user, myMemesList)));
-      checkLimits();
-    }
-    if(index == 2) {
+    if (index == 2) {
       List<ImageModel> imagelist;
       try {
-        imagelist = await _imageService.getImage(state.user.email);
+        imagelist = await _imageService.getImage(state.visitUser.email);
       } catch (e) {
         imagelist = <ImageModel>[];
       }
 
       Navigator.push(
-          state.context, MaterialPageRoute(builder: (context) => SnapshotPage(state.user, imagelist)));
+          state.context,
+          MaterialPageRoute(
+              builder: (context) => SnapshotPage(state.visitUser, imagelist)));
       checkLimits();
-      }
-      if(index == 3) {
-        print('music');
-        List<SongModel> songlist;
+    }
+    if (index == 3) {
+      print('music');
+      List<SongModel> songlist;
       try {
-        songlist = await _songService.getSong(state.user.email);
+        songlist = await _songService.getSong(state.visitUser.email);
       } catch (e) {
         songlist = <SongModel>[];
       }
       Navigator.push(
         state.context,
         MaterialPageRoute(
-          builder: (context) => MyMusic(state.user, songlist),
+          builder: (context) => MyMusic(state.visitUser, songlist),
         ),
       );
       checkLimits();
     }
-  
-}
+  }
 
-  // void myThoughts() async {
-  //   List<Thought> myThoughtsList =
-  //       await _thoughtService.getThoughts(user.uid.toString());
+  void checkLimits() async {
+    var timeLimitReached = (globals
+                .getDate(globals.limit.overrideThruDate)
+                .difference(DateTime.now())
+                .inDays !=
+            0 &&
+        globals.timer.timeOnAppSec / 60 > globals.limit.timeLimitMin);
+    var touchLimitReached = (globals
+                .getDate(globals.limit.overrideThruDate)
+                .difference(DateTime.now())
+                .inDays !=
+            0 &&
+        globals.touchCounter.touches > globals.limit.touchLimit);
 
-  //   Navigator.push(
-  //       state.context,
-  //       MaterialPageRoute(
-  //           builder: (context) => MyThoughtsPage(state.user, myThoughtsList)));
-  //   checkLimits();
-  // }
-
-  // void myMeme() async {
-  //   List<Meme> myMemesList =
-  //       await memeService.getMemes(user.uid.toString());
-  //   Navigator.push(
-  //       state.context, MaterialPageRoute(builder: (context) => MyMemesPage(state.user, myMemesList)));
-  //   checkLimits();
-  // }
-
-  // void mySnapshots() async {
-  //   List<ImageModel> imagelist;
-  //   try {
-  //     imagelist = await _imageService.getImage(state.user.email);
-  //   } catch (e) {
-  //     imagelist = <ImageModel>[];
-  //   }
-
-  //   Navigator.push(
-  //       state.context, MaterialPageRoute(builder: (context) => SnapshotPage(state.user, imagelist)));
-  //   checkLimits();
-  // }
-
-  // void myMusic() async {
-  //   List<SongModel> songlist;
-  //   try {
-  //     songlist = await _songService.getSong(state.user.email);
-  //   } catch (e) {
-  //     songlist = <SongModel>[];
-  //   }
-  //   Navigator.push(
-  //     state.context,
-  //     MaterialPageRoute(
-  //       builder: (context) => MyMusic(state.user, songlist),
-  //     ),
-  //   );
-  //   checkLimits();
-  // }
-
-    void checkLimits() async {
-    var timeLimitReached = (globals.getDate(globals.limit.overrideThruDate).difference(DateTime.now()).inDays != 0
-          && globals.timer.timeOnAppSec / 60 > globals.limit.timeLimitMin);
-    var touchLimitReached = (globals.getDate(globals.limit.overrideThruDate).difference(DateTime.now()).inDays != 0
-          && globals.touchCounter.touches > globals.limit.touchLimit);  
-
-    if ((timeLimitReached && globals.limit.timeLimitMin > 0) || (touchLimitReached && globals.limit.touchLimit > 0)) {
+    if ((timeLimitReached && globals.limit.timeLimitMin > 0) ||
+        (touchLimitReached && globals.limit.touchLimit > 0)) {
       LimitReachedDialog.info(
-          context: this.context, 
-          user: this.user, 
+          context: this.context,
+          user: this.currentUser,
           timeReached: timeLimitReached);
-        print('Limit Dialog opened');
-      }
+      print('Limit Dialog opened');
+    }
   }
 }

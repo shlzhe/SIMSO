@@ -50,7 +50,7 @@ class HomepageState extends State<Homepage> {
   bool snapshots = false;
   bool thoughts = true;
   bool friends = true;
-  List<Thought> publicThoughtsList = [];
+  List<Thought> friendsThoughtsList = []; //changed variable name because this is the friends thought list not the public one
   HomepageController controller;
   UserModel user;
   List<UserModel> visitUser;
@@ -71,12 +71,13 @@ class HomepageState extends State<Homepage> {
     controller.getUnreadMessages();
   }
    
+   /* //duplicate from controller
   gotoProfile(String uid) async {
     UserModel visitUser = await userService.readUser(uid);
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => ProfilePage(visitUser, true)));
+        MaterialPageRoute(builder: (context) => ProfilePage(user, visitUser, true)));
   }
-
+*/
   void stateChanged(Function f) {
     setState(f);
   }
@@ -245,7 +246,7 @@ class HomepageState extends State<Homepage> {
       drawer: MyDrawer(context, user),
       body: thoughts
           ? ListView.builder(
-              itemCount: publicThoughtsList.length,
+              itemCount: friendsThoughtsList.length,
               itemBuilder: (BuildContext context, int index) {
                 return Container(
                   padding: EdgeInsets.all(5.0),
@@ -262,15 +263,15 @@ class HomepageState extends State<Homepage> {
                     child: ListTile(
                       title: FlatButton.icon(
                           onPressed: () {
-                            gotoProfile(
-                                publicThoughtsList.elementAt(index).uid);
+                            controller.gotoProfile(
+                                friendsThoughtsList.elementAt(index).uid);
                           },
-                          icon: publicThoughtsList.elementAt(index).profilePic != '' ?Builder(builder: (BuildContext context){
+                          icon: friendsThoughtsList.elementAt(index).profilePic != '' ?Builder(builder: (BuildContext context){
                             try{
                               return Container(
                                 width: 35,
                                 height: 35,
-                                child: Image.network(publicThoughtsList.elementAt(index).profilePic));
+                                child: Image.network(friendsThoughtsList.elementAt(index).profilePic));
                             }on PlatformException{
                               return Icon(Icons.error_outline);
                             }
@@ -278,9 +279,9 @@ class HomepageState extends State<Homepage> {
                           Icon(Icons.error_outline),
                           label: Expanded(
                             child: Text(
-                              publicThoughtsList.elementAt(index).email +
+                              friendsThoughtsList.elementAt(index).email +
                                   ' ' +
-                                  publicThoughtsList
+                                  friendsThoughtsList
                                       .elementAt(index)
                                       .timestamp
                                       .toLocal()
@@ -292,7 +293,7 @@ class HomepageState extends State<Homepage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            publicThoughtsList.elementAt(index).text, 
+                            friendsThoughtsList.elementAt(index).text, 
                             style: TextStyle(fontSize: 24),
                           ),
                         ],
@@ -302,8 +303,8 @@ class HomepageState extends State<Homepage> {
                           this.context, 
                           this.user, 
                           mediaTypes.thought.index, 
-                          publicThoughtsList[index].thoughtId, 
-                          publicThoughtsList[index].uid, 
+                          friendsThoughtsList[index].thoughtId, 
+                          friendsThoughtsList[index].uid, 
                         ),
                     ),
                   ),
@@ -319,7 +320,7 @@ class HomepageState extends State<Homepage> {
                       child: Column(
                     children: <Widget>[
                       ListTile(
-                        onTap: (){gotoProfile(memesList[index].ownerID);},
+                        onTap: (){ controller.gotoProfile(memesList[index].ownerID);},
                           leading: CircleAvatar(
                             backgroundImage: CachedNetworkImageProvider(
                                 memesList[index].ownerPic),
@@ -363,7 +364,7 @@ class HomepageState extends State<Homepage> {
                       child: Column(
                     children: <Widget>[
                       ListTile(
-                        onTap: (){gotoProfile(imageList[index].ownerID);},
+                        onTap: (){controller.gotoProfile(imageList[index].ownerID);},
                           leading: imageList[index].ownerPic.contains('http') ? CircleAvatar(
                             backgroundImage: CachedNetworkImageProvider(
                                 imageList[index].ownerPic,
