@@ -76,7 +76,7 @@ class ThoughtService extends IThoughtService {
 
   @override
   Future<List<Thought>> contentThoughtList(
-      bool friends, UserModel user, String langPref) async {
+      bool friends, UserModel user) async {
     var data = <Thought>[];
     var friendsThoughtList = <Thought>[];
     try {
@@ -84,15 +84,13 @@ class ThoughtService extends IThoughtService {
           .collection(Thought.THOUGHTS_COLLECTION)
           .orderBy(Thought.TIMESTAMP)
           .getDocuments();
-      for (DocumentSnapshot doc in querySnapshot.documents) {
-        Thought newThought = Thought.deserialize(doc.data, doc.documentID);
-        if (langPref != 'none' && langPref != null) {
-          newThought.text =
-              await translator.translate(newThought.text, to: langPref);
-        }
-        data.add(newThought);
+
+      for (DocumentSnapshot doc in querySnapshot.documents){
+        data.add(Thought.deserialize(doc.data, doc.documentID));
       }
+
       data.removeWhere((element) => element.uid == user.uid.toString());
+      
       if (!friends) {
         //new content remove friends content
         try {
@@ -119,4 +117,13 @@ class ThoughtService extends IThoughtService {
       return data;
     }
   }
+
+       @override
+    Future<String> translateThought(String langPref, String text) async {
+        if (langPref != 'none' && langPref != null) {
+          text =
+              await translator.translate(text, to: langPref);
+        }
+        return text;
+      }
 }
