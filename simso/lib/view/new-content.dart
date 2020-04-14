@@ -163,6 +163,9 @@ class NewContentPageState extends State<NewContentPage> {
                                   memesList[index].ownerPic),
                               backgroundColor: Colors.grey,
                             ),
+                            title: GestureDetector(
+                                child: Text(memesList[index].email),
+                                onTap: () {}),
                             subtitle: Text(
                                 DateFormat("MMM dd-yyyy 'at' HH:mm:ss")
                                     .format(memesList[index].timestamp)),
