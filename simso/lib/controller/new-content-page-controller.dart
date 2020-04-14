@@ -37,6 +37,12 @@ class NewContentPageController {
   }
 
   Future music() async {
+    print("GOTHERE");
+    state.memesList = [];
+    state.imageList = [];
+    state.allSongsList =
+        await songService.contentSongList(state.friends, state.user);
+    state.allUsersList = await userService.readAllUser();
     if (state.music == false) {
       state.stateChanged(() {
         state.meme = false;
@@ -45,28 +51,7 @@ class NewContentPageController {
         state.snapshots = false;
       });
     }
-    List<SongModel> allSongList;
-    List<UserModel> allUserList;
-    try {
-      print("GET SONGS & USERS");
-      allSongList = await songService.getAllSongList();
-      allUserList = await userService.readAllUser();
-    } catch (e) {
-      allSongList = <SongModel>[];
-
-      print("SONGLIST LENGTH: " + allSongList.length.toString());
-    }
-    print("SUCCEED IN GETTING SONGS & USERS");
-    Navigator.push(
-      state.context,
-      MaterialPageRoute(
-        builder: (context) => MusicFeed(
-          state.user,
-          allUserList,
-          allSongList,
-        ),
-      ),
-    );
+    state.stateChanged(() {});
   }
 
   void thoughts() async {

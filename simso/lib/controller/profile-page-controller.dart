@@ -190,4 +190,24 @@ class ProfilePageController {
       print('Limit Dialog opened');
     }
   }
+
+  // Future mymusic() async {
+  //   List<SongModel> songlist;
+  //   try {
+  //     print("GET SONGS");
+  //     songlist = await _songService.getSong(state.user.email);
+  //   } catch (e) {
+  //     songlist = <SongModel>[];
+  //     print("SONGLIST LENGTH: " + songlist.length.toString());
+  //   }
+  //   print("SUCCEED IN GETTING SONGS");
+  //   Navigator.push(
+  //     state.context,
+  //     MaterialPageRoute(
+  //       builder: (context) => MyMusic(state.user, songlist),
+  //     ),
+  //   );
+  //   checkLimits();
+  // }
+
 }
