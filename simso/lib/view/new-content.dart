@@ -386,6 +386,13 @@ class NewContentPageState extends State<NewContentPage> {
                                                             ],
                                                           ),
                                                         ),
+                                                        EmojiContainer(
+                                                          this.context,
+                                                          this.user,
+                                                          mediaTypes.music.index,
+                                                          allSongsList[index].songId,
+                                                          users.uid,
+                                                        ),
                                                       ],
                                                     ),
                                                   ),
