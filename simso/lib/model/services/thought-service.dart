@@ -22,7 +22,7 @@ class ThoughtService extends IThoughtService {
       return null;
     });
 
-    _dictionaryService.updateDictionary(thought, null, null);
+    _dictionaryService.updateDictionary(thought);
   }
 
   @override
@@ -34,7 +34,7 @@ class ThoughtService extends IThoughtService {
     //return ref.documentID;
     //get dictionary
 
-    _dictionaryService.updateDictionary(thought, null, null);
+    _dictionaryService.updateDictionary(thought);
   }
 
   @override
