@@ -10,6 +10,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../model/entities/globals.dart' as globals;
 import '../view/login-page.dart';
 import 'package:simso/view/design-constants.dart';
+import 'package:simso/view/choose-avatar.dart';
+
 
 class AccountSettingController {
   AccountSettingPageState state;
@@ -49,7 +51,10 @@ class AccountSettingController {
     } else
       return;
   }
-
+  void changeAvatar() async {
+    state.user.profilePic = await Navigator.push(state.context, MaterialPageRoute(
+      builder: (context)=>ChooseAvatar()));
+  }
   void signOut() {
     showDialog(
         context: state.context,
@@ -213,7 +218,7 @@ class AccountSettingController {
       return showDialog(
         context: state.context,
         builder: (context) => new AlertDialog(
-          title: new Text('Not Saving'),
+          title: new Text('Not Saving'),  
           content: new Text('Your editing is not saved'),
           actions: <Widget>[
             new GestureDetector(
