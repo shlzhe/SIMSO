@@ -56,7 +56,7 @@ class MyMemesPageState extends State<MyMemesPage> {
           ),
           backgroundColor: DesignConstants.blue,
         ),
-        drawer: MyDrawer(context, user),
+        //drawer: MyDrawer(context, user),
         body: ListView.builder(
             itemCount: myMemesList == null ? 0 : myMemesList.length,
             itemBuilder: (BuildContext context, int index) {
