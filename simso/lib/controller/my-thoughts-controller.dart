@@ -42,5 +42,6 @@ class MyThoughtsController {
           ),
         ));
     Navigator.pop(state.context);
+    Navigator.pop(state.context, null);
   }
 }

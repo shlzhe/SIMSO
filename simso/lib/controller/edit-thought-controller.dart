@@ -10,6 +10,7 @@ import '../view/mydialog.dart';
 import '../view/homepage.dart';
 import '../view/edit-thought-page.dart';
 import '../view/my-thoughts-page.dart';
+import '../view/profile-page.dart';
 
 class EditThoughtController {
   EditThoughtPageState state;
@@ -35,6 +36,7 @@ class EditThoughtController {
     print('deleting thought docid' + state.thought.thoughtId);
     try {
       _thoughtService.deleteThought(state.thought.thoughtId);
+
       List<Thought> myThoughtsList =
           await _thoughtService.getThoughts(state.user.uid.toString());
       await Navigator.push(
@@ -43,6 +45,7 @@ class EditThoughtController {
             builder: (context) => MyThoughtsPage(state.user, myThoughtsList),
           ));
       Navigator.pop(state.context);
+      Navigator.pop(state.context, null);
     } catch (e) {
       MyDialog.info(
           context: state.context,

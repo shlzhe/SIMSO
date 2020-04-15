@@ -39,12 +39,13 @@ class ThoughtService extends IThoughtService {
 
   @override
   Future<List<Thought>> getThoughts(String uid) async {
+    print("getThoughts called");
     var myThoughtsList = <Thought>[];
     try {
       QuerySnapshot querySnapshot = await Firestore.instance
           .collection(Thought.THOUGHTS_COLLECTION)
           .where(Thought.UID, isEqualTo: uid)
-          .orderBy(Thought.TIMESTAMP)
+          .orderBy(Thought.TIMESTAMP, descending: true)
           .getDocuments();
       if (querySnapshot == null || querySnapshot.documents.length == 0) {
         var newThought = Thought(
@@ -82,7 +83,7 @@ class ThoughtService extends IThoughtService {
     try {
       QuerySnapshot querySnapshot = await Firestore.instance
           .collection(Thought.THOUGHTS_COLLECTION)
-          .orderBy(Thought.TIMESTAMP)
+          .orderBy(Thought.TIMESTAMP, descending: true)
           .getDocuments();
 
       for (DocumentSnapshot doc in querySnapshot.documents){
