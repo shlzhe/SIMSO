@@ -64,9 +64,7 @@ class VisitMemesPageState extends State<VisitMemesPage> {
                                 visitMemesList[index].ownerPic),
                             backgroundColor: Colors.grey,
                           ),
-                          title: GestureDetector(
-                            child: Text(visitMemesList[index].ownerName),
-                          ),
+                          title: Text(visitMemesList[index].ownerName),
                           subtitle: Text(DateFormat("MMM dd-yyyy 'at' HH:mm:ss")
                               .format(visitMemesList[index].timestamp)),
                           ),

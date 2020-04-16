@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import '../model/entities/user-model.dart';
 import '../model/entities/meme-model.dart';
 import '../view/design-constants.dart';
-import '../view/navigation-drawer.dart';
 import '../controller/my-memes-controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -45,10 +44,11 @@ class MyMemesPageState extends State<MyMemesPage> {
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: controller.addMeme,
+          backgroundColor: DesignConstants.blue
           ),
         appBar: AppBar(
           title: Text(
-            'Memes Page',
+            'My Memes',
             style: TextStyle(
                 fontFamily: 'Quicksand',
                 fontSize: 30.0,
@@ -70,11 +70,7 @@ class MyMemesPageState extends State<MyMemesPage> {
                                 myMemesList[index].ownerPic),
                             backgroundColor: Colors.grey,
                           ),
-                          title: GestureDetector(
-                            child: Text(myMemesList[index].ownerName),
-                            onTap: () =>
-                                controller.onTapProfile(myMemesList, index),
-                          ),
+                          title:Text(myMemesList[index].ownerName),
                           subtitle: Text(DateFormat("MMM dd-yyyy 'at' HH:mm:ss")
                               .format(myMemesList[index].timestamp)),
                           trailing: GestureDetector(
@@ -97,49 +93,6 @@ class MyMemesPageState extends State<MyMemesPage> {
               } else
                 return null;
             }));
-
-    // Container(
-    //   color: DesignConstants.blueGreyish,
-    //   child: ListView.builder(
-    //     itemCount: mySnapshotsList == null ? 0 : mySnapshotsList.length,
-    //     itemBuilder: (BuildContext context, int index) {
-    // return Container(
-    //   padding: EdgeInsets.all(15.0),
-    //   child: Container(
-    //     //padding: EdgeInsets.all(15.0),
-    //     //color: Colors.grey[200],
-    //     padding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-    //     decoration: BoxDecoration(
-    //       color: const Color(0xFFFFFFFF),
-    //       border: Border.all(
-    //         color: DesignConstants.blue,
-    //         width: 4,
-    //       ),
-    //       borderRadius: BorderRadius.circular(30),
-    //     ),
-    //     child: ListTile(
-    //       title: Text(DateFormat("MMM dd-yyyy 'at' HH:mm:ss")
-    //           .format(mySnapshotsList[index].timestamp)),
-    //       subtitle: Column(
-    //         crossAxisAlignment: CrossAxisAlignment.start,
-    //         children: <Widget>[
-    //           CachedNetworkImage(
-    //             imageUrl: mySnapshotsList[index].imgUrl,
-    //             placeholder: (context, url) =>
-    //                 CircularProgressIndicator(),
-    //             errorWidget: (context, url, error) =>
-    //                 Icon(Icons.error_outline),
-    //           ),
-    //         ],
-    //       ),
-    //       onTap: () =>
-    //           controller.onTapSnapshot(mySnapshotsList, index),
-    //     ),
-    //   ),
-    // );
-    //     },
-    //   ),
-    // )
   }
 
   Container loadingPlaceHolder = Container(
