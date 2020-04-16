@@ -32,7 +32,6 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:uuid/uuid.dart';
 
 class HomepageController {
-  AudioPlayer audioPlayer = new AudioPlayer(playerId: null);
   HomepageState state;
   ITimerService timerService;
   ITouchService touchService;
@@ -41,7 +40,6 @@ class HomepageController {
   List<UserModel> userList;
   List<SongModel> songList = new List<SongModel>();
   String userID;
-  int result;
   final ISongService _songService = locator<ISongService>();
   final IUserService _userService = locator<IUserService>();
   final IThoughtService thoughtService = locator<IThoughtService>();
@@ -164,15 +162,8 @@ class HomepageController {
   }
 
   void newContent() async {
-    state.stateChanged(() {
-      state.leave = true;
-    });
-    Navigator.push(
-      state.context,
-      MaterialPageRoute(
-        builder: (context) => NewContentPage(state.user),
-      ),
-    );
+    Navigator.push(state.context,
+        MaterialPageRoute(builder: (context) => NewContentPage(state.user)));
   }
 
   void snapshots() async {
@@ -244,142 +235,101 @@ class HomepageController {
     }
   }
 
-  Future playFunc(String songUrl) async {
+  Future playpause(String songUrl, bool play) async {
+    AudioPlayer audioPlayer;
     var uuid = Uuid();
-
-    playSong() async {
-      try {
-        result = await audioPlayer.play(songUrl);
-        if (result == 1) {
-          print("============== Play Success");
-        } else {
-          print("============== Play Failed");
-        }
-      } catch (e) {
-        print("Play Error: " + e.toString());
+    //int result;
+    state.stateChanged(() {
+      if (play == true) {
+        state.play = false;
       }
-    }
-
-    stopSong() async {
-      try {
-        result = await audioPlayer.stop();
-        if (result == 1) {
-          print("============== Stop Success");
-        } else {
-          print("============== Stop Failed");
-        }
-      } catch (e) {
-        print("Stop Song Error: " + e.toString());
-      }
-    }
-
-    if (state.play == false && state.pause == true) {
-      if (state.playerId == "") {
-        audioPlayer = new AudioPlayer(playerId: uuid.v4());
-        //print("============= 1st playerId: " + audioPlayer.playerId.toString());
-        state.stateChanged(() {
-          state.tempSongUrl = songUrl;
-          state.playerId = audioPlayer.playerId;
-        });
-        playSong();
-        state.stateChanged(() {
-          state.play = true;
-          state.pause = false;
-        });
-      } else {
-        playSong();
-        state.stateChanged(() {
-          state.play = true;
-          state.pause = false;
-        });
-      }
-    }
-
-    if (state.play == true &&
-        state.pause == false &&
-        songUrl != state.tempSongUrl) {
-      await stopSong();
-      state.stateChanged(() {
-        //print("************* PLAY NEW SONG FRM PAUSE **************");
-        audioPlayer = new AudioPlayer(playerId: uuid.v4());
-        // print("============= Subsequent new playerId: " +
-        //     audioPlayer.playerId.toString());
-
+      if (play == false) {
         state.play = true;
-        state.pause = false;
+      }
+    });
+
+    if (play && state.result == null) {
+      audioPlayer = new AudioPlayer(playerId: uuid.v4());
+      state.stateChanged(() {
         state.tempSongUrl = songUrl;
         state.playerId = audioPlayer.playerId;
-        playSong();
       });
-    }
-  }
-
-  Future pauseFunc(String songUrl) async {
-    var uuid = Uuid();
-
-    playSong() async {
-      try {
-        result = await audioPlayer.play(songUrl);
-        if (result == 1) {
+      state.result = await audioPlayer.play(songUrl);
+      if (state.result == 1) {
+        print("============== Play Success");
+      } else {
+        print("============== Play Failed");
+      }
+      // if (state.tempSongUrl == songUrl &&
+      //     audioPlayer.playerId == state.playerId &&
+      //     result != null) {
+      //   int result = await audioPlayer.resume();
+      //   if (result == 1) {
+      //     print("============== Resume Success");
+      //   } else {
+      //     print("============== Resume Failed");
+      //   }
+      // }
+      if (songUrl != state.tempSongUrl &&
+          audioPlayer.playerId != state.playerId &&
+          state.result == null) {
+        state.stateChanged(() {
+          state.tempSongUrl = songUrl;
+          state.playerId = audioPlayer.playerId;
+        });
+        state.result = await audioPlayer.play(songUrl);
+        if (state.result == 1) {
           print("============== Play Success");
         } else {
           print("============== Play Failed");
         }
-      } catch (e) {
-        print("Play Error: " + e.toString());
       }
-    }
-
-    stopSong() async {
-      try {
-        result = await audioPlayer.stop();
-        if (result == 1) {
-          print("============== Stop Success");
-        } else {
-          print("============== Stop Failed");
-        }
-      } catch (e) {
-        print("Stop Song Error: " + e.toString());
-      }
-    }
-
-    pauseSong() async {
-      try {
-        result = await audioPlayer.pause();
-        if (result == 1) {
-          print("============== Pause Success");
-        } else {
-          print("============== Pause Failed");
-        }
-      } catch (e) {
-        print("Pause Error: " + e.toString());
-      }
-    }
-
-    if (state.play == true && state.pause == false) {
-      if (songUrl != state.tempSongUrl) {
-        //print("************* PLAY NEW SONG FRM PLAY **************");
-        await stopSong();
-        state.stateChanged(() {
-          audioPlayer = new AudioPlayer(playerId: uuid.v4());
-          // print("============= Subsequent new playerId: " +
-          //     audioPlayer.playerId.toString());
-          //pause = true;
-          state.play = true;
-          state.pause = false;
-          state.tempSongUrl = songUrl;
-          state.playerId = audioPlayer.playerId;
-          playSong();
-        });
+    } else if ((play && songUrl != state.tempSongUrl) ||
+        (!play && songUrl != state.tempSongUrl)) {
+      state.result = await audioPlayer.stop();
+      if (state.result == 1) {
+        print("============== Stop Success");
       } else {
-        pauseSong();
-        state.stateChanged(() {
-          state.pause = true;
-          state.play = false;
-        });
+        print("============== Stop Failed");
+      }
+      audioPlayer = new AudioPlayer(playerId: uuid.v4());
+      state.stateChanged(() {
+        state.play = true;
+        state.result = null;
+      });
+    } else {
+      state.result = await audioPlayer.pause();
+      if (state.result == 1) {
+        print("============== Pause Success");
+      } else {
+        print("============== Pause Failed");
       }
     }
   }
+
+  //AudioPlayer audioPlayer = new AudioPlayer();
+  //print("GOTHERE0");
+
+  //int result = await audioPlayer.play(songUrl);
+
+  // if (result == 1)
+  //   print("PLAY SUCCESS");
+  // else
+  //   print("PLAY FAIL");
+
+  //print("GOTHERE1");
+
+  //  try {
+  // play() async {
+  // print("GOTHERE1");
+
+  //   int result = await audioPlayer.play(songUrl);
+  //   if (result == 1) {
+  //     print("Song Played Successfully");
+  //   }
+  //  }
+  // } catch (e) {
+  //   print("Song Play Error: " + e.toString());
 
   void gotoProfile(String uid) async {
     UserModel visitUser = await _userService.readUser(uid);
