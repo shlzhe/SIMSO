@@ -67,7 +67,7 @@ class HomepageState extends State<Homepage> {
     controller.setupTouchCounter();
     controller.getLimits();
     controller.thoughts();
-    controller.getUnreadMessages();
+   
   }
    
   gotoProfile(String uid) async {
@@ -87,7 +87,7 @@ class HomepageState extends State<Homepage> {
     var childButtons = List<UnicornButton>();
    final IconButton messageIcon = IconButton(
                     icon: Icon(Icons.textsms),
-                    iconSize: 40,
+                    //iconSize: 40,
                     onPressed: controller.mainChatScreen,
                     color: DesignConstants.yellow,
                     );
@@ -196,12 +196,12 @@ class HomepageState extends State<Homepage> {
                   messageIcon,
                    
                   Container( 
-                    width:30,
-                    height: 30,
+                    width:25,
+                    height: 25,
                     alignment: Alignment.topRight,
                     margin: EdgeInsets.only(top:5),
                     child: Container(
-                      width: 80,
+                      width: 50,
                       height: 25,
 
                       decoration: BoxDecoration(
