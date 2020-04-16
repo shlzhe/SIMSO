@@ -1,8 +1,17 @@
+import 'dart:async';
+
+import 'package:simso/model/services/call-service.dart';
+import 'package:simso/model/services/icall-service.dart';
+
+import '../../service-locator.dart';
+
 class Call {
   String callerUid;
   String receiverUid;
   bool callAccepted;
   bool callStatus;
+  ICallService callService = locator<ICallService>();
+
   Call(this.callerUid, this.receiverUid, this.callAccepted,this.callStatus);
   Call.clone(Call b){
     this.callerUid = b.callerUid;
@@ -29,5 +38,23 @@ class Call {
    callStatus = doc[CALLSTATUS],
    receiverUid = doc[RECEIVERUID];
 
+  bool callCheck;
 
+  startCallCheck(){
+    this.callCheck = true;
+    var sec = Duration(seconds: 5);
+    Timer.periodic(sec, (timer)=>{
+      if(!this.callCheck){
+        timer.cancel()
+      } else {
+        callService.checkCall(this.receiverUid).then((value)=>{
+          print(value.callerUid)
+        })
+      }
+    });
+
+  }
+  stopCallCheck(){
+    this.callCheck = false;
+  }
 }

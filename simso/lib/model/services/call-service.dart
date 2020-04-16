@@ -16,17 +16,19 @@ class CallService extends ICallService {
   }
 
   @override
-  Future<bool> checkCall(UserModel thisUser) async {
+  Future<Call> checkCall(String thisUser) async {
     try {
       var document = await Firestore.instance
           .collection(Call.CALLLOG)
-          .where(Call.RECEIVERUID, isEqualTo: thisUser.uid)
+          .where(Call.RECEIVERUID, isEqualTo: thisUser)
           .getDocuments();
-      if (document.documents.isEmpty) {
-        return false;
-      } else {
-        return true;
+      Call call;
+      if (document.documents.isNotEmpty) {
+        document.documents.forEach((doc)=>{
+          call = Call.deserialize(doc.data)
+        });
       }
+      return call; 
     } catch (e) {
       print(e);
       return null;

@@ -3,6 +3,6 @@ import 'package:simso/model/entities/user-model.dart';
 
 abstract class ICallService {
   void addCall(Call thisCall);
-  Future<bool> checkCall(UserModel thisUser);
+  Future<Call> checkCall(String thisUser);
   void deleteCall(Call thisCall);
 }
