@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:simso/controller/mainChatPage-controller.dart';
+import 'package:simso/model/entities/myfirebase.dart';
 import 'package:simso/model/services/itouch-service.dart';
 import 'package:flutter/material.dart';
 import 'package:simso/model/services/itimer-service.dart';
@@ -35,15 +36,19 @@ class MainChatPageState extends State<MainChatPage> {
   bool publicFlag = false;      //True when public button is clicked
   bool friendFlag = false;      //True when friends button is clicked
   int currentIndex;         //Hold index on users collection in DB of current user
+  var checkUnreadList = List<bool>();
+  var checkUnreadListPublic = List<bool>();
   MainChatPageState(this.user,this.userList,this.currentIndex) {
     controller = MainChatPageController(this);
-  
+    controller.getUnreadMessages();
   }
-
+  bool checkUnread;
+  List<String> latestMessages =  List<String>();
+  List<String> latestDateTime = List<String>();
   void stateChanged(Function f) {
     setState(f);
   }
- 
+  List<bool>unread=[];
   @override
   Widget build(BuildContext context) {
     this.context = context;
@@ -52,18 +57,15 @@ class MainChatPageState extends State<MainChatPage> {
       appBar: AppBar(
         title: Text('SimSo Together'),
         backgroundColor: DesignConstants.blue,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back), 
-          onPressed: controller.backButton,
-          ),
-          
+       
       ),
       body: new Center(
+        
         child: Padding(
-          padding: const EdgeInsets.all(8.0),   //Top center raise buttin
+          padding: const EdgeInsets.all(8.0),   //Top center raise button
+          
           child: Column(  
           children: <Widget>[  
-      
           //PUBLIC MODE
        publicFlag==false?  new RaisedButton.icon(        //if...
             icon: Icon(Icons.public), 
@@ -78,9 +80,18 @@ class MainChatPageState extends State<MainChatPage> {
                ListView.builder(
                  itemCount: userList.length,
                  itemBuilder: (BuildContext context, int index){
+                   
                    return Container(
-                     padding: EdgeInsets.all(5.0),
-                     height: 100,
+                    height:100,
+                    padding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFFFFF),
+                      border: Border.all(
+                        color: DesignConstants.blue,
+                        width: 4,
+                      ),
+                      borderRadius: BorderRadius.circular(30),
+                    ),   
                     child: 
                     ListTile(
                           leading: CachedNetworkImage(
@@ -94,10 +105,12 @@ class MainChatPageState extends State<MainChatPage> {
                                children: <Widget>[
                                 Text(userList[index].email),
                                 Text(userList[index].city == null ? '': userList[index].city),
-                                        
+                                checkUnreadListPublic.length == userList.length ?
+                                checkUnreadListPublic[index]==false ? Text('') : Text('NEW MESSAGE',style: TextStyle(color:DesignConstants.red),)
+                                : Text('') 
                               ],
                             ),
-                            onTap: ()=>controller.onTap(index),
+                            onTap: ()=>controller.onTapPublishMode(index),
                           )
                           
                           );
@@ -105,57 +118,83 @@ class MainChatPageState extends State<MainChatPage> {
                  )),
            //-----------------------------------------------------------------------
           //FRIEND MODE
-            friendFlag == false ? 
+           
+            friendFlag == true && friendList !=null  ?
+               //if friendmode is true
+            Expanded(
+              
+               child: 
+               
+               ListView.builder(
+                 itemCount: friendList.length, 
+                 itemBuilder: (BuildContext context, int index){
+                   controller.friendIndex(friendList[index].uid);
+                   
+                   return Container(
+                    height:120,
+                    padding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFFFFF),
+                      border: Border.all(
+                        color: DesignConstants.blue,
+                        width: 4,
+                      ),
+                      borderRadius: BorderRadius.circular(30),
+                    ),  
+                     
+                    child:       
+                    ListTile(
+                          leading: CachedNetworkImage(
+                            imageUrl: friendList[index].profilePic == null ? '': friendList[index].profilePic,
+                            placeholder: (context, url)=>CircularProgressIndicator(),
+                            errorWidget: (context, url, error)=> Icon(Icons.tag_faces),
+                            ),
+                            title: Text(friendList[index].username,), 
+                           
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                               children: <Widget>[
+                                Text(friendList[index].email),
+                                Text(friendList[index].city == null ? '': friendList[index].city),  
+                                checkUnreadList.length == friendList.length ?
+                                checkUnreadList[index]==false ? Text('') : Text('NEW MESSAGE',style: TextStyle(color:DesignConstants.red),)
+                                : Text('') 
+                                /*
+
+                                checkUnreadList.length == friendList.length && checkUnreadList.length == latestMessages.length ?
+                                checkUnreadList[index]==false ? Text('${latestMessages[index].substring(0,15)}...',style: TextStyle(fontStyle: FontStyle.italic,color:DesignConstants.blue),) 
+                                                                      : Text('${latestMessages[index].substring(0,15)}...',style: TextStyle(fontStyle: FontStyle.italic,color:DesignConstants.red),)
+                                : Text(''),
+
+                                checkUnreadList.length == friendList.length && checkUnreadList.length == latestDateTime.length ?
+                                checkUnreadList[index]==false ? Text('<${latestDateTime[index]}>',style: TextStyle(fontStyle: FontStyle.italic,color:DesignConstants.blue),) 
+                                                                      : Text('<${latestDateTime[index]}>',style: TextStyle(fontStyle: FontStyle.italic,color:DesignConstants.blue),)
+                                : Text('')
+                                */
+                              ],
+                          
+                            ),
+                            onTap: ()=>controller.onTapFriendMode(index),
+                          )
+                          
+                          );
+                 }
+                 )) 
+                 : //else no friends
             RaisedButton.icon(
             icon: Icon(Icons.local_florist), 
             label: Text('Friends'),
             textColor: DesignConstants.blue,
             onPressed: controller.showFriends,
-            )
-            :
-            //else
-            Expanded(
-               child: 
-               ListView.builder(
-                 itemCount: userList[currentIndex].friends.length, 
-                 itemBuilder: (BuildContext context, int index){
-                   return Container(
-                     padding: EdgeInsets.all(5.0),
-                     height: 100, 
-                    child: 
-                     
-                    ListTile(
-                          leading: CachedNetworkImage(
-                            imageUrl: userList[index].profilePic == null ? '': userList[index].profilePic,
-                            placeholder: (context, url)=>CircularProgressIndicator(),
-                            errorWidget: (context, url, error)=> Icon(Icons.tag_faces),
-                            ),
-                            title: Text(userList[index].username,), 
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                               children: <Widget>[
-                                Text(userList[index].email),
-                                Text(userList[index].city == null ? '': userList[index].city),        
-                              ],
-                            ),
-                            onTap: ()=>controller.onTap(index),
-                          )
-                          
-                          );
-                 }
-                 )),
-          //-----------------------------------------------------------------------
+            ),
           
           
-          ],
-      
+          //-----------------------------------------------------------------------   
+          ]    
       ),
         ),
         
-      )
-     
-     
-      
+      )   
     );
-}
+  }
 }

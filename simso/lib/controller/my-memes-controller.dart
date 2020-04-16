@@ -55,7 +55,7 @@ class MyMemesController {
     await Navigator.push(
         state.context,
         MaterialPageRoute(
-          builder: (context) => ProfilePage(state.user, visit
+          builder: (context) => ProfilePage(state.user, null, visit
               //myKeywords,
               ),
         ));

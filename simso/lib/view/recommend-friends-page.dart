@@ -51,6 +51,7 @@ class RecommendFriendsState extends State<RecommendFriends> {
             }
             userList = snapshot.data ?? [];
             if (userList.isNotEmpty) {
+              
               userList = _recommendFunction(userList);
             }
             return ListView.builder(
