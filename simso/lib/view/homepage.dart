@@ -428,7 +428,7 @@ class HomepageState extends State<Homepage> {
   }
 
   void myFriendsRequest() async {
-    print('myFriendRequest() called');
+   
     List<FriendRequests> friendRequests =
         await friendService.getFriendRequests(user.friendRequestRecieved);
     Navigator.push(

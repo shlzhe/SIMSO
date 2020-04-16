@@ -109,8 +109,7 @@ class _FriendPageState extends State<FriendPage> {
 
 void init() async {
   
-    friend2 =  await friendService.getFriends(state.userModel.friends);
-    
+    friend2 =  await friendService.getFriends(userModel.friends);
   }
 
 

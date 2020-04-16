@@ -124,7 +124,7 @@ class FriendService extends IFriendService {
         throw e;
       }
     }
-    print(friends);
+    
     return friends;
   }
 
@@ -156,7 +156,7 @@ class FriendService extends IFriendService {
       }
       
     }
-    print(friendRequestList);
+   
   return friendRequests;
   
   }
