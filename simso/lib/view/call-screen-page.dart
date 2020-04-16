@@ -1,16 +1,20 @@
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
+import 'package:simso/model/entities/call-model.dart';
+import 'package:simso/model/services/icall-service.dart';
 
 import '../model/entities/api-constants.dart';
 import '../model/entities/user-model.dart';
+import '../service-locator.dart';
 
 class CallScreenPage extends StatefulWidget {
   UserModel callerUser, receiverUser;
   bool videoCall;
-  CallScreenPage(this.callerUser, this.receiverUser, this.videoCall);
+  Call call;
+  CallScreenPage(this.callerUser, this.receiverUser, this.videoCall,this.call);
   @override
   State<StatefulWidget> createState() {
-    return CallScreenPageState(callerUser, receiverUser, videoCall);
+    return CallScreenPageState(callerUser, receiverUser, videoCall,call);
   }
 }
 
@@ -18,12 +22,16 @@ class CallScreenPageState extends State<CallScreenPage> {
   UserModel callerUser, receiverUser;
   bool videoCall;
   String _channel;
+  ICallService callService = locator<ICallService>();
+  Call call;
   static final _users = <int>[];
   bool muted = false;
-  CallScreenPageState(this.callerUser, this.receiverUser, this.videoCall);
+
+  CallScreenPageState(this.callerUser, this.receiverUser, this.videoCall,this.call);
 
   @override
   void dispose() {
+    callService.deleteCall(call);
     // clear users
     _users.clear();
     // destroy sdk

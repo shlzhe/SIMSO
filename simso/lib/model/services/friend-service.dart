@@ -3,7 +3,6 @@ import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/model/services/ifriend-service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:simso/model/entities/friendRequest-model.dart' ;
-import 'package:simso/model/services/ifriend-service.dart';
 
 
 class FriendService extends IFriendService {
@@ -22,6 +21,7 @@ class FriendService extends IFriendService {
       } else {
         query.documents
             .forEach((doc) => {userList.add(UserModel.deserialize(doc.data))});
+            
         return userList;
       }
     } catch (e) {
