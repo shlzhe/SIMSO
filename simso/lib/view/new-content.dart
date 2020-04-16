@@ -12,9 +12,8 @@ import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/model/services/iuser-service.dart';
 import 'package:simso/service-locator.dart';
 import 'package:simso/view/design-constants.dart';
-import 'package:simso/view/homepage.dart';
 import 'package:simso/view/profile-page.dart';
-import 'package:audioplayers/audioplayers.dart';
+
 import 'emoji-container.dart';
 import 'music-feed.dart';
 
@@ -28,7 +27,6 @@ class NewContentPage extends StatefulWidget {
 }
 
 class NewContentPageState extends State<NewContentPage> {
-  HomepageState state1;
   UserModel user;
   NewContentPageController controller;
   BuildContext context;
@@ -39,25 +37,17 @@ class NewContentPageState extends State<NewContentPage> {
   bool thoughts = true;
   bool friends = false;
   bool visit = false;
-  bool play = false;
-  bool pause = true;
-  bool leave = false;
   List<Thought> publicThoughtsList = [];
   List<SongModel> songsList = [];
   List<Meme> memesList = [];
   List<ImageModel> imageList = [];
   List<UserModel> allUsersList = [];
   List<SongModel> allSongsList = [];
-  String returnedID;
-  String tempSongUrl;
-  String playerId = "";
 
   gotoProfile(String uid) async {
     UserModel visitUser = await userService.readUser(uid);
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ProfilePage(user, visitUser, true)));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => ProfilePage(user, visitUser, true)));
   }
 
   void stateChanged(Function f) {
@@ -71,42 +61,9 @@ class NewContentPageState extends State<NewContentPage> {
   @override
   Widget build(BuildContext context) {
     this.context = context;
-    if (music == false || leave == true) {
-      play = false;
-      pause = true;
-      playerId = "";
-      tempSongUrl = null;
-      if (controller.audioPlayer != null) {
-        controller.audioPlayer.stop();
-        controller.audioPlayer.release();
-        //print("PLAYER DEACTIVATED");
-      } else {
-        controller.audioPlayer.stop();
-        controller.audioPlayer.release();
-        controller.audioPlayer = null;
-        tempSongUrl = null;
-      }
-      setState(() {
-        leave = false;
-      });
-    } else {}
     return Scaffold(
       backgroundColor: music ? Colors.black : Colors.white,
       appBar: AppBar(
-        leading: music
-            ? IconButton(
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  setState(() {
-                    leave = true;
-                  });
-                  Navigator.of(context).pop();
-                },
-              )
-            : null,
         title: Text(
           !thoughts && !meme && !snapshots && !music
               ? 'New Content'
@@ -342,7 +299,7 @@ class NewContentPageState extends State<NewContentPage> {
                                                                             setState(() {
                                                                               visit = true;
                                                                             });
-                                                                            gotoProfile(users.uid);
+                                                                           gotoProfile(users.uid);
                                                                           },
                                                                         )
                                                                   : users.uid ==
@@ -360,7 +317,7 @@ class NewContentPageState extends State<NewContentPage> {
                                                                             setState(() {
                                                                               visit = false;
                                                                             });
-                                                                            gotoProfile(user.uid);
+                                                                          gotoProfile(user.uid);
                                                                           },
                                                                         )
                                                                       : FlatButton(
@@ -376,7 +333,7 @@ class NewContentPageState extends State<NewContentPage> {
                                                                             setState(() {
                                                                               visit = true;
                                                                             });
-                                                                            gotoProfile(users.uid);
+                                                                          gotoProfile(users.uid);
                                                                           },
                                                                         )
                                                             ],
@@ -467,19 +424,7 @@ class NewContentPageState extends State<NewContentPage> {
                                       constraints:
                                           BoxConstraints.expand(height: 300),
                                       child: FlatButton(
-                                        onPressed: () {
-                                          play == false && pause == true
-                                              ? setState(() {
-                                                  controller.playFunc(
-                                                    allSongsList[index].songURL,
-                                                  );
-                                                })
-                                              : setState(() {
-                                                  controller.pauseFunc(
-                                                    allSongsList[index].songURL,
-                                                  );
-                                                });
-                                        },
+                                        onPressed: () {},
                                         padding: EdgeInsets.all(0.0),
                                         child: CachedNetworkImage(
                                           imageUrl: allSongsList[index].artWork,
@@ -534,14 +479,11 @@ class NewContentPageState extends State<NewContentPage> {
                                     child: Row(
                                       children: <Widget>[
                                         Text(
-                                          DateFormat("HH:mm MMM dd yyyy")
-                                              .format(allSongsList[index]
-                                                  .lastUpdatedAt),
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            color: Colors.grey,
-                                          ),
-                                        ),
+                                            '${allSongsList[index].lastUpdatedAt}',
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              color: Colors.grey,
+                                            ))
                                       ],
                                     ),
                                   ),
