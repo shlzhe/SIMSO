@@ -10,6 +10,7 @@ import '../view/mydialog.dart';
 import '../view/homepage.dart';
 import '../view/edit-thought-page.dart';
 import '../view/my-thoughts-page.dart';
+import '../view/profile-page.dart';
 
 class EditThoughtController {
   EditThoughtPageState state;
@@ -35,6 +36,7 @@ class EditThoughtController {
     print('deleting thought docid' + state.thought.thoughtId);
     try {
       _thoughtService.deleteThought(state.thought.thoughtId);
+
       List<Thought> myThoughtsList =
           await _thoughtService.getThoughts(state.user.uid.toString());
       await Navigator.push(
@@ -86,17 +88,5 @@ class EditThoughtController {
           });
     }
   }
-
-  //keep void entry function below, I liked this snippet of code but can't remember why right now
-  /*
-    void entry(String newValue) {
-      print("entry(" + newValue + ") called.");
-    if (newValue!=null){
-      state.entry = true;
-    }
-    if (newValue=='') state.entry = false;
-    state.stateChanged((){});
-  }
-  */
 
 }
