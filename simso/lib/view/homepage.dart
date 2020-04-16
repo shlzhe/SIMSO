@@ -193,6 +193,14 @@ class HomepageState extends State<Homepage> {
               IconButton(
                 onPressed: controller.newContent,
                 icon: Icon(
+                  Icons.public,
+                  size: 25,
+                ),
+                color: DesignConstants.yellow,
+              ),
+              IconButton(
+                onPressed: controller.searchContent,
+                icon: Icon(
                   Icons.search,
                   size: 25,
                 ),

@@ -9,7 +9,7 @@ import '../controller/my-thoughts-controller.dart';
 
 class MyThoughtsPage extends StatefulWidget {
   final UserModel user;
-  List<Thought> myThoughtsList;
+  final List<Thought> myThoughtsList;
 
   MyThoughtsPage(this.user, this.myThoughtsList);
 

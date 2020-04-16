@@ -43,44 +43,6 @@ class EditThoughtPageState extends State<EditThoughtPage> {
   @override
   Widget build(BuildContext context) {
     this.context = context;
-    var childButtons = List<UnicornButton>();
-
-    childButtons.add(
-      UnicornButton(
-        hasLabel: true,
-        labelText: "Save",
-        labelFontSize: 10,
-        currentButton: FloatingActionButton(
-          heroTag: "Save",
-          backgroundColor: DesignConstants.blueLight,
-          mini: true,
-          child: Icon(
-            Icons.save,
-            color: Colors.white,
-          ),
-          onPressed: controller.save,
-        ),
-      ),
-    );
-
-
-    childButtons.add(
-      UnicornButton(
-        hasLabel: true,
-        labelText: "Delete",
-        labelFontSize: 10,
-        currentButton: FloatingActionButton(
-          heroTag: "Delete",
-          backgroundColor: DesignConstants.red,
-          mini: true,
-          child: Icon(
-            Icons.delete_forever,
-            color: Colors.white,
-          ),
-          onPressed: controller.deleteThought,
-        ),
-      ),
-    );
     return Scaffold(
         floatingActionButton: UnicornDialer(
         backgroundColor: Colors.transparent,

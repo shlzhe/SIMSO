@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:unicorndial/unicorndial.dart';
+import 'package:unicorndial/unicorndial.dart'; //add in save icon as unicorn button
 import '../model/entities/user-model.dart';
 import '../model/entities/thought-model.dart';
 import '../view/design-constants.dart';
@@ -39,18 +39,8 @@ class AddThoughtPageState extends State<AddThoughtPage> {
 
   @override
   Widget build(BuildContext context) {
-    this.context = context;
-
-    
- 
-
-      
+    this.context = context; 
     return Scaffold(
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.save, color: Colors.white,),
-          backgroundColor: DesignConstants.blueLight,
-          onPressed: controller.save,
-        ),
         appBar: AppBar(
           title: Text(
             'Add a Thought',
