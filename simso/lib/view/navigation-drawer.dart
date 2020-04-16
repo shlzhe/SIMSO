@@ -133,7 +133,7 @@ class MyDrawer extends StatelessWidget {
     List<Friend> friends = await friendService.getFriends(user.friends);
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => FriendPage(user, friends)));
-    checkLimits();
+   checkLimits();
   }
 
   void recommendFriends() async {

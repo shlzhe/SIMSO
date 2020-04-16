@@ -8,6 +8,7 @@ import 'package:simso/model/entities/thought-model.dart';
 import 'package:simso/model/services/ilimit-service.dart';
 import 'package:simso/model/services/ipicture-service.dart';
 import 'package:simso/model/services/itouch-service.dart';
+import 'package:simso/view/friends-page.dart';
 import 'package:simso/view/navigation-drawer.dart';
 import 'package:simso/view/profile-page.dart';
 import 'package:unicorndial/unicorndial.dart';
@@ -27,7 +28,7 @@ import 'emoji-container.dart';
 class Homepage extends StatefulWidget {
   final UserModel user;
   final List<SongModel> songlist;
-
+   
   Homepage(this.user, this.songlist);
 
   @override
@@ -59,6 +60,7 @@ class HomepageState extends State<Homepage> {
   String returnedID;
   var idController = TextEditingController();
   var formKey = GlobalKey<FormState>();
+  HomepageState state;
 
   HomepageState(this.user) {
     controller = HomepageController(this, this.timerService, this.touchService,
