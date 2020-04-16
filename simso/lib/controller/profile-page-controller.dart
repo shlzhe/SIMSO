@@ -5,7 +5,6 @@ import '../view/profile-page.dart';
 import '../view/account-setting-page.dart';
 import '../view/mainChat-page.dart';
 import '../view/visit-thoughts-page.dart';
-import '../view/visit-memes-page.dart';
 import '../view/my-thoughts-page.dart';
 import '../view/my-snapshot-page.dart';
 import '../view/my-memes-page.dart';
@@ -39,7 +38,7 @@ class ProfilePageController {
   List<SongModel> songList = new List<SongModel>();
   String userID;
   final ISongService _songService = locator<ISongService>();
-  final IMemeService _memeService = locator<IMemeService>();
+  final IMemeService memeService = locator<IMemeService>();
   final IImageService _imageService = locator<IImageService>();
   final IThoughtService _thoughtService = locator<IThoughtService>();
   final bool visit = false;
@@ -127,41 +126,14 @@ class ProfilePageController {
         }
       }
     }
-    if (index == 1) {  //Meme
-      List<Meme> memesList = [];
-
-      if (state.currentUser.uid == state.visitUser.uid ||
-          state.visitUser == null) {
-        //user wants to visit their own memes
-        try {
-          memesList =
-              await _memeService.getMemes(state.currentUser.uid);
-          Navigator.push(
-              state.context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      MyMemesPage(state.currentUser, memesList)));
-        } catch (e) {
-          print(e);
-        }
-      } else {
-        //user wants to visit another person's memes
-        try {
-          memesList = await _memeService.getMemes(state.visitUser.uid);
-
-          // for (Meme meme in memesList) {
-          //   meme.text = await _memeService.translateThought(
-          //       state.currentUser.language, thought.text);
-          // }
-
-          Navigator.push(
-              state.context,
-              MaterialPageRoute(
-                  builder: (context) => VisitMemesPage(currentUser, visitUser, memesList)));
-        } catch (e) {
-          print(e);
-        }
-      }
+    if (index == 1) {
+      List<Meme> myMemesList =
+          await memeService.getMemes(visitUser.uid.toString());
+      Navigator.push(
+          state.context,
+          MaterialPageRoute(
+              builder: (context) => MyMemesPage(state.visitUser, myMemesList)));
+      checkLimits();
     }
     if (index == 2) {
       List<ImageModel> imagelist;
