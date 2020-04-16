@@ -1,36 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../model/entities/user-model.dart';
 import '../model/entities/meme-model.dart';
+import '../model/entities/user-model.dart';
 import '../view/design-constants.dart';
-import '../controller/my-memes-controller.dart';
+import '../controller/visit-memes-controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class MyMemesPage extends StatefulWidget {
-  final UserModel user;
-  final List<Meme> myMemesList;
+class VisitMemesPage extends StatefulWidget {
+  final UserModel currentUser;
+  final UserModel visitUser;
+  List<Meme> visitMemesList;
 
-  MyMemesPage(this.user, this.myMemesList);
+  VisitMemesPage(this.currentUser, this.visitUser, this.visitMemesList);
 
   @override
   State<StatefulWidget> createState() {
-    return MyMemesPageState(user, myMemesList);
+    return VisitMemesPageState(currentUser, visitUser, visitMemesList);
   }
 }
 
-class MyMemesPageState extends State<MyMemesPage> {
+class VisitMemesPageState extends State<VisitMemesPage> {
   BuildContext context;
-  MyMemesController controller;
+  VisitMemesController controller;
+  UserModel currentUser;
+  UserModel visitUser;
 
-  UserModel user;
-  List<Meme> myMemesList;
-
-  //bool entry = false; //keep, there was something I liked about this snippet of code from Hiep
-
+  List<Meme> visitMemesList;
   var formKey = GlobalKey<FormState>();
 
-  MyMemesPageState(this.user, this.myMemesList) {
-    controller = MyMemesController(this);
+  VisitMemesPageState(this.currentUser, this.visitUser, this.visitMemesList) {
+    controller = VisitMemesController(this);
   }
 
   void stateChanged(Function f) {
@@ -40,15 +39,11 @@ class MyMemesPageState extends State<MyMemesPage> {
   @override
   Widget build(BuildContext context) {
     this.context = context;
+
     return Scaffold(
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: controller.addMeme,
-          backgroundColor: DesignConstants.blue
-          ),
         appBar: AppBar(
           title: Text(
-            'My Memes',
+            visitUser.username + "'s Memes",
             style: TextStyle(
                 fontFamily: 'Quicksand',
                 fontSize: 30.0,
@@ -56,31 +51,25 @@ class MyMemesPageState extends State<MyMemesPage> {
           ),
           backgroundColor: DesignConstants.blue,
         ),
-        //drawer: MyDrawer(context, user),
         body: ListView.builder(
-            itemCount: myMemesList == null ? 0 : myMemesList.length,
+            itemCount: visitMemesList == null ? 0 : visitMemesList.length,
             itemBuilder: (BuildContext context, int index) {
-              if (myMemesList != null) {
+              if (visitMemesList != null) {
                 return Container(
                   child: Column(
                     children: <Widget>[
                       ListTile(
                           leading: CircleAvatar(
                             backgroundImage: CachedNetworkImageProvider(
-                                myMemesList[index].ownerPic),
+                                visitMemesList[index].ownerPic),
                             backgroundColor: Colors.grey,
                           ),
-                          title:Text(myMemesList[index].ownerName),
+                          title: Text(visitMemesList[index].ownerName),
                           subtitle: Text(DateFormat("MMM dd-yyyy 'at' HH:mm:ss")
-                              .format(myMemesList[index].timestamp)),
-                          trailing: GestureDetector(
-                            child: const Icon(Icons.edit),
-                            onTap: () => controller.onTapMeme(
-                                myMemesList, index),
-                          )
+                              .format(visitMemesList[index].timestamp)),
                           ),
                         CachedNetworkImage(
-                        imageUrl: myMemesList[index].imgUrl,
+                        imageUrl: visitMemesList[index].imgUrl,
                         fit: BoxFit.fitWidth,
                         placeholder: (context, url) =>
                             CircularProgressIndicator(),
@@ -94,9 +83,4 @@ class MyMemesPageState extends State<MyMemesPage> {
                 return null;
             }));
   }
-
-  Container loadingPlaceHolder = Container(
-    height: 400.0,
-    child: Center(child: CircularProgressIndicator()),
-  );
 }

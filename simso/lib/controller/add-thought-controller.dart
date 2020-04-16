@@ -10,6 +10,7 @@ import '../view/mydialog.dart';
 import '../view/homepage.dart';
 import '../view/add-thought-page.dart';
 import '../view/my-thoughts-page.dart';
+import '../view/profile-page.dart';
 
 class AddThoughtController {
   AddThoughtPageState state;
@@ -58,6 +59,7 @@ class AddThoughtController {
           MaterialPageRoute(
             builder: (context) => MyThoughtsPage(state.user, myThoughtsList),
           ));
+      Navigator.pop(state.context);
       Navigator.pop(state.context);
     } catch (e) {
       MyDialog.info(
