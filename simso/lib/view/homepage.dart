@@ -25,6 +25,7 @@ import '../model/entities/friendRequest-model.dart';
 import 'package:simso/model/services/ifriend-service.dart';
 import 'package:simso/view/notification-page.dart';
 import 'emoji-container.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class Homepage extends StatefulWidget {
   final UserModel user;
@@ -52,7 +53,9 @@ class HomepageState extends State<Homepage> {
   bool thoughts = true;
   bool friends = true;
   bool visit = false;
-  bool play = true;
+  bool play = false;
+  bool pause = true;
+  bool leave = false;
   List<Thought> friendsThoughtsList =
       []; //changed variable name because this is the friends thought list not the public one
   HomepageController controller;
@@ -63,10 +66,9 @@ class HomepageState extends State<Homepage> {
   List<SongModel> allSongsList = [];
   List<UserModel> allUsersList = [];
   List<Meme> memesList;
-  int result;
   String returnedID;
   String tempSongUrl;
-  String playerId;
+  String playerId = "";
   var idController = TextEditingController();
   var formKey = GlobalKey<FormState>();
   List<Message> unreadMessage;
@@ -94,6 +96,25 @@ class HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     this.context = context;
+    if (music == false || leave == true) {
+      play = false;
+      pause = true;
+      playerId = "";
+      tempSongUrl = null;
+      if (controller.audioPlayer != null) {
+        controller.audioPlayer.stop();
+        controller.audioPlayer.release();
+        //print("PLAYER DEACTIVATED");
+      } else {
+        controller.audioPlayer.stop();
+        controller.audioPlayer.release();
+        controller.audioPlayer = null;
+        tempSongUrl = null;
+      }
+      setState(() {
+        leave = false;
+      });
+    } else {}
     var childButtons = List<UnicornButton>();
    final IconButton messageIcon = IconButton(
                     icon: Icon(Icons.textsms),
@@ -597,11 +618,17 @@ class HomepageState extends State<Homepage> {
                                           BoxConstraints.expand(height: 300),
                                       child: FlatButton(
                                         onPressed: () {
-                                          setState(() {
-                                            controller.playpause(
-                                                allSongsList[index].songURL,
-                                                play);
-                                          });
+                                          play == false && pause == true
+                                              ? setState(() {
+                                                  controller.playFunc(
+                                                    allSongsList[index].songURL,
+                                                  );
+                                                })
+                                              : setState(() {
+                                                  controller.pauseFunc(
+                                                    allSongsList[index].songURL,
+                                                  );
+                                                });
                                         },
                                         padding: EdgeInsets.all(0.0),
                                         child: CachedNetworkImage(
@@ -657,11 +684,14 @@ class HomepageState extends State<Homepage> {
                                     child: Row(
                                       children: <Widget>[
                                         Text(
-                                            '${allSongsList[index].lastUpdatedAt}',
-                                            style: TextStyle(
-                                              fontSize: 11,
-                                              color: Colors.grey,
-                                            ))
+                                          DateFormat("HH:mm MMM dd yyyy")
+                                              .format(allSongsList[index]
+                                                  .lastUpdatedAt),
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
