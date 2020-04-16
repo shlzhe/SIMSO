@@ -51,7 +51,6 @@ class EditThoughtPageState extends State<EditThoughtPage> {
         parentButton: Icon(
           Icons.add,
         ),
-        childButtons: childButtons,
       ),
         appBar: AppBar(
           title: Text(

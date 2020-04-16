@@ -96,9 +96,6 @@ class _FriendPageState extends State<FriendPage> {
                         var mySnackbar =
                             SnackBar(content: Text("..."));
                         Scaffold.of(context).showSnackBar(mySnackbar); 
-                         setState(() {
-                       widget.friends.removeAt(index);
-                   });
                      },
                      
                     );
@@ -121,7 +118,7 @@ void init() async {
 void navigateProfile(String uid) async {
    UserModel goToUser = await userService.readUser(uid);
     Navigator.push(context, MaterialPageRoute(
-      builder: (context) => ProfilePage(goToUser, true)
+      builder: (context) => ProfilePage(this.userModel2, goToUser, true)
     ));
     
   }
@@ -159,7 +156,10 @@ void navigateProfile(String uid) async {
 
 Future<void> _deleteFriend(Friend friendUser) async {
     friendService.deleteFriend(widget.userModel, friendUser);
-     }
+    setState(() {
+        widget.friends.remove(friendUser);
+    });
+  }
 
 }
 
