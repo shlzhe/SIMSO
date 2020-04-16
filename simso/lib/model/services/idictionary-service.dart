@@ -13,4 +13,5 @@ abstract class IDictionaryService {
   //Future<List<Thought>> searchDictionaryWord(String word); //add in whatever else I can search for, music?
   Future<bool> wordInDictionary(String searchWord);
   Future<DictionaryWord> getWordDocument(String searchWord);
+  Future<void> searchTermRetrieval(String searchTerm);
 }

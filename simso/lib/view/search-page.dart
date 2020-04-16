@@ -91,7 +91,7 @@ class SearchPageState extends State<SearchPage> {
                       'Search',
                       style: TextStyle(fontSize: 22.0, color: Colors.grey[900]),
                     ),
-                    onPressed: controller.save,
+                    onPressed: controller.search,
                     padding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                     shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(18.0),
