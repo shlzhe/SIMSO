@@ -58,7 +58,7 @@ class PersonalChatPageController {
     //GET ALL MESSAGES WITH SENDER = CURRENT USER UID
     
       //Create a Collecion where sender is current user ONLY
-      print('(Personal Chat Testing $i:${filteredMessages[i].text}');
+      //print('(Personal Chat Testing $i:${filteredMessages[i].text}');
 
     
   }
@@ -107,7 +107,7 @@ class PersonalChatPageController {
     }
     return null;
   }
-
+  var myFriends = <UserModel>[]; 
   Future<void> saveTextMessage(String newValue) async {  //newValue is validated input text msg
     print('saveTextMessage() called');
     
@@ -150,6 +150,28 @@ class PersonalChatPageController {
       unread: true
     );
     await messageService.addMessage(message);
+   try {
+      userList = await MyFirebase.getUsers();
+    } catch (e) {
+      throw e.toString();
+    }
+      state.userList=List.from(userList);
+
+      //DESERIALIZE FRIENDS DATA AND STORE IN A LIST<USERMODEL> ARRAY------------------
+     
+      for(int i = 0; i< state.user.friends.length; i++){
+        QuerySnapshot querySnapshot = await Firestore.instance.collection('users')
+        .where('UID',isEqualTo: state.user.friends[i])
+        .getDocuments();
+        for (DocumentSnapshot doc in querySnapshot.documents){
+              myFriends.add(UserModel.deserialize(doc.data));
+         }
+      }
+        //Update myFriends in UI
+  
+                state.stateChanged((){
+                  state.friendList=List.from(myFriends);
+                });
    //****************************************/
     //UPDATE FILTEREDMESSAGE
     try {
@@ -168,7 +190,65 @@ class PersonalChatPageController {
      print('[personal chat UI]: ${state.filteredMessages[i].text}');
    }
 
+   //Change all received messages to unread=false
+   await MyFirebase.updateUnreadMessage(state.user.uid, state.userList[state.index].uid);
+
   }
 
-  
+  favMessage(Message message) async {
+    print('favMessage clicked');
+    //Update message 
+    await messageService.updateFavorite(message);
+    //Retrieve filteredMessages and update its value on UI
+    var updatedFilteredMsg = await messageService.getFilteredMessages(state.user.uid, state.userList[state.index].uid);
+    state.stateChanged((){
+       state.filteredMessages=List.from(updatedFilteredMsg);
+    });
+    
+  }
+
+
+  Future<void> checkAllRead() async {
+    //Showing toast message
+    Fluttertoast.showToast(
+      msg: "All meassages are read",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIos: 1,
+      backgroundColor: DesignConstants.red,
+      textColor: DesignConstants.yellow,
+      fontSize: 16,
+    );
+   
+     //Change all received messages to unread=false
+   await MyFirebase.updateUnreadMessage(state.user.uid, state.userList[state.index].uid);
+  }
+
+
+
+  Future<void> backToMainChat() async {
+   //Retrieve all SimSo users
+    try {
+      //Stuff in userList
+      userList = await MyFirebase.getUsers();
+    } catch (e) {
+      throw e.toString();
+    }
+
+    //Find current index of current user
+    int currentIndex = 0;
+    for (int i = 0; i < userList.length; i++) {
+      if (userList[i].uid == state.user.uid) //Found index of current user
+      {
+        currentIndex = i;
+        break;
+      } else
+        currentIndex++;
+    }
+     if(state.publicFlag!=false)
+    {  
+      
+
+  }}
+
 }

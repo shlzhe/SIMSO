@@ -1,6 +1,7 @@
 import 'package:simso/model/entities/thought-model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:simso/model/entities/user-model.dart';
+import 'package:simso/model/entities/dictionary-word-model.dart';
 import 'package:simso/service-locator.dart';
 import 'ithought-service.dart';
 import 'idictionary-service.dart';
@@ -22,7 +23,7 @@ class ThoughtService extends IThoughtService {
       return null;
     });
 
-    _dictionaryService.updateDictionary(thought, null, null);
+    _dictionaryService.updateDictionary(thought);
   }
 
   @override
@@ -34,17 +35,18 @@ class ThoughtService extends IThoughtService {
     //return ref.documentID;
     //get dictionary
 
-    _dictionaryService.updateDictionary(thought, null, null);
+    _dictionaryService.updateDictionary(thought);
   }
 
   @override
   Future<List<Thought>> getThoughts(String uid) async {
+    print("getThoughts called");
     var myThoughtsList = <Thought>[];
     try {
       QuerySnapshot querySnapshot = await Firestore.instance
           .collection(Thought.THOUGHTS_COLLECTION)
           .where(Thought.UID, isEqualTo: uid)
-          .orderBy(Thought.TIMESTAMP)
+          .orderBy(Thought.TIMESTAMP, descending: true)
           .getDocuments();
       if (querySnapshot == null || querySnapshot.documents.length == 0) {
         var newThought = Thought(
@@ -69,30 +71,31 @@ class ThoughtService extends IThoughtService {
           .collection(Thought.THOUGHTS_COLLECTION)
           .document(docID)
           .delete();
+
+      _dictionaryService.removeDictionaryRef(docID);
     } catch (e) {
       throw e;
     }
+    
   }
 
   @override
   Future<List<Thought>> contentThoughtList(
-      bool friends, UserModel user, String langPref) async {
+      bool friends, UserModel user) async {
     var data = <Thought>[];
     var friendsThoughtList = <Thought>[];
     try {
       QuerySnapshot querySnapshot = await Firestore.instance
           .collection(Thought.THOUGHTS_COLLECTION)
-          .orderBy(Thought.TIMESTAMP)
+          .orderBy(Thought.TIMESTAMP, descending: true)
           .getDocuments();
-      for (DocumentSnapshot doc in querySnapshot.documents) {
-        Thought newThought = Thought.deserialize(doc.data, doc.documentID);
-        if (langPref != 'none' && langPref != null) {
-          newThought.text =
-              await translator.translate(newThought.text, to: langPref);
-        }
-        data.add(newThought);
+
+      for (DocumentSnapshot doc in querySnapshot.documents){
+        data.add(Thought.deserialize(doc.data, doc.documentID));
       }
+
       data.removeWhere((element) => element.uid == user.uid.toString());
+      
       if (!friends) {
         //new content remove friends content
         try {
@@ -119,4 +122,13 @@ class ThoughtService extends IThoughtService {
       return data;
     }
   }
+
+       @override
+    Future<String> translateThought(String langPref, String text) async {
+        if (langPref != 'none' && langPref != null) {
+          text =
+              await translator.translate(text, to: langPref);
+        }
+        return text;
+      }
 }

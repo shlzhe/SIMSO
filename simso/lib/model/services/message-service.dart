@@ -40,7 +40,7 @@ class MessageService implements IMessageService {
     Message tempMessage;
     var currentDateTime;
     var nextDateTime;
-    List<StringSink> dateTimes;
+    List<String> dateTimes;
     //SORTED FILTEREDMESSAGES BASED ON COUNTER
    
     filteredMessages.sort((a,b){
@@ -52,7 +52,7 @@ class MessageService implements IMessageService {
 
 
     for(int i=0; i<filteredMessages.length -1 ; i++) {
-      print('BEFORE: ' + '${filteredMessages[i].time}');
+      //print('BEFORE: ' + '${filteredMessages[i].time}');
       tempMessage=null;
       currentDateTime = new DateFormat('MM-dd-yyyy - HH:mm:ss').parse(filteredMessages[i].time);
       nextDateTime  = new DateFormat('MM-dd-yyyy - HH:mm:ss').parse(filteredMessages[i+1].time);
@@ -92,7 +92,27 @@ class MessageService implements IMessageService {
         return null;
       });
   }
+
+
+  @override
+  Future<void> updateFavorite(Message message) async {
+    //Get document ID of favored message 
+    QuerySnapshot querySnapshot = await Firestore.instance
+        .collection('messages')
+        .where('sender', isEqualTo: message.sender)
+        .where('receiver', isEqualTo: message.receiver)
+        .where('time', isEqualTo: message.time)
+        .getDocuments();
+    for (DocumentSnapshot doc in querySnapshot.documents) {
+      if(message.isLike == true)
+      Firestore.instance.collection('messages').document(doc.documentID).updateData({'isLike': false});
+      else
+      Firestore.instance.collection('messages').document(doc.documentID).updateData({'isLike': true});
+      
+   }
+    
+  }
   
-  
+ 
   
 }
