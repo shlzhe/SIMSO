@@ -45,7 +45,6 @@ class EditThoughtController {
             builder: (context) => MyThoughtsPage(state.user, myThoughtsList),
           ));
       Navigator.pop(state.context);
-      Navigator.pop(state.context, null);
     } catch (e) {
       MyDialog.info(
           context: state.context,
@@ -89,17 +88,5 @@ class EditThoughtController {
           });
     }
   }
-
-  //keep void entry function below, I liked this snippet of code but can't remember why right now
-  /*
-    void entry(String newValue) {
-      print("entry(" + newValue + ") called.");
-    if (newValue!=null){
-      state.entry = true;
-    }
-    if (newValue=='') state.entry = false;
-    state.stateChanged((){});
-  }
-  */
 
 }

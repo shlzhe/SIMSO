@@ -60,7 +60,7 @@ class AddThoughtController {
             builder: (context) => MyThoughtsPage(state.user, myThoughtsList),
           ));
       Navigator.pop(state.context);
-      Navigator.pop(state.context, null);
+      Navigator.pop(state.context);
     } catch (e) {
       MyDialog.info(
           context: state.context,
