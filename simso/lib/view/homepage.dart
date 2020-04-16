@@ -77,7 +77,7 @@ class HomepageState extends State<Homepage> {
     controller.setupTouchCounter();
     controller.getLimits();
     controller.thoughts();
-    controller.getUnreadMessages();
+   
   }
 
   /* //duplicate from controller
@@ -95,12 +95,12 @@ class HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     this.context = context;
     var childButtons = List<UnicornButton>();
-    final IconButton messageIcon = IconButton(
-      icon: Icon(Icons.textsms),
-      iconSize: 40,
-      onPressed: controller.mainChatScreen,
-      color: DesignConstants.yellow,
-    );
+   final IconButton messageIcon = IconButton(
+                    icon: Icon(Icons.textsms),
+                    //iconSize: 40,
+                    onPressed: controller.mainChatScreen,
+                    color: DesignConstants.yellow,
+                    );
     childButtons.add(
       UnicornButton(
         hasLabel: true,
@@ -202,30 +202,34 @@ class HomepageState extends State<Homepage> {
               Stack(
                 children: <Widget>[
                   messageIcon,
-                  Container(
-                    width: 30,
-                    height: 30,
+                  Container( 
+                    width:25,
+                    height: 25,
                     alignment: Alignment.topRight,
                     margin: EdgeInsets.only(top: 5),
                     child: Container(
-                        width: 80,
-                        height: 25,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: controller.unreadMessages == null
-                                ? DesignConstants.blue
-                                : Colors.red,
-                            border: Border.all(color: Colors.white, width: 1)),
-                        child: Padding(
-                            padding: const EdgeInsets.all(0),
-                            child: controller.unreadMessages == null
-                                ? Center(child: Text('0'))
-                                : Center(
-                                    child: Text(
-                                        controller.unreadMessages.length
-                                            .toString(),
-                                        style: TextStyle(fontSize: 15)),
-                                  ))),
+
+                      width: 50,
+                      height: 25,
+
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: controller.unreadMessages==null? DesignConstants.blue : Colors.red,
+                        border: Border.all(color:Colors.white,width:1)),
+                    
+                    child: Padding(
+                      padding: const EdgeInsets.all(0),
+                      child: 
+                      controller.unreadMessages == null ?   
+                      Center(
+                        child: Text('0')
+                      )
+                      : 
+                       Center(
+                        child: Text(controller.unreadMessages.length.toString(), style: TextStyle( fontSize:15)),
+                      )
+                    )               
+                    ),
                   )
                 ],
               ),
