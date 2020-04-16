@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:simso/model/entities/image-model.dart';
 import 'package:simso/model/entities/meme-model.dart';
@@ -9,6 +10,7 @@ import 'package:simso/model/entities/thought-model.dart';
 import 'package:simso/model/services/ilimit-service.dart';
 import 'package:simso/model/services/ipicture-service.dart';
 import 'package:simso/model/services/itouch-service.dart';
+import 'package:simso/view/music-feed.dart';
 import 'package:simso/view/navigation-drawer.dart';
 import 'package:simso/view/profile-page.dart';
 import 'package:unicorndial/unicorndial.dart';
@@ -49,38 +51,46 @@ class HomepageState extends State<Homepage> {
   bool snapshots = false;
   bool thoughts = true;
   bool friends = true;
-  List<Thought> publicThoughtsList = [];
+  bool visit = false;
+  bool play = true;
+  List<Thought> friendsThoughtsList =
+      []; //changed variable name because this is the friends thought list not the public one
   HomepageController controller;
   UserModel user;
+  List<SongModel> songs;
   List<UserModel> visitUser;
-  List<ImageModel> imageList =[];
-  List<SongModel> songlist;
+  List<ImageModel> imageList = [];
+  List<SongModel> allSongsList = [];
+  List<UserModel> allUsersList = [];
   List<Meme> memesList;
+  int result;
   String returnedID;
+  String tempSongUrl;
+  String playerId;
   var idController = TextEditingController();
   var formKey = GlobalKey<FormState>();
   List<Message> unreadMessage;
   HomepageState(this.user) {
     controller = HomepageController(this, this.timerService, this.touchService,
-        this.limitService, this.songlist);
+        this.limitService, this.allSongsList);
     controller.setupTimer();
     controller.setupTouchCounter();
     controller.getLimits();
     controller.thoughts();
    
   }
-   
+
+  /* //duplicate from controller
   gotoProfile(String uid) async {
     UserModel visitUser = await userService.readUser(uid);
     Navigator.push(context,
-        MaterialPageRoute(builder: (context) => ProfilePage(visitUser, true)));
+        MaterialPageRoute(builder: (context) => ProfilePage(user, visitUser, true)));
   }
-
+*/
   void stateChanged(Function f) {
     setState(f);
   }
 
-  
   @override
   Widget build(BuildContext context) {
     this.context = context;
@@ -162,9 +172,9 @@ class HomepageState extends State<Homepage> {
         ),
       ),
     );
-    
+
     return Scaffold(
-      
+      backgroundColor: music ? Colors.black : Colors.white,
       floatingActionButton: UnicornDialer(
         backgroundColor: Colors.transparent,
         parentButtonBackground: Colors.blueGrey[300],
@@ -174,7 +184,6 @@ class HomepageState extends State<Homepage> {
         ),
         childButtons: childButtons,
       ),
-      
       appBar: AppBar(
         title: Text('Home Page'),
         backgroundColor: DesignConstants.blue,
@@ -187,20 +196,19 @@ class HomepageState extends State<Homepage> {
                   Icons.search,
                   size: 25,
                 ),
-               
                 color: DesignConstants.yellow,
               ),
-          //=======
-          Stack(children: <Widget>[
-              
+              //=======
+              Stack(
+                children: <Widget>[
                   messageIcon,
-                   
                   Container( 
                     width:25,
                     height: 25,
                     alignment: Alignment.topRight,
-                    margin: EdgeInsets.only(top:5),
+                    margin: EdgeInsets.only(top: 5),
                     child: Container(
+
                       width: 50,
                       height: 25,
 
@@ -220,38 +228,34 @@ class HomepageState extends State<Homepage> {
                        Center(
                         child: Text(controller.unreadMessages.length.toString(), style: TextStyle( fontSize:15)),
                       )
-                    )
-                      
+                    )               
                     ),
                   )
+                ],
+              ),
 
-                 ],
-                                
-                ),
+              //=======
 
-          //=======
-          
-           IconButton(
-            icon: Icon(Icons.notifications),
-            onPressed: myFriendsRequest,
-            color: DesignConstants.yellow,
+              IconButton(
+                icon: Icon(Icons.notifications),
+                onPressed: myFriendsRequest,
+                color: DesignConstants.yellow,
+              ),
+            ],
           ),
-        ],        
-          ),
-       
         ],
       ),
       drawer: MyDrawer(context, user),
       body: thoughts
           ? ListView.builder(
-              itemCount: publicThoughtsList.length,
+              itemCount: friendsThoughtsList.length,
               itemBuilder: (BuildContext context, int index) {
                 return Container(
                   padding: EdgeInsets.all(5.0),
                   child: Container(
                     padding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFFFFFF),
+                      color: music ? Colors.black : Color(0xFFFFFFFF),
                       border: Border.all(
                         color: DesignConstants.blue,
                         width: 4,
@@ -261,18 +265,31 @@ class HomepageState extends State<Homepage> {
                     child: ListTile(
                       title: FlatButton.icon(
                           onPressed: () {
-                            gotoProfile(
-                                publicThoughtsList.elementAt(index).uid);
+                            controller.gotoProfile(
+                                friendsThoughtsList.elementAt(index).uid);
                           },
-                          icon: Image.network(
-                            publicThoughtsList.elementAt(index).profilePic,
-                            scale: 10,
-                          ),
+                          icon: friendsThoughtsList
+                                      .elementAt(index)
+                                      .profilePic !=
+                                  ''
+                              ? Builder(builder: (BuildContext context) {
+                                  try {
+                                    return Container(
+                                        width: 35,
+                                        height: 35,
+                                        child: Image.network(friendsThoughtsList
+                                            .elementAt(index)
+                                            .profilePic));
+                                  } on PlatformException {
+                                    return Icon(Icons.error_outline);
+                                  }
+                                })
+                              : Icon(Icons.error_outline),
                           label: Expanded(
                             child: Text(
-                              publicThoughtsList.elementAt(index).email +
+                              friendsThoughtsList.elementAt(index).email +
                                   ' ' +
-                                  publicThoughtsList
+                                  friendsThoughtsList
                                       .elementAt(index)
                                       .timestamp
                                       .toLocal()
@@ -283,15 +300,18 @@ class HomepageState extends State<Homepage> {
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(publicThoughtsList.elementAt(index).text),
-                          EmojiContainer(
-                            this.context, 
-                            this.user, 
-                            mediaTypes.thought.index, 
-                            publicThoughtsList[index].thoughtId, 
-                            publicThoughtsList[index].uid, 
-                          )
+                          Text(
+                            friendsThoughtsList.elementAt(index).text,
+                            style: TextStyle(fontSize: 24),
+                          ),
                         ],
+                      ),
+                      trailing: EmojiContainer(
+                        this.context,
+                        this.user,
+                        mediaTypes.thought.index,
+                        friendsThoughtsList[index].thoughtId,
+                        friendsThoughtsList[index].uid,
                       ),
                     ),
                   ),
@@ -299,105 +319,363 @@ class HomepageState extends State<Homepage> {
               },
             )
           : (meme
-          
               ? ListView.builder(
                   itemCount: memesList.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Container(
                       child: Column(
-                    children: <Widget>[
-                      ListTile(
-                        onTap: (){gotoProfile(memesList[index].ownerID);},
-                          leading: CircleAvatar(
-                            backgroundImage: CachedNetworkImageProvider(
-                                memesList[index].ownerPic),
-                            backgroundColor: Colors.grey,
-                          ),
-                          title: GestureDetector(
-                            child: Text(memesList[index].ownerName),
-                            onTap: (){}
+                        children: <Widget>[
+                          ListTile(
+                            onTap: () {
+                              controller.gotoProfile(memesList[index].ownerID);
+                            },
+                            leading: CircleAvatar(
+                              backgroundImage: CachedNetworkImageProvider(
+                                  memesList[index].ownerPic),
+                              backgroundColor: Colors.grey,
                             ),
-                          subtitle: Text(DateFormat("MMM dd-yyyy 'at' HH:mm:ss")
-                              .format(memesList[index].timestamp)),
-                        ),
-                      Container(
-                        child: CachedNetworkImage(
-                        imageUrl: memesList[index].imgUrl,
-                        fit: BoxFit.fitWidth,
-                        placeholder: (context, url) =>
-                            CircularProgressIndicator(),
-                        errorWidget: (context, url, error) =>
-                            Icon(Icons.error_outline),
-                        ),
+                            title: GestureDetector(
+                                child: Text(memesList[index].email),
+                                onTap: () {}),
+                            subtitle: Text(
+                                DateFormat("MMM dd-yyyy 'at' HH:mm:ss")
+                                    .format(memesList[index].timestamp)),
+                            trailing: EmojiContainer(
+                              this.context,
+                              this.user,
+                              mediaTypes.meme.index,
+                              memesList[index].memeId,
+                              memesList[index].ownerID,
+                            ),
+                          ),
+                          Container(
+                            child: CachedNetworkImage(
+                              imageUrl: memesList[index].imgUrl,
+                              fit: BoxFit.fitWidth,
+                              placeholder: (context, url) =>
+                                  CircularProgressIndicator(),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error_outline),
+                            ),
+                          ),
+                        ],
                       ),
-                      EmojiContainer(
-                        this.context, 
-                        this.user, 
-                        mediaTypes.meme.index, 
-                        memesList[index].memeId, 
-                        memesList[index].ownerID, 
-                      )
-                    ],
-                  ),
-                );
+                    );
                   },
                 )
               : snapshots
                   ? ListView.builder(
-                  itemCount: imageList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      child: Column(
-                    children: <Widget>[
-                      ListTile(
-                        onTap: (){gotoProfile(imageList[index].ownerID);},
-                          leading: imageList[index].ownerPic.contains('http') ? CircleAvatar(
-                            backgroundImage: CachedNetworkImageProvider(
-                                imageList[index].ownerPic,
-                                ),
-                            backgroundColor: Colors.grey,
-                            ) 
-                            :
-                            Icon(Icons.error_outline)
-                            ,
-                          title: GestureDetector(
-                            child: Text(imageList[index].createdBy),
-                            onTap: (){}
-                            ),
-                          subtitle: Text(DateFormat("MMM dd-yyyy 'at' HH:mm:ss")
-                              .format(imageList[index].lastUpdatedAt)),
-                        ),
-                        Container(
-                          child: CachedNetworkImage(
-                            imageUrl: imageList[index].imageURL,
-                            fit: BoxFit.fitWidth,
-                            placeholder: (context, url) =>
-                                CircularProgressIndicator(),
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error_outline),
-                          ),
-                        ),
-                        EmojiContainer(
-                          this.context, 
-                          this.user, 
-                          mediaTypes.snapshot.index, 
-                          imageList[index].imageId, 
-                          imageList[index].ownerID, 
-                        )
-                    ],
-                  ),
-                );
-                  },
-                )
-                  : ListView.builder(
-                      itemCount: 0,
+                      itemCount: imageList.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Container(
-                          child: Text('Music'),
+                          child: Column(
+                            children: <Widget>[
+                              ListTile(
+                                onTap: () {
+                                  controller
+                                      .gotoProfile(imageList[index].ownerID);
+                                },
+                                leading:
+                                    imageList[index].ownerPic.contains('http')
+                                        ? CircleAvatar(
+                                            backgroundImage:
+                                                CachedNetworkImageProvider(
+                                              imageList[index].ownerPic,
+                                            ),
+                                            backgroundColor: Colors.grey,
+                                          )
+                                        : Icon(Icons.error_outline),
+                                title: GestureDetector(
+                                    child: Text(imageList[index].createdBy),
+                                    onTap: () {}),
+                                subtitle: Text(DateFormat(
+                                        "MMM dd-yyyy 'at' HH:mm:ss")
+                                    .format(imageList[index].lastUpdatedAt)),
+                                trailing: EmojiContainer(
+                                  this.context,
+                                  this.user,
+                                  mediaTypes.snapshot.index,
+                                  imageList[index].imageId,
+                                  imageList[index].ownerID,
+                                ),
+                              ),
+                              Container(
+                                child: CachedNetworkImage(
+                                  imageUrl: imageList[index].imageURL,
+                                  fit: BoxFit.fitWidth,
+                                  placeholder: (context, url) =>
+                                      CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) =>
+                                      Icon(Icons.error_outline),
+                                ),
+                              ),
+                            ],
+                          ),
                         );
                       },
-                    )),
+                    )
+                  : music
+                      ? ListView.builder(
+                          itemCount: allSongsList.length,
+                          itemBuilder: (context, index) => Container(
+                            child: Container(
+                              child: Column(
+                                children: <Widget>[
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  //for (UserModel users in allUserList)
+                                  for (UserModel users in allUsersList)
+                                    Container(
+                                      child:
+                                          allSongsList[index].createdBy ==
+                                                  users.email
+                                              ? Container(
+                                                  child: Container(
+                                                    child: Row(
+                                                      children: <Widget>[
+                                                        Container(
+                                                          child: Column(
+                                                            children: <Widget>[
+                                                              users.profilePic
+                                                                      .isNotEmpty
+                                                                  ? users.uid ==
+                                                                          user
+                                                                              .uid
+                                                                      ? FlatButton(
+                                                                          child:
+                                                                              CircleAvatar(
+                                                                            backgroundImage:
+                                                                                NetworkImage(users.profilePic),
+                                                                            radius:
+                                                                                22.0,
+                                                                          ),
+                                                                          onPressed:
+                                                                              () {
+                                                                            setState(() {
+                                                                              visit = false;
+                                                                            });
+                                                                            controller.gotoProfile(user.uid);
+                                                                          },
+                                                                        )
+                                                                      : FlatButton(
+                                                                          child:
+                                                                              CircleAvatar(
+                                                                            backgroundImage:
+                                                                                NetworkImage(users.profilePic),
+                                                                            radius:
+                                                                                22.0,
+                                                                          ),
+                                                                          onPressed:
+                                                                              () {
+                                                                            setState(() {
+                                                                              visit = true;
+                                                                            });
+                                                                            controller.gotoProfile(users.uid);
+                                                                          },
+                                                                        )
+                                                                  : users.uid ==
+                                                                          user.uid
+                                                                      ? FlatButton(
+                                                                          child:
+                                                                              CircleAvatar(
+                                                                            backgroundImage:
+                                                                                NetworkImage(DesignConstants.profile),
+                                                                            radius:
+                                                                                22.0,
+                                                                          ),
+                                                                          onPressed:
+                                                                              () {
+                                                                            setState(() {
+                                                                              visit = false;
+                                                                            });
+                                                                            controller.gotoProfile(user.uid);
+                                                                          },
+                                                                        )
+                                                                      : FlatButton(
+                                                                          child:
+                                                                              CircleAvatar(
+                                                                            backgroundImage:
+                                                                                NetworkImage(DesignConstants.profile),
+                                                                            radius:
+                                                                                22.0,
+                                                                          ),
+                                                                          onPressed:
+                                                                              () {
+                                                                            setState(() {
+                                                                              visit = true;
+                                                                            });
+                                                                            controller.gotoProfile(users.uid);
+                                                                          },
+                                                                        )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          child: Column(
+                                                            children: <Widget>[
+                                                              Row(
+                                                                children: <
+                                                                    Widget>[
+                                                                  users.username
+                                                                          .isNotEmpty
+                                                                      ? Container(
+                                                                          child:
+                                                                              Text(
+                                                                            '${users.username}',
+                                                                            style:
+                                                                                TextStyle(
+                                                                              color: Colors.white,
+                                                                              fontWeight: FontWeight.bold,
+                                                                              fontSize: 15,
+                                                                            ),
+                                                                          ),
+                                                                        )
+                                                                      : Container(
+                                                                          child:
+                                                                              Text(
+                                                                            'Username Unavailable',
+                                                                            style:
+                                                                                TextStyle(
+                                                                              color: Colors.white,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                ],
+                                                              ),
+                                                              Row(
+                                                                children: <
+                                                                    Widget>[
+                                                                  Text(
+                                                                    '${allSongsList[index].genre}',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: Colors
+                                                                          .grey,
+                                                                      fontSize:
+                                                                          11,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        EmojiContainer(
+                                                          this.context,
+                                                          this.user,
+                                                          mediaTypes.music.index,
+                                                          allSongsList[index].songId,
+                                                          users.uid,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                )
+                                              : Container(),
+                                    ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
+                                      Container(
+                                        padding: EdgeInsets.all(5),
+                                        child: Text(
+                                          '${allSongsList[index].title}',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.blueGrey[100],
+                                            fontStyle: FontStyle.italic,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Container(
+                                    child: ConstrainedBox(
+                                      constraints:
+                                          BoxConstraints.expand(height: 300),
+                                      child: FlatButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            controller.playpause(
+                                                allSongsList[index].songURL,
+                                                play);
+                                          });
+                                        },
+                                        padding: EdgeInsets.all(0.0),
+                                        child: CachedNetworkImage(
+                                          imageUrl: allSongsList[index].artWork,
+                                          placeholder: (context, url) =>
+                                              CircularProgressIndicator(),
+                                          errorWidget: (context, url, error) =>
+                                              Icon(Icons.error_outline),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  for (UserModel users in allUsersList)
+                                    Container(
+                                      child: allSongsList[index].createdBy ==
+                                              users.email
+                                          ? Container(
+                                              padding: EdgeInsets.only(
+                                                left: 22.0,
+                                                top: 10.0,
+                                              ),
+                                              child: users.username.isNotEmpty
+                                                  ? Container(
+                                                      child: Row(
+                                                        children: <Widget>[
+                                                          Text(
+                                                            '${users.username}',
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 15,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    )
+                                                  : Container(
+                                                      child: Row(
+                                                        children: <Widget>[
+                                                          Text(
+                                                              'Username Unavailable'),
+                                                        ],
+                                                      ),
+                                                    ),
+                                            )
+                                          : Container(),
+                                    ),
+                                  Container(
+                                    padding: EdgeInsets.only(left: 22),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Text(
+                                            '${allSongsList[index].lastUpdatedAt}',
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              color: Colors.grey,
+                                            ))
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 50,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      : null),
       bottomNavigationBar: BottomAppBar(
+        color: music ? Colors.black : Colors.white,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[

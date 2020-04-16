@@ -40,7 +40,7 @@ class MusicFeedState extends State<MusicFeed> {
   SongModel songCopy;
   bool visit = false;
   List<SongModel> songlist;
-  List<SongModel> allSongList;
+  List<SongModel> allSongList = [];
   List<int> deleteIndices;
   int currentScreenIndex = 0;
   int songCount = songNum;
@@ -87,31 +87,24 @@ class MusicFeedState extends State<MusicFeed> {
           fontFamily: 'Quantum',
         ),
         home: Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back_ios,
-                color: DesignConstants.yellow,
-              ),
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => Homepage(
-                      user,
-                      songlist,
-                    ),
-                  ),
-                );
-              },
-            ),
-            backgroundColor: DesignConstants.blue,
-            title: Text(
-              'Music Feed',
-              style: TextStyle(
-                color: DesignConstants.yellow,
-              ),
-            ),
-          ),
+          // appBar: AppBar(
+          //   leading: IconButton(
+          //     icon: Icon(
+          //       Icons.arrow_back_ios,
+          //       color: DesignConstants.yellow,
+          //     ),
+          //     onPressed: () {
+          //       Navigator.of(context).pop();
+          //     },
+          //   ),
+          //   backgroundColor: DesignConstants.blue,
+          //   title: Text(
+          //     'Music Feed',
+          //     style: TextStyle(
+          //       color: DesignConstants.yellow,
+          //     ),
+          //   ),
+          // ),
           body: ListView.builder(
             itemCount: allSongList.length,
             itemBuilder: (context, index) => Container(
@@ -121,6 +114,7 @@ class MusicFeedState extends State<MusicFeed> {
                     SizedBox(
                       height: 20,
                     ),
+                    //for (UserModel users in allUserList)
                     for (UserModel users in allUserList)
                       Container(
                         child: allSongList[index].createdBy == users.email
@@ -150,6 +144,7 @@ class MusicFeedState extends State<MusicFeed> {
                                                               builder: (context) =>
                                                                   ProfilePage(
                                                                       user,
+                                                                      user,
                                                                       visit),
                                                             ),
                                                           );
@@ -172,6 +167,7 @@ class MusicFeedState extends State<MusicFeed> {
                                                               builder: (context) =>
                                                                   ProfilePage(
                                                                       users,
+                                                                      null,
                                                                       visit),
                                                             ),
                                                           );
@@ -196,6 +192,7 @@ class MusicFeedState extends State<MusicFeed> {
                                                               builder: (context) =>
                                                                   ProfilePage(
                                                                       user,
+                                                                      null,
                                                                       visit),
                                                             ),
                                                           );
@@ -219,6 +216,7 @@ class MusicFeedState extends State<MusicFeed> {
                                                               builder: (context) =>
                                                                   ProfilePage(
                                                                       users,
+                                                                      null,
                                                                       visit),
                                                             ),
                                                           );
@@ -291,14 +289,30 @@ class MusicFeedState extends State<MusicFeed> {
                       ],
                     ),
                     Container(
-                      child: CachedNetworkImage(
-                        imageUrl: allSongList[index].artWork,
-                        placeholder: (context, url) =>
-                            CircularProgressIndicator(),
-                        errorWidget: (context, url, error) =>
-                            Icon(Icons.error_outline),
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints.expand(height: 300),
+                        child: FlatButton(
+                          onPressed: () {},
+                          padding: EdgeInsets.all(0.0),
+                          child: CachedNetworkImage(
+                            imageUrl: allSongList[index].artWork,
+                            placeholder: (context, url) =>
+                                CircularProgressIndicator(),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error_outline),
+                          ),
+                        ),
                       ),
                     ),
+                    // Container(
+                    //   child: CachedNetworkImage(
+                    //     imageUrl: allSongList[index].artWork,
+                    //     placeholder: (context, url) =>
+                    //         CircularProgressIndicator(),
+                    //     errorWidget: (context, url, error) =>
+                    //         Icon(Icons.error_outline),
+                    //   ),
+                    // ),
                     for (UserModel users in allUserList)
                       Container(
                         child: allSongList[index].createdBy == users.email
@@ -351,52 +365,52 @@ class MusicFeedState extends State<MusicFeed> {
               ),
             ),
           ),
-          bottomNavigationBar: BottomAppBar(
-            color: Colors.black,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                RaisedButton(
-                  child: Text(
-                    'Thoughts',
-                    style: TextStyle(color: DesignConstants.yellow),
-                  ),
-                  onPressed: controller.newContent,
-                  color: thoughts
-                      ? DesignConstants.blueLight
-                      : DesignConstants.blue,
-                ),
-                RaisedButton(
-                  child: Text(
-                    'Memes',
-                    style: TextStyle(color: DesignConstants.yellow),
-                  ),
-                  onPressed: controller.meme,
-                  color:
-                      meme ? DesignConstants.blueLight : DesignConstants.blue,
-                ),
-                RaisedButton(
-                  child: Text(
-                    'SnapShots',
-                    style: TextStyle(color: DesignConstants.yellow),
-                  ),
-                  onPressed: controller.snapshots,
-                  color: snapshots
-                      ? DesignConstants.blueLight
-                      : DesignConstants.blue,
-                ),
-                RaisedButton(
-                  child: Text(
-                    'Music',
-                    style: TextStyle(color: DesignConstants.yellow),
-                  ),
-                  onPressed: controller.music,
-                  color:
-                      music ? DesignConstants.blueLight : DesignConstants.blue,
-                ),
-              ],
-            ),
-          ),
+          // bottomNavigationBar: BottomAppBar(
+          //   color: Colors.black,
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     children: <Widget>[
+          //       RaisedButton(
+          //         child: Text(
+          //           'Thoughts',
+          //           style: TextStyle(color: DesignConstants.yellow),
+          //         ),
+          //         onPressed: controller.newContent,
+          //         color: thoughts
+          //             ? DesignConstants.blueLight
+          //             : DesignConstants.blue,
+          //       ),
+          //       RaisedButton(
+          //         child: Text(
+          //           'Memes',
+          //           style: TextStyle(color: DesignConstants.yellow),
+          //         ),
+          //         onPressed: controller.meme,
+          //         color:
+          //             meme ? DesignConstants.blueLight : DesignConstants.blue,
+          //       ),
+          //       RaisedButton(
+          //         child: Text(
+          //           'SnapShots',
+          //           style: TextStyle(color: DesignConstants.yellow),
+          //         ),
+          //         onPressed: controller.snapshots,
+          //         color: snapshots
+          //             ? DesignConstants.blueLight
+          //             : DesignConstants.blue,
+          //       ),
+          //       RaisedButton(
+          //         child: Text(
+          //           'Music',
+          //           style: TextStyle(color: DesignConstants.yellow),
+          //         ),
+          //         onPressed: controller.music,
+          //         color:
+          //             music ? DesignConstants.blueLight : DesignConstants.blue,
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ),
       ),
     );
