@@ -1,37 +1,45 @@
 import '../view/search-page.dart';
+import 'package:flutter/material.dart';
 import '../model/services/idictionary-service.dart';
-import '../model/entities/dictionary-word-model.dart';
+import '../view/search-results-page.dart';
 import '../service-locator.dart';
 
 class SearchPageController {
-  SearchPageState state;  
+  SearchPageState state;
   String searchTerm;
   SearchPageController(this.state);
   IDictionaryService dictionaryService = locator<IDictionaryService>();
 
-  String validateText(String value) {
-    if (value == null || value.length == 0) {
+  String validateSearchTerms(String searchTerm) {
+    if (searchTerm == null || searchTerm.length == 0) {
       return 'Enter Text ';
+    } else {
+      dictionaryService.searchTermRetrieval(searchTerm).then((value) => {
+            state.thoughtSet = value,
+          });
+
+      if (state.thoughtSet.isEmpty) {
+        return "No results found";
+      } else {
+        return null;
+      }
     }
-    return null;
   }
-
-  void saveText(String value) {
-    print("saveText: "+ value);
-    searchTerm = value;
-  }
-
 
   void search() async {
     if (!state.formKey.currentState.validate()) {
+
       return;
     }
     state.formKey.currentState.save();
 
-    //searchTerm(searchTerm) to retrieve all thoughts
+    state.thoughtSet.forEach((thought) => {state.thoughtList.add(thought)});
 
-
-    dictionaryService.searchTermRetrieval(searchTerm);
+    Navigator.push(
+        state.context,
+        MaterialPageRoute(
+            builder: (context) =>
+                SearchResultsPage(state.user, state.thoughtList)));
+    
   }
-
 }

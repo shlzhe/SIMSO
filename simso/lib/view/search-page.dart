@@ -1,11 +1,33 @@
 import 'package:flutter/material.dart';
 import '../model/entities/user-model.dart';
+import '../model/entities/thought-model.dart';
 import '../view/design-constants.dart';
 import '../controller/search-page-controller.dart';
 import 'package:flutter/rendering.dart';
+import 'package:simso/service-locator.dart';
+import 'package:simso/model/services/iuser-service.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+import 'package:simso/controller/new-content-page-controller.dart';
+import 'package:simso/model/entities/image-model.dart';
+import 'package:simso/model/entities/meme-model.dart';
+import 'package:simso/model/entities/song-model.dart';
+import 'package:simso/model/entities/thought-model.dart';
+import 'package:simso/model/entities/user-model.dart';
+import 'package:simso/model/services/iuser-service.dart';
+import 'package:simso/service-locator.dart';
+import 'package:simso/view/design-constants.dart';
+import 'package:simso/view/profile-page.dart';
+
+
+import 'emoji-container.dart';
 
 class SearchPage extends StatefulWidget {
   final UserModel user;
+  
 
   SearchPage(this.user);
 
@@ -18,8 +40,10 @@ class SearchPage extends StatefulWidget {
 class SearchPageState extends State<SearchPage> {
   BuildContext context;
   SearchPageController controller;
-
+  List<Thought> thoughtList = [];
+  Set<Thought> thoughtSet = {};
   UserModel user;
+  String searchTerm;
 
   var formKey = GlobalKey<FormState>();
 
@@ -30,6 +54,7 @@ class SearchPageState extends State<SearchPage> {
   void stateChanged(Function f) {
     setState(f);
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -58,8 +83,8 @@ class SearchPageState extends State<SearchPage> {
                   child: TextFormField(
                     maxLines: 1,
                     initialValue: '',
-                    validator: controller.validateText,
-                    onSaved: controller.saveText,
+                    validator: controller.validateSearchTerms,
+                    onTap: controller.search,
                     style: TextStyle(fontSize: 22.0, color: Colors.grey[700]),
                     decoration: InputDecoration(
                       filled: true,
@@ -97,8 +122,7 @@ class SearchPageState extends State<SearchPage> {
                       borderRadius: new BorderRadius.circular(18.0),
                     ),
                   ),
-                ),
-                
+                ),                
               ],
             ),
           ),

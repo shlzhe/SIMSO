@@ -168,7 +168,6 @@ class HomepageController {
   }
 
   void searchContent() async {
-    print("search");
         Navigator.push(state.context,
         MaterialPageRoute(builder: (context) => SearchPage(state.user)));
   }

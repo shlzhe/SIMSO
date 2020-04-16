@@ -10,8 +10,8 @@ abstract class IDictionaryService {
   Future<void> addDictionaryWord(String word, Thought thought);
   Future<void> deleteDictionaryWord(String docID);
   Future<List<String>> getMyKeywords(String thoughtId);
-  //Future<List<Thought>> searchDictionaryWord(String word); //add in whatever else I can search for, music?
   Future<bool> wordInDictionary(String searchWord);
   Future<DictionaryWord> getWordDocument(String searchWord);
-  Future<void> searchTermRetrieval(String searchTerm);
+  Future<Set<Thought>> searchTermRetrieval(String searchTerm);
+  Future<void> removeDictionaryRef(String thoughtDocID);
 }

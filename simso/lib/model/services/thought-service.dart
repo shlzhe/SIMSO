@@ -1,6 +1,7 @@
 import 'package:simso/model/entities/thought-model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:simso/model/entities/user-model.dart';
+import 'package:simso/model/entities/dictionary-word-model.dart';
 import 'package:simso/service-locator.dart';
 import 'ithought-service.dart';
 import 'idictionary-service.dart';
@@ -69,9 +70,12 @@ class ThoughtService extends IThoughtService {
           .collection(Thought.THOUGHTS_COLLECTION)
           .document(docID)
           .delete();
+
+      _dictionaryService.removeDictionaryRef(docID);
     } catch (e) {
       throw e;
     }
+    
   }
 
   @override

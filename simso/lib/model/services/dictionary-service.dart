@@ -100,8 +100,7 @@ class DictionaryService extends IDictionaryService {
           .collection(DictionaryWord.DICTIONARY_COLLECTION)
           .where(DictionaryWord.THOUGHTLIST, arrayContains: thoughtId)
           .getDocuments();
-      if (querySnapshot == null || querySnapshot.documents.length == 0)
-        print('querysnapshot is null');
+      if (querySnapshot != null && querySnapshot.documents.length > 0)
       for (DocumentSnapshot doc in querySnapshot.documents) {
         keyword = DictionaryWord.deserialize(doc.data, doc.documentID).word;
         duplicate = false;
@@ -112,7 +111,7 @@ class DictionaryService extends IDictionaryService {
         } else {
           myKeywords.forEach((n) => {if (n == keyword) duplicate == true});
         }
-        ;
+        
         if (!duplicate)
           myKeywords
               .add(DictionaryWord.deserialize(doc.data, doc.documentID).word);
@@ -125,7 +124,6 @@ class DictionaryService extends IDictionaryService {
 
   @override
   Future<List<DictionaryWord>> getDictionary() async {
-    print("Firebase thought-service.dart getDictionary() called");
     try {
       var dictionaryWordList = <DictionaryWord>[];
       QuerySnapshot querySnapshot = await Firestore.instance
@@ -157,13 +155,11 @@ class DictionaryService extends IDictionaryService {
       }
     } catch (e) {
       print(searchWord + " not found in dictionary e: " + e);
-      throw e;
+      //throw e;
     }
   }
 
   Future<DictionaryWord> getWordDocument(String searchWord) async {
-    //Num listSearchTermCount
-    print("getWordDocument(" + searchWord + ")");
     DictionaryWord foundWordDocument;
     try {
       QuerySnapshot querySnapshot = await Firestore.instance
@@ -172,35 +168,28 @@ class DictionaryService extends IDictionaryService {
           .getDocuments();
 
       if (querySnapshot == null || querySnapshot.documents.length == 0) {
-        print("nothing found for " + searchWord);
         return foundWordDocument;
       } else {
         for (DocumentSnapshot doc in querySnapshot.documents) {
           foundWordDocument =
               DictionaryWord.deserialize(doc.data, doc.documentID);
         }
-
-        print("found: " + foundWordDocument.word);
-
         return foundWordDocument;
       }
     } catch (e) {
       print(searchWord + " not found in dictionary with error e: " + e);
-      throw e;
+      //throw e;
     }
   }
 
   //Future<List<Thought>> searchTermRetrieval(String searchTerm) async {
-  Future<void> searchTermRetrieval(String searchTerm) async {
-    print("searchTermRetrieval");
+  Future<Set<Thought>> searchTermRetrieval(String searchTerm) async {
     //first break down search term into a list of terms
     var searchWordList = searchTerm
         .replaceAll(new RegExp(r"[^\'\w\s]+"), '')
         .replaceAll(new RegExp(r'[ ]{2,}'), ' ')
         .split(' ')
         .toSet();
-
-    searchWordList.forEach((word) => {print(word)});
 
     Set<Thought> thoughtList = {};
     List<DictionaryWord> wordList = [];
@@ -225,24 +214,63 @@ class DictionaryService extends IDictionaryService {
       throw (e);
     }
 
+
     if (wordList.isNotEmpty) {
       try {
         for (var word in wordList) {
+          
+
           for (var thoughtID in word.thoughtList) {
+            
            var snapshot = await Firestore.instance.collection('thoughts')
                 .document(thoughtID).get();
-            thoughtList.add(Thought.deserialize(snapshot.data, snapshot.documentID));
+
+            if(snapshot.exists){
+              Thought newThought = Thought.deserialize(snapshot.data, snapshot.documentID);
+              thoughtList.add(newThought);
+            } else
+            {
+              print('no doc at thoughtID: ' + thoughtID + " somebody did a dirty data deed.");
+              removeDictionaryRef(thoughtID);
+            }
+            
+            
           }
         }
       } catch (e) {
-        throw (e);
+        print(e);
+        //throw (e);
       }
 
-      thoughtList.forEach((thought) => {
-        print(thought.text)
-      });
-    } else {
-      print("wordList IS empty");
+
     }
+
+    return thoughtList;
+  }
+
+
+  Future<void> removeDictionaryRef(String thoughtDocID) async {
+    List<DictionaryWord> wordList = [];
+
+    QuerySnapshot querySnapshot = await Firestore.instance
+            .collection('dictionary')
+            .where(DictionaryWord.THOUGHTLIST, arrayContains: thoughtDocID)
+            .getDocuments();
+
+    for (DocumentSnapshot doc in querySnapshot.documents) {
+      wordList.add(DictionaryWord.deserialize(doc.data, doc.documentID));
+    }
+
+    wordList.forEach((word) => {
+      word.thoughtList.remove(thoughtDocID) 
+    });
+
+      for(var word in wordList) {
+          await Firestore.instance
+          .collection(DictionaryWord.DICTIONARY_COLLECTION)
+          .document(word.wordDocID)
+          .setData(word.serialize());
+      }
+
   }
 }
