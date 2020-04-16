@@ -19,12 +19,6 @@ class MyMemesController {
   IDictionaryService _dictionaryService = locator<IDictionaryService>();
 
   MyMemesController(this.state);
-  Future<bool> onBackPressed() {
-    Navigator.push(
-        state.context,
-        MaterialPageRoute(
-            builder: (context) => ProfilePage(state.user, state.user, visit)));
-  }
 
   void addMeme() {
     Navigator.push(

@@ -41,9 +41,7 @@ class MyMemesPageState extends State<MyMemesPage> {
   @override
   Widget build(BuildContext context) {
     this.context = context;
-    return WillPopScope(
-      onWillPop: controller.onBackPressed,
-    child: Scaffold(
+    return Scaffold(
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: controller.addMeme,
@@ -98,7 +96,7 @@ class MyMemesPageState extends State<MyMemesPage> {
                 );
               } else
                 return null;
-            })));
+            }));
 
     // Container(
     //   color: DesignConstants.blueGreyish,
