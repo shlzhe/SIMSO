@@ -352,7 +352,7 @@ class HomepageState extends State<Homepage> {
                               backgroundColor: Colors.grey,
                             ),
                             title: GestureDetector(
-                                child: Text(memesList[index].ownerName),
+                                child: Text(memesList[index].email),
                                 onTap: () {}),
                             subtitle: Text(
                                 DateFormat("MMM dd-yyyy 'at' HH:mm:ss")
@@ -577,6 +577,13 @@ class HomepageState extends State<Homepage> {
                                                               ),
                                                             ],
                                                           ),
+                                                        ),
+                                                        EmojiContainer(
+                                                          this.context,
+                                                          this.user,
+                                                          mediaTypes.music.index,
+                                                          allSongsList[index].songId,
+                                                          users.uid,
                                                         ),
                                                       ],
                                                     ),
