@@ -28,7 +28,7 @@ class FriendPage extends StatefulWidget {
 
 class _FriendPageState extends State<FriendPage> {
   IUserService userService = locator<IUserService>();
- UserModel userModel;
+ UserModel userModel2;
   IFriendService friendService = locator<IFriendService>();
  List<Friend> friend2;
  UserModel friend;
@@ -37,8 +37,9 @@ class _FriendPageState extends State<FriendPage> {
  
  var loading = true;
 
-   _FriendPageState  (this.userModel, this.friend2){
-     init();
+   _FriendPageState  (this.userModel2, this.friend2) {
+     
+    // init();
    }
    
    
@@ -71,7 +72,7 @@ class _FriendPageState extends State<FriendPage> {
         body: ListView.builder(
             itemCount: widget.friends.length,
             itemBuilder: (context, index) {
-              Friend friend2 = widget.friends[index];
+               Friend friend2 = widget.friends[index];
               return new ListTile(
                   leading: CircleAvatar(
                     child: ClipOval(
@@ -89,12 +90,15 @@ class _FriendPageState extends State<FriendPage> {
                   ),
                 title: new Text('${widget.friends[index].username}'),
                 subtitle: Text('${widget.friends[index].aboutme}'),
-                  onTap: () {
+                  onTap: () async {
                       _showDialog(context, friend2).then(
                       (value) {
                         var mySnackbar =
                             SnackBar(content: Text("..."));
-                        Scaffold.of(context).showSnackBar(mySnackbar);   
+                        Scaffold.of(context).showSnackBar(mySnackbar); 
+                         setState(() {
+                       widget.friends.removeAt(index);
+                   });
                      },
                      
                     );
@@ -108,8 +112,9 @@ class _FriendPageState extends State<FriendPage> {
   }
 
 void init() async {
-  
-    friend2 =  await friendService.getFriends(userModel.friends);
+ 
+ //state.friend2 =  await friendService.getFriends(state.widget.friends);
+ 
   }
 
 
@@ -125,7 +130,7 @@ void navigateProfile(String uid) async {
   Future<String> _showDialog(BuildContext context, Friend friend) {
     return showDialog(
       context: context,
-      builder: (context) {
+      builder: (context,) {
         return new AlertDialog(
           title: new Text('${friend.username}'),
           actions: <Widget>[
@@ -141,6 +146,7 @@ void navigateProfile(String uid) async {
               onPressed: () {
                 navigateProfile(friend.uid);
                 Navigator.of(context).pop();
+                
               },
               child: new Text('View Profile'),
             ),

@@ -78,12 +78,16 @@ _NotificationPageState state;
                     title: new Text('${widget.friendRequest[index].username}'),
                     subtitle: Text('${widget.friendRequest[index].aboutme}'),
 
-                    onTap: () {
+                    onTap: () async {
                       _showDialog(context, friendUser).then(
                       (value) {
                         var mySnackbar =
                             SnackBar(content: Text("..."));
                         Scaffold.of(context).showSnackBar(mySnackbar);
+                       setState(() {
+                  widget.friendRequest.removeAt(index);
+                   });
+  
                       },
                     );
 
@@ -132,8 +136,7 @@ _NotificationPageState state;
 
 
   void init() async {
-   friendRequest = await friendService.getFriendRequests(userModel.friendRequestRecieved);
-  
+   
  }
 
 }
