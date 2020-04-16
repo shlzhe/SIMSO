@@ -50,6 +50,7 @@ class Call {
   startCallCheck(String reUid) {
     this.callCheck = true;
     var sec = Duration(seconds: 5);
+    var call;
     Timer.periodic(
         sec,
         (timer) => {
@@ -58,7 +59,9 @@ class Call {
               else
                 {
                   callService.checkCall(reUid).then((value) => {
-                        print(value.toString()+"========")
+                        if(value != null) {
+                          call = value
+                        }
                         //this = value
                       })
                 }
