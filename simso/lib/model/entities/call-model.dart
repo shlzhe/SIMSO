@@ -12,12 +12,18 @@ class Call {
   bool callStatus;
   ICallService callService = locator<ICallService>();
 
-  Call(this.callerUid, this.receiverUid, this.callAccepted,this.callStatus);
-  Call.clone(Call b){
+  Call(this.callerUid, this.receiverUid, this.callAccepted, this.callStatus);
+  Call.clone(Call b) {
     this.callerUid = b.callerUid;
     this.receiverUid = b.receiverUid;
     this.callAccepted = b.callAccepted;
     this.callStatus = b.callStatus;
+  }
+  Call.isEmpty() {
+    this.callerUid = '';
+    this.receiverUid = '';
+    this.callAccepted = null;
+    this.callStatus = null;
   }
   static const CALLERUID = 'calleruid';
   static const RECEIVERUID = 'receiveruid';
@@ -32,29 +38,34 @@ class Call {
       CALLSTATUS: callStatus,
     };
   }
+
   Call.deserialize(Map<String, dynamic> doc)
-  : callAccepted = doc[CALLACCEPTED],
-   callerUid = doc[CALLERUID],
-   callStatus = doc[CALLSTATUS],
-   receiverUid = doc[RECEIVERUID];
+      : callAccepted = doc[CALLACCEPTED],
+        callerUid = doc[CALLERUID],
+        callStatus = doc[CALLSTATUS],
+        receiverUid = doc[RECEIVERUID];
 
   bool callCheck;
 
-  startCallCheck(){
+  startCallCheck(String reUid) {
     this.callCheck = true;
     var sec = Duration(seconds: 5);
-    Timer.periodic(sec, (timer)=>{
-      if(!this.callCheck){
-        timer.cancel()
-      } else {
-        callService.checkCall(this.receiverUid).then((value)=>{
-          print(value.callerUid)
-        })
-      }
-    });
-
+    Timer.periodic(
+        sec,
+        (timer) => {
+              if (!this.callCheck)
+                {timer.cancel()}
+              else
+                {
+                  callService.checkCall(reUid).then((value) => {
+                        print(value.toString()+"========")
+                        //this = value
+                      })
+                }
+            });
   }
-  stopCallCheck(){
+
+  stopCallCheck() {
     this.callCheck = false;
   }
 }

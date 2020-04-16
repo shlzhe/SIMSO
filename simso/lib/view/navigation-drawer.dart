@@ -94,6 +94,7 @@ class MyDrawer extends StatelessWidget {
                 //Dialog box pop up to confirm signing out
                 FirebaseAuth.instance.signOut();
                 globals.timer.stopTimer();
+                globals.call.stopCallCheck();
                 globals.timer = null;
                 globals.touchCounter = null;
                 globals.limit = null;

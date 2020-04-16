@@ -1,6 +1,7 @@
 // For storing variables needed throughout the app
 library simso.globals;
 
+import 'package:simso/model/entities/call-model.dart';
 import 'package:simso/model/entities/limit-model.dart';
 import 'package:simso/model/entities/timer-model.dart';
 import 'package:simso/model/entities/touch-counter-model.dart';
@@ -8,6 +9,7 @@ import 'package:simso/model/entities/touch-counter-model.dart';
 TimerModel timer;
 TouchCounterModel touchCounter;
 LimitModel limit;
+Call call;
 
 DateTime getDate(String dateString) {
   var firstDashIndex = dateString.indexOf('/', 1);

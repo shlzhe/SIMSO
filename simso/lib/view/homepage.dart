@@ -78,6 +78,7 @@ class HomepageState extends State<Homepage> {
     controller.getLimits();
     controller.thoughts();
     controller.getUnreadMessages();
+    controller.setUpCheckCall();
   }
 
   /* //duplicate from controller
