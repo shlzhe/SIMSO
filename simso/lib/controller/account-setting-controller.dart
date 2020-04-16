@@ -10,12 +10,20 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../model/entities/globals.dart' as globals;
 import '../view/login-page.dart';
 import 'package:simso/view/design-constants.dart';
+import 'package:simso/view/choose-avatar.dart';
 
 class AccountSettingController {
   AccountSettingPageState state;
   IUserService userService = locator<IUserService>();
   AccountSettingController(this.state);
   final LocalUser localUserFunction = LocalUser();
+
+  void changeAvatar() async {
+    state.user.profilePic = await Navigator.push(
+        state.context, MaterialPageRoute(builder: (context) => ChooseAvatar()));
+    state.userCopy.profilePic = state.user.profilePic;
+    state.changing = true;
+  }
 
   void saveUserName(String value) {
     state.userCopy.username = value;
