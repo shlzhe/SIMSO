@@ -70,7 +70,6 @@ class HomepageState extends State<Homepage> {
   String playerId;
   var idController = TextEditingController();
   var formKey = GlobalKey<FormState>();
-  HomepageState state;
 
   List<Message> unreadMessage;
   HomepageState(this.user) {
