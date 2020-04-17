@@ -6,6 +6,7 @@ import '../view/design-constants.dart';
 import '../controller/add-thought-controller.dart';
 import '../model/entities/globals.dart' as globals;
 
+
 class AddThoughtPage extends StatefulWidget {
   final UserModel user;
 
@@ -41,82 +42,12 @@ class AddThoughtPageState extends State<AddThoughtPage> {
   @override
   Widget build(BuildContext context) {
     this.context = context;
-    globals.context = context;
-    var childButtons = List<UnicornButton>();
-
-    childButtons.add(
-      UnicornButton(
-        hasLabel: true,
-        labelText: "Add Thoughts",
-        labelFontSize: 10,
-        currentButton: FloatingActionButton(
-          heroTag: "Add Thoughts",
-          backgroundColor: Colors.white,
-          mini: true,
-          child: Icon(
-            Icons.bubble_chart,
-            color: Colors.black,
-          ),
-          onPressed: null,
+    globals.context = context;return Scaffold(
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.save, color: Colors.white,),
+          backgroundColor: DesignConstants.blue,
+          onPressed: controller.save,
         ),
-      ),
-    );
-
-    childButtons.add(
-      UnicornButton(
-        hasLabel: true,
-        labelText: "Add Photos",
-        labelFontSize: 10,
-        currentButton: FloatingActionButton(
-          heroTag: "Add Photos",
-          backgroundColor: Colors.white,
-          mini: true,
-          child: Icon(
-            Icons.camera,
-            color: Colors.black,
-          ),
-          onPressed: null,
-        ),
-      ),
-    );
-
-    childButtons.add(
-      UnicornButton(
-        hasLabel: true,
-        labelText: "Add Memes",
-        labelFontSize: 10,
-        currentButton: FloatingActionButton(
-          heroTag: "Add Memes",
-          backgroundColor: Colors.white,
-          mini: true,
-          child: Icon(
-            Icons.mood,
-            color: Colors.black,
-          ),
-          onPressed: null,
-        ),
-      ),
-    );
-
-    childButtons.add(
-      UnicornButton(
-        hasLabel: true,
-        labelText: "Add Music",
-        labelFontSize: 10,
-        currentButton: FloatingActionButton(
-          heroTag: "Add Music",
-          backgroundColor: Colors.white,
-          mini: true,
-          child: Icon(
-            Icons.music_note,
-            color: Colors.black,
-          ),
-          onPressed: null,
-        ),
-      ),
-    );
-    this.context = context; 
-    return Scaffold(
         appBar: AppBar(
           title: Text(
             'Add a Thought',
