@@ -47,77 +47,44 @@ class EditThoughtPageState extends State<EditThoughtPage> {
     globals.context = context;
     var childButtons = List<UnicornButton>();
 
-    childButtons.add(
+childButtons.add(
       UnicornButton(
         hasLabel: true,
-        labelText: "Add Thoughts",
+        labelText: "Save",
         labelFontSize: 10,
         currentButton: FloatingActionButton(
-          heroTag: "Add Thoughts",
-          backgroundColor: Colors.white,
+          heroTag: "Save",
+          backgroundColor: DesignConstants.blueLight,
           mini: true,
           child: Icon(
-            Icons.bubble_chart,
-            color: Colors.black,
+            Icons.save,
+            color: Colors.white,
           ),
-          onPressed: null,
+          onPressed: controller.save,
         ),
       ),
     );
 
-    childButtons.add(
-      UnicornButton(
-        hasLabel: true,
-        labelText: "Add Photos",
-        labelFontSize: 10,
-        currentButton: FloatingActionButton(
-          heroTag: "Add Photos",
-          backgroundColor: Colors.white,
-          mini: true,
-          child: Icon(
-            Icons.camera,
-            color: Colors.black,
-          ),
-          onPressed: null,
-        ),
-      ),
-    );
 
     childButtons.add(
       UnicornButton(
         hasLabel: true,
-        labelText: "Add Memes",
+        labelText: "Delete",
         labelFontSize: 10,
         currentButton: FloatingActionButton(
-          heroTag: "Add Memes",
-          backgroundColor: Colors.white,
+          heroTag: "Delete",
+          backgroundColor: DesignConstants.red,
           mini: true,
           child: Icon(
-            Icons.mood,
-            color: Colors.black,
+            Icons.delete_forever,
+            color: Colors.white,
           ),
-          onPressed: null,
+          onPressed: controller.deleteThought,
         ),
       ),
     );
 
-    childButtons.add(
-      UnicornButton(
-        hasLabel: true,
-        labelText: "Add Music",
-        labelFontSize: 10,
-        currentButton: FloatingActionButton(
-          heroTag: "Add Music",
-          backgroundColor: Colors.white,
-          mini: true,
-          child: Icon(
-            Icons.music_note,
-            color: Colors.black,
-          ),
-          onPressed: null,
-        ),
-      ),
-    );
+
     return Scaffold(
         floatingActionButton: UnicornDialer(
         backgroundColor: Colors.transparent,
