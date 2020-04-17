@@ -94,6 +94,7 @@ class MyDrawer extends StatelessWidget {
                 //Dialog box pop up to confirm signing out
                 FirebaseAuth.instance.signOut();
                 globals.timer.stopTimer();
+                globals.call.stopCallCheck();
                 globals.timer = null;
                 globals.touchCounter = null;
                 globals.limit = null;
@@ -187,6 +188,7 @@ class MyDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    globals.context = context;
     return Drawer(
       child: ListView(
         children: <Widget>[

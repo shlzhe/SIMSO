@@ -25,6 +25,7 @@ class FriendService extends IFriendService {
       } else {
         query.documents
             .forEach((doc) => {userList.add(UserModel.deserialize(doc.data))});
+            
         return userList;
       }
     } catch (e) {

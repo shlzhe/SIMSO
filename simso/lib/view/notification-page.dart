@@ -5,6 +5,7 @@ import 'package:simso/model/entities/user-model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:simso/model/services/friend-service.dart' ;
 import 'package:simso/model/services/ifriend-service.dart' ;
+import '../model/entities/globals.dart' as globals;
 
 import '../model/entities/user-model.dart';
 import '../service-locator.dart';
@@ -49,7 +50,7 @@ _NotificationPageState state;
 
   @override
   Widget build(BuildContext context) {
-   
+    globals.context = context;
     return Scaffold (
 
       appBar: AppBar(

@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/view/design-constants.dart';
 import 'package:simso/view/navigation-drawer.dart' as drawer;
+import '../model/entities/globals.dart' as globals;
+
 import '../service-locator.dart';
 import 'package:simso/model/services/iuser-service.dart';
 import '../controller/account-setting-controller.dart';
@@ -45,6 +47,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
   @override
   Widget build(BuildContext context) {
     this.context = context;
+    globals.context = context;
     return WillPopScope(
       onWillPop: controller.onBackPressed,
       child: Scaffold(

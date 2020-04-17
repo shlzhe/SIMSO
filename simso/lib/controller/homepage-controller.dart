@@ -2,12 +2,14 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:simso/model/entities/call-model.dart';
 import 'package:simso/model/entities/meme-model.dart';
 import 'package:simso/model/entities/message-model.dart';
 import 'package:simso/model/entities/thought-model.dart';
 import 'package:simso/model/entities/myfirebase.dart';
 import 'package:simso/model/entities/song-model.dart';
 import 'package:simso/model/entities/user-model.dart';
+import 'package:simso/model/services/icall-service.dart';
 import 'package:simso/model/services/ilimit-service.dart';
 import 'package:simso/model/services/imeme-service.dart';
 import 'package:simso/model/services/isong-service.dart';
@@ -45,6 +47,7 @@ class HomepageController {
   final IUserService _userService = locator<IUserService>();
   final IThoughtService thoughtService = locator<IThoughtService>();
   final IMemeService memeService = locator<IMemeService>();
+  final ICallService callService = locator<ICallService>();
   var unreadMessages;
 
   HomepageController(this.state, this.timerService, this.touchService,
@@ -81,11 +84,19 @@ class HomepageController {
   }
 
   Future addPhotos() async {
+    
     Navigator.push(
         state.context,
         MaterialPageRoute(
           builder: (context) => AddPhoto(state.user, null),
         ));
+  }
+
+  void setUpCheckCall(BuildContext thisContext) async {
+    print("me===");
+    Call call = new Call.isEmpty();
+    globals.call = call;
+    globals.call.startCallCheck(state.user.uid, state.context);
   }
 
   void setupTimer() async {

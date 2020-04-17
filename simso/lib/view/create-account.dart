@@ -5,6 +5,7 @@ import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/model/services/iuser-service.dart';
 import 'package:simso/service-locator.dart';
 import 'package:simso/view/design-constants.dart';
+import '../model/entities/globals.dart' as globals;
 
 class CreateAccount extends StatefulWidget{
   @override
@@ -30,6 +31,7 @@ class CreateAccount extends StatefulWidget{
   @override
   Widget build(BuildContext context) {
     this.context = context;
+    globals.context = context;
     return Scaffold(
       body: Form(
         key: formKey,

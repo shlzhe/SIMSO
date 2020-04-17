@@ -4,6 +4,7 @@ import '../model/entities/user-model.dart';
 import '../model/entities/meme-model.dart';
 import '../view/design-constants.dart';
 import '../controller/add-meme-controller.dart';
+import '../model/entities/globals.dart' as globals;
 
 class AddMemePage extends StatefulWidget {
   final UserModel user;
@@ -46,6 +47,7 @@ class AddMemePageState extends State<AddMemePage> {
   @override
   Widget build(BuildContext context) {
     this.context = context;
+    globals.context = context;
     var childButtons = List<UnicornButton>();
     return Scaffold(
 

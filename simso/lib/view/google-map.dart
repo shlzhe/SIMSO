@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:simso/model/entities/friend-model.dart';
+import '../model/entities/globals.dart' as globals;
 
 
 class ViewGoogleMap extends StatefulWidget {
@@ -85,6 +86,7 @@ class _GoogleMapState extends State<ViewGoogleMap> {
 
   @override
   Widget build(BuildContext context) {
+    globals.context = context;
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(

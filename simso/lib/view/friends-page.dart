@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:simso/model/entities/friend-model.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/view/google-map.dart';
+import '../model/entities/globals.dart' as globals;
+
 import 'package:simso/model/services/ifriend-service.dart' ;
 import 'package:simso/view/navigation-drawer.dart' ;
 import 'design-constants.dart';
@@ -55,6 +57,7 @@ class _FriendPageState extends State<FriendPage> {
 
   @override
   Widget build(BuildContext context) {
+    globals.context = context;
     this.context = context ;
 
     return Scaffold(

@@ -5,6 +5,7 @@ import '../model/entities/meme-model.dart';
 import '../view/design-constants.dart';
 import '../controller/my-memes-controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../model/entities/globals.dart' as globals;
 
 class MyMemesPage extends StatefulWidget {
   final UserModel user;
@@ -40,6 +41,7 @@ class MyMemesPageState extends State<MyMemesPage> {
   @override
   Widget build(BuildContext context) {
     this.context = context;
+    globals.context = context;
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),

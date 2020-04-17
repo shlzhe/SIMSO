@@ -49,6 +49,7 @@ dependencies:
   audioplayers: ^0.15.0
   emoji_picker: ^0.1.0
   uuid: ^2.0.4
+  string_similarity: ^1.0.1
 
 
   # The following adds the Cupertino Icons font to your application.

@@ -21,6 +21,10 @@ import 'model/services/meme-service.dart';
 import 'model/services/imeme-service.dart';
 import 'model/services/dictionary-service.dart';
 import 'model/services/idictionary-service.dart';
+import 'model/services/icall-service.dart';
+import 'model/services/call-service.dart';
+
+
 import 'package:get_it/get_it.dart';
 
 // This is for dependancy injection. Register each new service here
@@ -35,7 +39,7 @@ setupServiceLocator() {
   locator.registerLazySingleton<IThoughtService>(() => ThoughtService());
   locator.registerLazySingleton<IMemeService>(() => MemeService());
   //locator.registerLazySingleton<IMemeService>(() => MemeService());
-
+  locator.registerLazySingleton<ICallService>(()=> CallService());
   locator.registerLazySingleton<IFriendService>(() => FriendService());
   locator.registerLazySingleton<ILimitService>(() => LimitService());
   locator.registerLazySingleton<IDictionaryService>(() => DictionaryService());

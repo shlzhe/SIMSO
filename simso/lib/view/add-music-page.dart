@@ -6,6 +6,7 @@ import '../model/entities/song-model.dart';
 import '../controller/add-music-controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:simso/view/design-constants.dart';
+import '../model/entities/globals.dart' as globals;
 
 class AddMusic extends StatefulWidget {
   // changes should be done within state object, these should be unchangeable
@@ -74,6 +75,7 @@ class AddMusicState extends State<AddMusic> {
 
   @override
   Widget build(BuildContext context) {
+    globals.context = context;
     return WillPopScope(
       onWillPop: () {
         return Future.value(false);

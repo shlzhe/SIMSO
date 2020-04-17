@@ -9,6 +9,7 @@ import '../controller/my-music-controller.dart';
 import '../service-locator.dart';
 import 'design-constants.dart';
 import 'dart:async';
+import '../model/entities/globals.dart' as globals;
 
 class MyMusic extends StatefulWidget {
   final UserModel user;
@@ -81,6 +82,7 @@ class MyMusicState extends State<MyMusic> {
   @override
   Widget build(BuildContext context) {
     this.context = context;
+    globals.context = context;
     return WillPopScope(
       onWillPop: () {
         return Future.value(false);

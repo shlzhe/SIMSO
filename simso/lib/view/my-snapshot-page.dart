@@ -9,6 +9,7 @@ import '../model/entities/image-model.dart';
 import '../model/services/ipicture-service.dart';
 import '../model/services/picture-service.dart';
 import '../service-locator.dart';
+import '../model/entities/globals.dart' as globals;
 
 class SnapshotPage extends StatefulWidget {
 
@@ -78,6 +79,7 @@ class SnapshotPageState extends State<SnapshotPage> {
   @override
   Widget build(BuildContext context) {
     this.context = context;
+    globals.context = context;
     return Scaffold(
       appBar: AppBar(
         title: Text(user.username + ' Snapshot'),
