@@ -48,7 +48,7 @@ class AddThoughtPageState extends State<AddThoughtPage> {
     return Scaffold(
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.save, color: Colors.white,),
-          backgroundColor: DesignConstants.blueLight,
+          backgroundColor: DesignConstants.blue,
           onPressed: controller.save,
         ),
         appBar: AppBar(
