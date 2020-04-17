@@ -5,6 +5,7 @@ import '../model/entities/user-model.dart';
 import '../view/design-constants.dart';
 import '../controller/visit-memes-controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../model/entities/globals.dart' as globals;
 
 class VisitMemesPage extends StatefulWidget {
   final UserModel currentUser;
@@ -39,6 +40,7 @@ class VisitMemesPageState extends State<VisitMemesPage> {
   @override
   Widget build(BuildContext context) {
     this.context = context;
+    globals.context = context;
 
     return Scaffold(
         appBar: AppBar(
@@ -59,16 +61,16 @@ class VisitMemesPageState extends State<VisitMemesPage> {
                   child: Column(
                     children: <Widget>[
                       ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: CachedNetworkImageProvider(
-                                visitMemesList[index].ownerPic),
-                            backgroundColor: Colors.grey,
-                          ),
-                          title: Text(visitMemesList[index].ownerName),
-                          subtitle: Text(DateFormat("MMM dd-yyyy 'at' HH:mm:ss")
-                              .format(visitMemesList[index].timestamp)),
-                          ),
-                        CachedNetworkImage(
+                        leading: CircleAvatar(
+                          backgroundImage: CachedNetworkImageProvider(
+                              visitMemesList[index].ownerPic),
+                          backgroundColor: Colors.grey,
+                        ),
+                        title: Text(visitMemesList[index].ownerName),
+                        subtitle: Text(DateFormat("MMM dd-yyyy 'at' HH:mm:ss")
+                            .format(visitMemesList[index].timestamp)),
+                      ),
+                      CachedNetworkImage(
                         imageUrl: visitMemesList[index].imgUrl,
                         fit: BoxFit.fitWidth,
                         placeholder: (context, url) =>

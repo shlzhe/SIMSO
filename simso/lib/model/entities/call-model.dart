@@ -1,7 +1,12 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:simso/model/services/call-service.dart';
 import 'package:simso/model/services/icall-service.dart';
+import 'package:simso/view/call-request-page.dart';
+import 'package:simso/model/entities/globals.dart' as global;
+import 'package:simso/view/call-screen-page.dart';
 
 import '../../service-locator.dart';
 
@@ -47,10 +52,10 @@ class Call {
 
   bool callCheck;
 
-  startCallCheck(String reUid) {
+  startCallCheck(String reUid, BuildContext context) {
     this.callCheck = true;
     var sec = Duration(seconds: 5);
-    var call;
+
     Timer.periodic(
         sec,
         (timer) => {
@@ -59,13 +64,23 @@ class Call {
               else
                 {
                   callService.checkCall(reUid).then((value) => {
-                        if(value != null) {
-                          call = value
-                        }
-                        //this = value
+                        print("======inside checkCall======"),
+                        if (value != null)
+                          {
+                            timer.cancel(),
+                            global.callState = true,
+                            if(global.c == 0){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CallScreenPage(true, value),
+                                )),
+                                global.c++,
+                            },
+                          }
                       })
                 }
-            });
+            });            
   }
 
   stopCallCheck() {

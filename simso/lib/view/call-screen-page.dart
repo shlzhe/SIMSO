@@ -2,24 +2,23 @@ import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:simso/model/entities/call-model.dart';
 import 'package:simso/model/services/icall-service.dart';
+import '../model/entities/globals.dart' as globals;
 
 import '../model/entities/api-constants.dart';
 import '../model/entities/user-model.dart';
 import '../service-locator.dart';
 
 class CallScreenPage extends StatefulWidget {
-  UserModel callerUser, receiverUser;
   bool videoCall;
   Call call;
-  CallScreenPage(this.callerUser, this.receiverUser, this.videoCall,this.call);
+  CallScreenPage(this.videoCall,this.call);
   @override
   State<StatefulWidget> createState() {
-    return CallScreenPageState(callerUser, receiverUser, videoCall,call);
+    return CallScreenPageState(videoCall,call);
   }
 }
 
 class CallScreenPageState extends State<CallScreenPage> {
-  UserModel callerUser, receiverUser;
   bool videoCall;
   String _channel;
   ICallService callService = locator<ICallService>();
@@ -27,10 +26,12 @@ class CallScreenPageState extends State<CallScreenPage> {
   static final _users = <int>[];
   bool muted = false;
 
-  CallScreenPageState(this.callerUser, this.receiverUser, this.videoCall,this.call);
+  CallScreenPageState(this.videoCall,this.call);
 
   @override
   void dispose() {
+    globals.callState = false;
+    globals.c = 0;
     callService.deleteCall(call);
     // clear users
     _users.clear();

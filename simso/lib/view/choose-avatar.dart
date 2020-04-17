@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:simso/controller/choose-avatar-controller.dart';
 import 'package:simso/view/design-constants.dart';
+import '../model/entities/globals.dart' as globals;
+
 
 class ChooseAvatar extends StatefulWidget{
   @override
@@ -26,6 +28,7 @@ class ChooseAvatar extends StatefulWidget{
   @override
   Widget build(BuildContext context) {
     this.context =context;
+    globals.context = context;
     return Scaffold(
       appBar: AppBar(
         title: Text('Choose an Avatar', style: TextStyle(color: DesignConstants.yellow),),

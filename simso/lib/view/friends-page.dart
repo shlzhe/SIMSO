@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:simso/model/entities/friend-model.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/view/google-map.dart';
+import '../model/entities/globals.dart' as globals;
 
 import 'design-constants.dart';
 
@@ -14,6 +15,7 @@ class FriendPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    globals.context = context;
     return Scaffold(
         appBar: AppBar(
           title: Text('My Friends'),

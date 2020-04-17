@@ -9,6 +9,7 @@ import '../model/entities/image-model.dart';
 import '../controller/add-photo-controller.dart';
 import 'package:simso/model/services/ipicture-service.dart';
 import '../service-locator.dart';
+import '../model/entities/globals.dart' as globals;
 
 List<CameraDescription> cameras;
 
@@ -98,6 +99,7 @@ class AddPhotoState extends State<AddPhoto> {
 
   @override
   Widget build(BuildContext context) {
+    globals.context = context;
     return WillPopScope(
       onWillPop: () {
         return Future.value(true);

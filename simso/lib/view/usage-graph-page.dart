@@ -5,6 +5,7 @@ import 'package:simso/model/entities/timer-model.dart';
 import 'package:simso/model/entities/touch-counter-model.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'design-constants.dart';
+import '../model/entities/globals.dart' as globals;
 
 class UsageGraphPage extends StatefulWidget {
   final UserModel user;
@@ -26,7 +27,7 @@ class UsageGraphPageState extends State<UsageGraphPage> {
   List<charts.Series<TimerModel, String>> timerSeries;
   Padding timerChart;
   Padding touchChart;
-  
+
   UsageGraphController controller;
 
   UsageGraphPageState(this.user, this.timers, this.touchCounters) {
@@ -41,6 +42,8 @@ class UsageGraphPageState extends State<UsageGraphPage> {
 
   @override
   Widget build(BuildContext context) {
+    globals.context = context;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('This Week\'s Usage'),
@@ -50,22 +53,22 @@ class UsageGraphPageState extends State<UsageGraphPage> {
       body: Container(
         child: ListView(
           children: <Widget>[
-             Center(
+            Center(
               child: Container(
-                margin: EdgeInsets.only(top: 30),
+                  margin: EdgeInsets.only(top: 30),
                   child: Text(
-                'Minutes',
-                style: TextStyle(fontSize: 24, color: Colors.white),
-              )),
+                    'Minutes',
+                    style: TextStyle(fontSize: 24, color: Colors.white),
+                  )),
             ),
             timerChart,
-             Center(
+            Center(
               child: Container(
-                margin: EdgeInsets.only(top: 10),
+                  margin: EdgeInsets.only(top: 10),
                   child: Text(
-                'Touches',
-                style: TextStyle(fontSize: 24, color: Colors.white),
-              )),
+                    'Touches',
+                    style: TextStyle(fontSize: 24, color: Colors.white),
+                  )),
             ),
             touchChart,
           ],

@@ -17,17 +17,16 @@ import 'package:simso/model/services/itimer-service.dart';
 import 'package:simso/model/services/iuser-service.dart';
 import '../service-locator.dart';
 import 'design-constants.dart';
+import '../model/entities/globals.dart' as globals;
 
 import 'package:simso/model/services/ifriend-service.dart';
 
-
 class ProfilePage extends StatefulWidget {
-  
   final UserModel currentUser;
   final UserModel visitUser;
   final bool visit;
 
-  ProfilePage(this.currentUser, this.visitUser,this.visit);
+  ProfilePage(this.currentUser, this.visitUser, this.visit);
 
   @override
   State<StatefulWidget> createState() {
@@ -53,9 +52,8 @@ class ProfilePageState extends State<ProfilePage> {
   bool friends = true;
   // List<Thought> publicThoughtsList = [];
 
-
   //List<UserModel> visitUser; I don't think this is used as a list
-  List<ImageModel> imageList =[];
+  List<ImageModel> imageList = [];
   List<SongModel> songlist;
   List<Meme> memesList;
   String returnedID;
@@ -64,7 +62,6 @@ class ProfilePageState extends State<ProfilePage> {
 
   ProfilePageState(this.currentUser, this.visitUser, this.visit) {
     controller = ProfilePageController(this, this.currentUser, this.visitUser);
-
   }
 
   void stateChanged(Function fn) {
@@ -73,10 +70,11 @@ class ProfilePageState extends State<ProfilePage> {
 
   int _selectedIndex = 0;
 
-
   @override
   Widget build(BuildContext context) {
     this.context = context;
+    globals.context = context;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(visitUser.username + "'s Profile"),
@@ -182,13 +180,13 @@ class ProfilePageState extends State<ProfilePage> {
         //   ),
         // )
       ]),
-      
+
       bottomNavigationBar: BottomNavigationBar(
         unselectedItemColor: DesignConstants.blue,
         currentIndex: _selectedIndex,
         selectedItemColor: DesignConstants.blue,
         onTap: controller.goTo,
-          type: BottomNavigationBarType.fixed,
+        type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.bubble_chart),

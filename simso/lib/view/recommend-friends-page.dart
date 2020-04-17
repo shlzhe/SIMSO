@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/model/services/ifriend-service.dart';
 import 'package:string_similarity/string_similarity.dart';
+import '../model/entities/globals.dart' as globals;
 
 import '../service-locator.dart';
 import 'design-constants.dart';
@@ -37,6 +38,8 @@ class RecommendFriendsState extends State<RecommendFriends> {
 
   @override
   Widget build(BuildContext context) {
+    globals.context = context;
+
     return Scaffold(
       appBar: AppBar(
         title: new Text('Recommend Friends'),
@@ -149,7 +152,8 @@ class RecommendFriendsState extends State<RecommendFriends> {
     var compare = inputData.text;
     print(compare);
     for (var j in theList) {
-      if (StringSimilarity.compareTwoStrings(compare, j.email) > 0.35 || StringSimilarity.compareTwoStrings(compare, j.username) > 0.35) {
+      if (StringSimilarity.compareTwoStrings(compare, j.email) > 0.35 ||
+          StringSimilarity.compareTwoStrings(compare, j.username) > 0.35) {
         print(j.email);
         holdList.add(j);
       }

@@ -5,6 +5,7 @@ import '../model/entities/thought-model.dart';
 import '../view/design-constants.dart';
 import '../view/navigation-drawer.dart';
 import '../controller/add-thought-controller.dart';
+import '../model/entities/globals.dart' as globals;
 
 class AddThoughtPage extends StatefulWidget {
   final UserModel user;
@@ -43,6 +44,7 @@ class AddThoughtPageState extends State<AddThoughtPage> {
   @override
   Widget build(BuildContext context) {
     this.context = context;
+    globals.context = context;
     var childButtons = List<UnicornButton>();
 
     childButtons.add(

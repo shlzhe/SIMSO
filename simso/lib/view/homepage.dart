@@ -25,6 +25,8 @@ import '../model/entities/friendRequest-model.dart';
 import 'package:simso/model/services/ifriend-service.dart';
 import 'package:simso/view/notification-page.dart';
 import 'emoji-container.dart';
+import '../model/entities/globals.dart' as globals;
+
 
 class Homepage extends StatefulWidget {
   final UserModel user;
@@ -78,7 +80,6 @@ class HomepageState extends State<Homepage> {
     controller.getLimits();
     controller.thoughts();
     controller.getUnreadMessages();
-    controller.setUpCheckCall();
   }
 
   /* //duplicate from controller
@@ -91,10 +92,16 @@ class HomepageState extends State<Homepage> {
   void stateChanged(Function f) {
     setState(f);
   }
-
+  
   @override
   Widget build(BuildContext context) {
     this.context = context;
+    if(globals.callState){print("====global true");} else {
+      print("====global false");
+      controller.setUpCheckCall(this.context);
+    }
+    
+
     var childButtons = List<UnicornButton>();
     final IconButton messageIcon = IconButton(
       icon: Icon(Icons.textsms),

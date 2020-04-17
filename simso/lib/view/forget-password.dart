@@ -4,6 +4,7 @@ import 'package:simso/controller/forget-password-controller.dart';
 import 'package:simso/model/services/iuser-service.dart';
 import 'package:simso/service-locator.dart';
 import 'package:simso/view/design-constants.dart';
+import '../model/entities/globals.dart' as globals;
 
 class ForgetPassword extends StatefulWidget{
   @override

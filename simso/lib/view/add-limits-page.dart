@@ -3,6 +3,7 @@ import 'package:simso/controller/add-limits-page-controller.dart';
 import 'package:simso/model/entities/limit-model.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/model/services/ilimit-service.dart';
+import '../model/entities/globals.dart' as globals;
 
 import '../service-locator.dart';
 import 'design-constants.dart';
@@ -57,6 +58,7 @@ class AddLimitsPageState extends State<AddLimitsPage> {
 
   @override
   Widget build(BuildContext context) {
+    globals.context = context;
     return Scaffold(
       appBar: AppBar(
         title: Text('Set Limits'),

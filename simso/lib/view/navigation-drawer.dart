@@ -188,6 +188,7 @@ class MyDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    globals.context = context;
     return Drawer(
       child: ListView(
         children: <Widget>[

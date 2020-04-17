@@ -14,6 +14,7 @@ import 'package:simso/model/services/iuser-service.dart';
 import '../model/entities/user-model.dart';
 import '../service-locator.dart';
 import 'design-constants.dart';
+import '../model/entities/globals.dart' as globals;
 
 class PersonalChatPage extends StatefulWidget {
   final UserModel user;
@@ -156,6 +157,7 @@ class PersonalChatPageState extends State<PersonalChatPage> {
   @override
   Widget build(BuildContext context) {
     this.context = context;
+    globals.context = context;
     return Scaffold(
       backgroundColor: DesignConstants.blue,
       appBar: AppBar(
@@ -187,11 +189,12 @@ class PersonalChatPageState extends State<PersonalChatPage> {
                 onPressed: () => {
                       call = new Call(user.uid, userList[index].uid, false,true),
                       callService.addCall(call),
+
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              CallScreenPage(user, userList[index], false,call),
+                              CallScreenPage(false,call),
                         ),
                       ),
                     }),
@@ -207,7 +210,7 @@ class PersonalChatPageState extends State<PersonalChatPage> {
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              CallScreenPage(user, userList[index], true,call),
+                              CallScreenPage(true,call),
                         ),
                       ),
                     }),

@@ -13,6 +13,7 @@ import 'package:simso/model/services/iuser-service.dart';
 import 'package:simso/service-locator.dart';
 import 'package:simso/view/design-constants.dart';
 import 'package:simso/view/profile-page.dart';
+import '../model/entities/globals.dart' as globals;
 
 import 'emoji-container.dart';
 import 'music-feed.dart';
@@ -61,6 +62,7 @@ class NewContentPageState extends State<NewContentPage> {
   @override
   Widget build(BuildContext context) {
     this.context = context;
+    globals.context = context;
     return Scaffold(
       backgroundColor: music ? Colors.black : Colors.white,
       appBar: AppBar(

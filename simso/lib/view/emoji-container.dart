@@ -5,6 +5,7 @@ import 'package:simso/model/entities/message-model.dart';
 import 'package:simso/model/services/imessage-service.dart';
 import '../model/entities/user-model.dart';
 import '../service-locator.dart';
+import '../model/entities/globals.dart' as globals;
 
 class EmojiContainer extends StatelessWidget {
   final UserModel user;
@@ -63,6 +64,7 @@ class EmojiContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    globals.context = context;
     return Container(
       child: FlatButton(
         child: Text('❤️', style: TextStyle(fontSize: 20),),

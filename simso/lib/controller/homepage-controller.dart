@@ -83,6 +83,7 @@ class HomepageController {
   }
 
   Future addPhotos() async {
+    
     Navigator.push(
         state.context,
         MaterialPageRoute(
@@ -90,10 +91,11 @@ class HomepageController {
         ));
   }
 
-  void setUpCheckCall() async {
+  void setUpCheckCall(BuildContext thisContext) async {
+    print("me===");
     Call call = new Call.isEmpty();
     globals.call = call;
-    globals.call.startCallCheck(state.user.uid);
+    globals.call.startCallCheck(state.user.uid, state.context);
   }
 
   void setupTimer() async {

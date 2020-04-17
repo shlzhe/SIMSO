@@ -1,6 +1,7 @@
 // For storing variables needed throughout the app
 library simso.globals;
 
+import 'package:flutter/cupertino.dart';
 import 'package:simso/model/entities/call-model.dart';
 import 'package:simso/model/entities/limit-model.dart';
 import 'package:simso/model/entities/timer-model.dart';
@@ -10,7 +11,9 @@ TimerModel timer;
 TouchCounterModel touchCounter;
 LimitModel limit;
 Call call;
-
+BuildContext context;
+bool callState = false;
+int c = 0;
 DateTime getDate(String dateString) {
   var firstDashIndex = dateString.indexOf('/', 1);
   var secondDashIndex = dateString.indexOf('/', 2);

@@ -8,6 +8,7 @@ import 'package:simso/model/services/iuser-service.dart';
 import '../model/entities/user-model.dart';
 import '../service-locator.dart';
 import 'design-constants.dart';
+import '../model/entities/globals.dart' as globals;
 
 class MainChatPage extends StatefulWidget {
   final UserModel user;
@@ -52,6 +53,7 @@ class MainChatPageState extends State<MainChatPage> {
   @override
   Widget build(BuildContext context) {
     this.context = context;
+    globals.context = context;
     return Scaffold(
     
       appBar: AppBar(

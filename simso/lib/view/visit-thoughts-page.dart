@@ -4,6 +4,7 @@ import '../model/entities/thought-model.dart';
 import '../model/entities/user-model.dart';
 import '../view/design-constants.dart';
 import '../controller/visit-thoughts-controller.dart';
+import '../model/entities/globals.dart' as globals;
 
 class VisitThoughtsPage extends StatefulWidget {
   final UserModel currentUser;
@@ -41,7 +42,7 @@ class VisitThoughtsPageState extends State<VisitThoughtsPage> {
   @override
   Widget build(BuildContext context) {
     this.context = context;
-        
+        globals.context = context;
     return Scaffold(
         appBar: AppBar(
           title: Text(
