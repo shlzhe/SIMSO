@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:simso/controller/mainChatPage-controller.dart';
 import 'package:simso/controller/personalChatPage-controller.dart';
 import 'package:simso/model/entities/call-model.dart';
@@ -186,15 +187,15 @@ class PersonalChatPageState extends State<PersonalChatPage> {
                   Icons.call,
                   color: DesignConstants.yellow,
                 ),
-                onPressed: () => {
-                      call = new Call(user.uid, userList[index].uid, false,true),
+                onPressed: () async => {
+                      await _handleCameraAndMic(),
+                      call =
+                          new Call(user.uid, userList[index].uid, false, true),
                       callService.addCall(call),
-
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              CallScreenPage(false,call),
+                          builder: (context) => CallScreenPage(false, call),
                         ),
                       ),
                     }),
@@ -203,14 +204,15 @@ class PersonalChatPageState extends State<PersonalChatPage> {
                   Icons.video_call,
                   color: DesignConstants.yellow,
                 ),
-                onPressed: () => {
-                      call = new Call(user.uid, userList[index].uid, false,true),
+                onPressed: () async => {
+                      await _handleCameraAndMic(),
+                      call =
+                          new Call(user.uid, userList[index].uid, false, true),
                       callService.addCall(call),
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              CallScreenPage(true,call),
+                          builder: (context) => CallScreenPage(true, call),
                         ),
                       ),
                     }),
@@ -294,6 +296,12 @@ class PersonalChatPageState extends State<PersonalChatPage> {
           //Show message
         ],
       ),
+    );
+  }
+
+  Future<void> _handleCameraAndMic() async {
+    await PermissionHandler().requestPermissions(
+      [PermissionGroup.camera, PermissionGroup.microphone],
     );
   }
 }

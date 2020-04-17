@@ -45,7 +45,7 @@ class CallScreenPageState extends State<CallScreenPage> {
   void initState() {
     super.initState();
     // initialize agora sdk
-    _channel = "asdasdasddqwddewfefa";
+    _channel = call.callerUid+call.receiverUid;
     initialize();
   }
 
@@ -69,23 +69,29 @@ class CallScreenPageState extends State<CallScreenPage> {
       int uid,
       int elapsed,
     ) {
+      print("======join channel success");
       setState(() {});
     };
 
     AgoraRtcEngine.onLeaveChannel = () {
       setState(() {
+      print("======leave channel");
+
         _users.clear();
       });
     };
 
     AgoraRtcEngine.onUserJoined = (int uid, int elapsed) {
       setState(() {
+      print("======user join");
         _users.add(uid);
       });
     };
 
     AgoraRtcEngine.onUserOffline = (int uid, int reason) {
       setState(() {
+      print("======user offline");
+
         _users.remove(uid);
       });
     };
@@ -96,6 +102,7 @@ class CallScreenPageState extends State<CallScreenPage> {
       int height,
       int elapsed,
     ) {
+      print("======remove video frame");
       setState(() {});
     };
   }
@@ -224,6 +231,7 @@ class CallScreenPageState extends State<CallScreenPage> {
   }
 
   void _onSwitchCamera() {
+    print("=====switch camera ====");
     AgoraRtcEngine.switchCamera();
   }
 

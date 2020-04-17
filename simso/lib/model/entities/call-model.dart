@@ -69,18 +69,44 @@ class Call {
                           {
                             timer.cancel(),
                             global.callState = true,
-                            if(global.c == 0){
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => CallScreenPage(true, value),
-                                )),
+                            if (global.c == 0)
+                              {
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (_) => AlertDialog(
+                                    title: Text("Incoming Call"),
+                                    content:
+                                        Text("Do you want to accept the call?"),
+                                    actions: <Widget>[
+                                      new FlatButton(
+                                        onPressed: ()=>{
+                                          Navigator.pop(context),
+                                          callService.deleteCall(value)
+                                        },
+                                        child: Text("No"),
+                                      ),
+                                      new FlatButton(
+                                        onPressed: () => {
+                                          Navigator.pop(context),
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CallScreenPage(true, value),
+                                              )),
+                                        },
+                                        child: Text("Yes"),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 global.c++,
-                            },
+                              },
                           }
                       })
                 }
-            });            
+            });
   }
 
   stopCallCheck() {
