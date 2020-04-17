@@ -98,8 +98,10 @@ class HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     this.context = context;
-    if(globals.callState){print("====global true");} else {
-      print("====global false");
+    if(globals.callState){
+      // print("====global true");
+      } else {
+      // print("====global false");
       controller.setUpCheckCall(this.context);
     }
     
