@@ -3,10 +3,14 @@ import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/model/services/ifriend-service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:simso/model/entities/friendRequest-model.dart' ;
+import 'package:simso/model/services/ifriend-service.dart';
+import 'package:simso/view/friends-page.dart' ;
 
 
 class FriendService extends IFriendService {
   static const FriendRequest = "friendrequest";
+
+
 
   @override
   Future<List<UserModel>> getUsers() async {
@@ -101,7 +105,7 @@ class FriendService extends IFriendService {
 
   @override
   Future<List<Friend>> getFriends(List friendList) async {
-    if (friendList.isEmpty)
+    if (friendList.isEmpty || friendList == null)
      return new List<Friend>();
 
     var friends = <Friend>[];
@@ -121,7 +125,7 @@ class FriendService extends IFriendService {
         throw e;
       }
     }
-    print(friends[0].profilePic);
+    
     return friends;
   }
 
@@ -153,7 +157,7 @@ class FriendService extends IFriendService {
       }
       
     }
-    print(friendRequestList);
+   
   return friendRequests;
   
   }
@@ -193,7 +197,7 @@ class FriendService extends IFriendService {
   }
 
  @override
-  void deleteFriend(UserModel currentUser, UserModel friendUser) async {  
+  void deleteFriend(UserModel currentUser, Friend friendUser) async {  
         try{       
      await Firestore.instance.collection(UserModel.USERCOLLECTION).document(currentUser.uid).updateData({
           UserModel.FRIENDS: FieldValue.arrayRemove([friendUser.uid])

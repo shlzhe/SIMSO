@@ -41,6 +41,7 @@ class NewContentPageState extends State<NewContentPage> {
   List<Thought> publicThoughtsList = [];
   List<SongModel> songsList = [];
   List<Meme> memesList = [];
+  
   List<ImageModel> imageList = [];
   List<UserModel> allUsersList = [];
   List<SongModel> allSongsList = [];

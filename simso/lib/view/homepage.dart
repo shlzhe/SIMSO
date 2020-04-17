@@ -10,6 +10,7 @@ import 'package:simso/model/entities/thought-model.dart';
 import 'package:simso/model/services/ilimit-service.dart';
 import 'package:simso/model/services/ipicture-service.dart';
 import 'package:simso/model/services/itouch-service.dart';
+import 'package:simso/view/friends-page.dart';
 import 'package:simso/view/music-feed.dart';
 import 'package:simso/view/navigation-drawer.dart';
 import 'package:simso/view/profile-page.dart';
@@ -31,7 +32,7 @@ import '../model/entities/globals.dart' as globals;
 class Homepage extends StatefulWidget {
   final UserModel user;
   final List<SongModel> songlist;
-
+   
   Homepage(this.user, this.songlist);
 
   @override
@@ -71,6 +72,7 @@ class HomepageState extends State<Homepage> {
   String playerId;
   var idController = TextEditingController();
   var formKey = GlobalKey<FormState>();
+
   List<Message> unreadMessage;
   HomepageState(this.user) {
     controller = HomepageController(this, this.timerService, this.touchService,
@@ -200,6 +202,14 @@ class HomepageState extends State<Homepage> {
             children: <Widget>[
               IconButton(
                 onPressed: controller.newContent,
+                icon: Icon(
+                  Icons.public,
+                  size: 25,
+                ),
+                color: DesignConstants.yellow,
+              ),
+              IconButton(
+                onPressed: controller.searchContent,
                 icon: Icon(
                   Icons.search,
                   size: 25,
@@ -724,7 +734,7 @@ class HomepageState extends State<Homepage> {
   }
 
   void myFriendsRequest() async {
-    print('myFriendRequest() called');
+   
     List<FriendRequests> friendRequests =
         await friendService.getFriendRequests(user.friendRequestRecieved);
     Navigator.push(

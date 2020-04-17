@@ -1,6 +1,7 @@
 import 'package:simso/model/entities/thought-model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:simso/model/entities/user-model.dart';
+import 'package:simso/model/entities/dictionary-word-model.dart';
 import 'package:simso/service-locator.dart';
 import 'ithought-service.dart';
 import 'idictionary-service.dart';
@@ -22,7 +23,7 @@ class ThoughtService extends IThoughtService {
       return null;
     });
 
-    _dictionaryService.updateDictionary(thought, null, null);
+    _dictionaryService.updateDictionary(thought);
   }
 
   @override
@@ -34,17 +35,18 @@ class ThoughtService extends IThoughtService {
     //return ref.documentID;
     //get dictionary
 
-    _dictionaryService.updateDictionary(thought, null, null);
+    _dictionaryService.updateDictionary(thought);
   }
 
   @override
   Future<List<Thought>> getThoughts(String uid) async {
+    print("getThoughts called");
     var myThoughtsList = <Thought>[];
     try {
       QuerySnapshot querySnapshot = await Firestore.instance
           .collection(Thought.THOUGHTS_COLLECTION)
           .where(Thought.UID, isEqualTo: uid)
-          .orderBy(Thought.TIMESTAMP)
+          .orderBy(Thought.TIMESTAMP, descending: true)
           .getDocuments();
       if (querySnapshot == null || querySnapshot.documents.length == 0) {
         var newThought = Thought(
@@ -69,9 +71,12 @@ class ThoughtService extends IThoughtService {
           .collection(Thought.THOUGHTS_COLLECTION)
           .document(docID)
           .delete();
+
+      _dictionaryService.removeDictionaryRef(docID);
     } catch (e) {
       throw e;
     }
+    
   }
 
   @override
@@ -82,7 +87,7 @@ class ThoughtService extends IThoughtService {
     try {
       QuerySnapshot querySnapshot = await Firestore.instance
           .collection(Thought.THOUGHTS_COLLECTION)
-          .orderBy(Thought.TIMESTAMP)
+          .orderBy(Thought.TIMESTAMP, descending: true)
           .getDocuments();
 
       for (DocumentSnapshot doc in querySnapshot.documents){

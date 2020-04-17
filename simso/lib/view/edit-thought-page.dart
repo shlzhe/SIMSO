@@ -120,15 +120,13 @@ class EditThoughtPageState extends State<EditThoughtPage> {
     );
     return Scaffold(
         floatingActionButton: UnicornDialer(
-          backgroundColor: Colors.transparent,
-          parentButtonBackground: DesignConstants.red,
-          orientation: UnicornOrientation.VERTICAL,
-          parentButton: Icon(
-            Icons.delete,
-          ),
-          //childButtons: childButtons,
-          onMainButtonPressed: () => controller.deleteThought(),
+        backgroundColor: Colors.transparent,
+        parentButtonBackground: Colors.blueGrey[300],
+        orientation: UnicornOrientation.VERTICAL,
+        parentButton: Icon(
+          Icons.add,
         ),
+      ),
         appBar: AppBar(
           title: Text(
             'Edit Your Thought',
@@ -139,7 +137,6 @@ class EditThoughtPageState extends State<EditThoughtPage> {
           ),
           backgroundColor: DesignConstants.blue,
         ),
-        drawer: MyDrawer(context, user),
         body: Container(
           padding: EdgeInsets.all(10.0),
           child: Form(
@@ -173,30 +170,6 @@ class EditThoughtPageState extends State<EditThoughtPage> {
                       ),
                     ),
                   ),
-                ),
-                Container(
-                  padding: EdgeInsets.only(left: 14.0, bottom: 8.0),
-                ),
-                Theme(
-                  data: Theme.of(context)
-                      .copyWith(splashColor: Colors.transparent),
-                  child: RaisedButton(
-                    child: Text(
-                      'Update',
-                      style: TextStyle(fontSize: 22.0, color: Colors.grey[900]),
-                    ),
-                    onPressed: controller.save,
-                    padding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(18.0),
-                    ),
-                  ),
-                ),
-                Theme(
-                  data: Theme.of(context)
-                      .copyWith(splashColor: Colors.transparent),
-                  child: Text('Keywords: ' + myKeywords.toString()),
-                  
                 ),
                 
               ],

@@ -30,7 +30,7 @@ class MyThoughtsController {
     MyDialog.showProgressBar(state.context);
 
     List<String> myKeywords = await _dictionaryService.getMyKeywords(
-        myThoughtsList[index].thoughtId, null, null);
+        myThoughtsList[index].thoughtId);
 
     await Navigator.push(
         state.context,
@@ -42,5 +42,6 @@ class MyThoughtsController {
           ),
         ));
     Navigator.pop(state.context);
+    Navigator.pop(state.context, null);
   }
 }

@@ -27,6 +27,7 @@ import 'package:simso/view/music-feed.dart';
 import 'package:simso/view/my-memes-page.dart';
 import 'package:simso/view/new-content.dart';
 import 'package:simso/view/profile-page.dart';
+import 'package:simso/view/search-page.dart';
 import '../view/add-music-page.dart';
 import '../view/add-thought-page.dart';
 import '../model/entities/globals.dart' as globals;
@@ -175,6 +176,11 @@ class HomepageController {
   void newContent() async {
     Navigator.push(state.context,
         MaterialPageRoute(builder: (context) => NewContentPage(state.user)));
+  }
+
+  void searchContent() async {
+        Navigator.push(state.context,
+        MaterialPageRoute(builder: (context) => SearchPage(state.user)));
   }
 
   void snapshots() async {

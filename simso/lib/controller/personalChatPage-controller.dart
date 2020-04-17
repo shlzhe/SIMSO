@@ -15,6 +15,7 @@ import 'package:simso/view/personalChatPage.dart';
 import '../service-locator.dart';
 
 class PersonalChatPageController {
+  
   PersonalChatPageState state;
   ITimerService timerService;
   ITouchService touchService;

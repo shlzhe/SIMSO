@@ -21,6 +21,7 @@ void main() async {
     credential= await localUserFunction.readCredential();
   }catch(error){}
   setupServiceLocator();
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(SimsoApp(localUserFunction, email,password, credential));
 }
 class SimsoApp extends StatelessWidget {

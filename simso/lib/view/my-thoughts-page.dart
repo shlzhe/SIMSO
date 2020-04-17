@@ -10,7 +10,7 @@ import '../model/entities/globals.dart' as globals;
 
 class MyThoughtsPage extends StatefulWidget {
   final UserModel user;
-  List<Thought> myThoughtsList;
+  final List<Thought> myThoughtsList;
 
   MyThoughtsPage(this.user, this.myThoughtsList);
 
@@ -101,8 +101,6 @@ class MyThoughtsPageState extends State<MyThoughtsPage> {
                   padding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   decoration: BoxDecoration(
                     color: const Color(0xFFFFFFFF),
-
-        
                     border: Border.all(
                       color: DesignConstants.blue,
                       width: 4,
