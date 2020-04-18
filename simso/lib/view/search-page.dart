@@ -4,26 +4,10 @@ import '../model/entities/thought-model.dart';
 import '../view/design-constants.dart';
 import '../controller/search-page-controller.dart';
 import 'package:flutter/rendering.dart';
-import 'package:simso/service-locator.dart';
-import 'package:simso/model/services/iuser-service.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
-import 'package:simso/controller/new-content-page-controller.dart';
-import 'package:simso/model/entities/image-model.dart';
-import 'package:simso/model/entities/meme-model.dart';
-import 'package:simso/model/entities/song-model.dart';
 import 'package:simso/model/entities/thought-model.dart';
 import 'package:simso/model/entities/user-model.dart';
-import 'package:simso/model/services/iuser-service.dart';
-import 'package:simso/service-locator.dart';
 import 'package:simso/view/design-constants.dart';
-import 'package:simso/view/profile-page.dart';
-
-
-import 'emoji-container.dart';
 
 class SearchPage extends StatefulWidget {
   final UserModel user;

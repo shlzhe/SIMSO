@@ -271,8 +271,6 @@ class HomepageState extends State<Homepage> {
                 ],
               ),
 
-              //=======
-
               IconButton(
                 icon: Icon(Icons.notifications),
                 onPressed: myFriendsRequest,

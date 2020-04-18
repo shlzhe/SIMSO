@@ -94,7 +94,7 @@ class HomepageController {
   }
 
   void setUpCheckCall(BuildContext thisContext) async {
-    print("me===");
+    //print("me===");
     Call call = new Call.isEmpty();
     globals.call = call;
     globals.call.startCallCheck(state.user.uid, state.context);

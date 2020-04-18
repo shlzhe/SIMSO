@@ -5,7 +5,6 @@ import '../model/entities/user-model.dart';
 import '../model/entities/thought-model.dart';
 import '../model/services/idictionary-service.dart';
 import '../view/my-thoughts-page.dart';
-import '../view/add-thought-page.dart';
 import '../view/edit-thought-page.dart';
 import '../view/mydialog.dart';
 
@@ -17,14 +16,6 @@ class MyThoughtsController {
   IDictionaryService _dictionaryService = locator<IDictionaryService>();
 
   MyThoughtsController(this.state);
-
-  void addThought() {
-    Navigator.push(
-        state.context,
-        MaterialPageRoute(
-          builder: (context) => AddThoughtPage(state.user),
-        ));
-  }
 
   void onTapThought(List<Thought> myThoughtsList, int index) async {
     MyDialog.showProgressBar(state.context);
@@ -42,6 +33,6 @@ class MyThoughtsController {
           ),
         ));
     Navigator.pop(state.context);
-    Navigator.pop(state.context, null);
+    //Navigator.pop(state.context, null);
   }
 }

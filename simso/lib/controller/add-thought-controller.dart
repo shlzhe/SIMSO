@@ -4,13 +4,10 @@ import 'package:simso/model/entities/song-model.dart';
 import '../service-locator.dart';
 import '../model/entities/user-model.dart';
 import '../model/entities/thought-model.dart';
-import '../model/entities/dictionary-word-model.dart';
 import '../model/services/ithought-service.dart';
 import '../view/mydialog.dart';
-import '../view/homepage.dart';
 import '../view/add-thought-page.dart';
 import '../view/my-thoughts-page.dart';
-import '../view/profile-page.dart';
 
 class AddThoughtController {
   AddThoughtPageState state;
@@ -59,7 +56,6 @@ class AddThoughtController {
           MaterialPageRoute(
             builder: (context) => MyThoughtsPage(state.user, myThoughtsList),
           ));
-      Navigator.pop(state.context);
       Navigator.pop(state.context);
     } catch (e) {
       MyDialog.info(
