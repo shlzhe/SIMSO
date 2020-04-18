@@ -56,7 +56,7 @@ class HomepageState extends State<Homepage> {
   bool thoughts = true;
   bool friends = true;
   bool visit = false;
-  bool play = true;
+  bool play = false;
   bool pause = true;
   bool leave = false;
   List<Thought> friendsThoughtsList =
