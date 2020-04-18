@@ -14,6 +14,7 @@ import 'package:simso/service-locator.dart';
 import 'package:simso/view/design-constants.dart';
 import 'package:simso/view/profile-page.dart';
 import '../model/entities/globals.dart' as globals;
+import 'package:audioplayers/audioplayers.dart';
 
 import 'emoji-container.dart';
 import 'music-feed.dart';
@@ -38,18 +39,26 @@ class NewContentPageState extends State<NewContentPage> {
   bool thoughts = true;
   bool friends = false;
   bool visit = false;
+  bool play = false;
+  bool pause = true;
+  bool leave = false;
   List<Thought> publicThoughtsList = [];
   List<SongModel> songsList = [];
   List<Meme> memesList = [];
-  
+
   List<ImageModel> imageList = [];
   List<UserModel> allUsersList = [];
   List<SongModel> allSongsList = [];
+  String returnedID;
+  String tempSongUrl;
+  String playerId = "";
 
   gotoProfile(String uid) async {
     UserModel visitUser = await userService.readUser(uid);
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => ProfilePage(user, visitUser, true)));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ProfilePage(user, visitUser, true)));
   }
 
   void stateChanged(Function f) {
@@ -64,9 +73,42 @@ class NewContentPageState extends State<NewContentPage> {
   Widget build(BuildContext context) {
     this.context = context;
     globals.context = context;
+    if (music == false || leave == true) {
+      play = false;
+      pause = true;
+      playerId = "";
+      tempSongUrl = null;
+      if (controller.audioPlayer != null) {
+        controller.audioPlayer.stop();
+        controller.audioPlayer.release();
+        //print("PLAYER DEACTIVATED");
+      } else {
+        controller.audioPlayer.stop();
+        controller.audioPlayer.release();
+        controller.audioPlayer = null;
+        tempSongUrl = null;
+      }
+      setState(() {
+        leave = false;
+      });
+    } else {}
     return Scaffold(
       backgroundColor: music ? Colors.black : Colors.white,
       appBar: AppBar(
+        leading: music
+            ? IconButton(
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  setState(() {
+                    leave = true;
+                  });
+                  Navigator.of(context).pop();
+                },
+              )
+            : null,
         title: Text(
           !thoughts && !meme && !snapshots && !music
               ? 'New Content'
@@ -302,7 +344,7 @@ class NewContentPageState extends State<NewContentPage> {
                                                                             setState(() {
                                                                               visit = true;
                                                                             });
-                                                                           gotoProfile(users.uid);
+                                                                            gotoProfile(users.uid);
                                                                           },
                                                                         )
                                                                   : users.uid ==
@@ -320,7 +362,7 @@ class NewContentPageState extends State<NewContentPage> {
                                                                             setState(() {
                                                                               visit = false;
                                                                             });
-                                                                          gotoProfile(user.uid);
+                                                                            gotoProfile(user.uid);
                                                                           },
                                                                         )
                                                                       : FlatButton(
@@ -336,7 +378,7 @@ class NewContentPageState extends State<NewContentPage> {
                                                                             setState(() {
                                                                               visit = true;
                                                                             });
-                                                                          gotoProfile(users.uid);
+                                                                            gotoProfile(users.uid);
                                                                           },
                                                                         )
                                                             ],
@@ -395,8 +437,10 @@ class NewContentPageState extends State<NewContentPage> {
                                                         EmojiContainer(
                                                           this.context,
                                                           this.user,
-                                                          mediaTypes.music.index,
-                                                          allSongsList[index].songId,
+                                                          mediaTypes
+                                                              .music.index,
+                                                          allSongsList[index]
+                                                              .songId,
                                                           users.uid,
                                                         ),
                                                       ],
@@ -427,7 +471,19 @@ class NewContentPageState extends State<NewContentPage> {
                                       constraints:
                                           BoxConstraints.expand(height: 300),
                                       child: FlatButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          play == false && pause == true
+                                              ? setState(() {
+                                                  controller.playFunc(
+                                                    allSongsList[index].songURL,
+                                                  );
+                                                })
+                                              : setState(() {
+                                                  controller.pauseFunc(
+                                                    allSongsList[index].songURL,
+                                                  );
+                                                });
+                                        },
                                         padding: EdgeInsets.all(0.0),
                                         child: CachedNetworkImage(
                                           imageUrl: allSongsList[index].artWork,

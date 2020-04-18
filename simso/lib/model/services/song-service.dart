@@ -139,7 +139,7 @@ class SongService extends ISongService {
       songlist
           .removeWhere((element) => element.createdBy == user.email.toString());
       if (!friends) {
-        print("NOTFRIENDSONGS");
+        // print("NOTFRIENDSONGS");
         //new content remove friends content
         try {
           for (var u in allUsersList) {
@@ -152,8 +152,8 @@ class SongService extends ISongService {
         } catch (error) {
           print(error);
         }
-        print("============NOTFRIENDSONGLIST LENGTH: " +
-            songlist.length.toString());
+        // print("============NOTFRIENDSONGLIST LENGTH: " +
+        //     songlist.length.toString());
         return songlist.reversed.toList();
       } else {
         try {
@@ -161,7 +161,7 @@ class SongService extends ISongService {
             for (var i in user.friends) {
               //friends content remove public content
               if (u.uid == i) {
-                print("FRIEND EMAIL: " + u.email.toString());
+                //   print("FRIEND EMAIL: " + u.email.toString());
                 var temp =
                     songlist.where((element) => element.createdBy == u.email);
 
@@ -169,8 +169,8 @@ class SongService extends ISongService {
               }
             }
           }
-          print("============FRIENDSONGLIST LENGTH: " +
-              friendsSongsList.length.toString());
+          // print("============FRIENDSONGLIST LENGTH: " +
+          //     friendsSongsList.length.toString());
         } catch (error) {
           print(error);
         }

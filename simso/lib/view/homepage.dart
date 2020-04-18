@@ -27,6 +27,7 @@ import 'package:simso/model/services/ifriend-service.dart';
 import 'package:simso/view/notification-page.dart';
 import 'emoji-container.dart';
 import '../model/entities/globals.dart' as globals;
+import 'package:audioplayers/audioplayers.dart';
 
 
 class Homepage extends StatefulWidget {
@@ -56,6 +57,8 @@ class HomepageState extends State<Homepage> {
   bool friends = true;
   bool visit = false;
   bool play = true;
+  bool pause = true;
+  bool leave = false;
   List<Thought> friendsThoughtsList =
       []; //changed variable name because this is the friends thought list not the public one
   HomepageController controller;
@@ -66,10 +69,9 @@ class HomepageState extends State<Homepage> {
   List<SongModel> allSongsList = [];
   List<UserModel> allUsersList = [];
   List<Meme> memesList;
-  int result;
   String returnedID;
   String tempSongUrl;
-  String playerId;
+  String playerId = "";
   var idController = TextEditingController();
   var formKey = GlobalKey<FormState>();
 
@@ -98,6 +100,25 @@ class HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     this.context = context;
+     if (music == false || leave == true) {
+      play = false;
+      pause = true;
+      playerId = "";
+      tempSongUrl = null;
+      if (controller.audioPlayer != null) {
+        controller.audioPlayer.stop();
+        controller.audioPlayer.release();
+        //print("PLAYER DEACTIVATED");
+      } else {
+        controller.audioPlayer.stop();
+        controller.audioPlayer.release();
+        controller.audioPlayer = null;
+        tempSongUrl = null;
+      }
+      setState(() {
+        leave = false;
+      });
+    } else {}
     if(globals.callState){
       // print("====global true");
       } else {
@@ -109,7 +130,7 @@ class HomepageState extends State<Homepage> {
     var childButtons = List<UnicornButton>();
     final IconButton messageIcon = IconButton(
       icon: Icon(Icons.textsms),
-      iconSize: 40,
+      iconSize: 25,
       onPressed: controller.mainChatScreen,
       color: DesignConstants.yellow,
     );
@@ -223,8 +244,8 @@ class HomepageState extends State<Homepage> {
                 children: <Widget>[
                   messageIcon,
                   Container(
-                    width: 30,
-                    height: 30,
+                    width: 15,
+                    height: 15,
                     alignment: Alignment.topRight,
                     margin: EdgeInsets.only(top: 5),
                     child: Container(
@@ -244,7 +265,7 @@ class HomepageState extends State<Homepage> {
                                     child: Text(
                                         controller.unreadMessages.length
                                             .toString(),
-                                        style: TextStyle(fontSize: 15)),
+                                        style: TextStyle(fontSize: 8)),
                                   ))),
                   )
                 ],
@@ -613,11 +634,17 @@ class HomepageState extends State<Homepage> {
                                           BoxConstraints.expand(height: 300),
                                       child: FlatButton(
                                         onPressed: () {
-                                          setState(() {
-                                            controller.playpause(
-                                                allSongsList[index].songURL,
-                                                play);
-                                          });
+                                         play == false && pause == true
+                                              ? setState(() {
+                                                  controller.playFunc(
+                                                    allSongsList[index].songURL,
+                                                  );
+                                                })
+                                              : setState(() {
+                                                  controller.pauseFunc(
+                                                    allSongsList[index].songURL,
+                                                  );
+                                                });
                                         },
                                         padding: EdgeInsets.all(0.0),
                                         child: CachedNetworkImage(
