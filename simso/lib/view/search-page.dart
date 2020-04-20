@@ -1,64 +1,69 @@
 import 'package:flutter/material.dart';
-import 'package:unicorndial/unicorndial.dart';
 import '../model/entities/user-model.dart';
-import '../model/entities/meme-model.dart';
+import '../model/entities/thought-model.dart';
 import '../view/design-constants.dart';
-import '../controller/add-meme-controller.dart';
-import '../model/entities/globals.dart' as globals;
+import '../controller/search-page-controller.dart';
+import 'package:flutter/rendering.dart';
+import 'package:simso/service-locator.dart';
+import 'package:simso/model/services/iuser-service.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+import 'package:simso/controller/new-content-page-controller.dart';
+import 'package:simso/model/entities/image-model.dart';
+import 'package:simso/model/entities/meme-model.dart';
+import 'package:simso/model/entities/song-model.dart';
+import 'package:simso/model/entities/thought-model.dart';
+import 'package:simso/model/entities/user-model.dart';
+import 'package:simso/model/services/iuser-service.dart';
+import 'package:simso/service-locator.dart';
+import 'package:simso/view/design-constants.dart';
+import 'package:simso/view/profile-page.dart';
 
-class AddMemePage extends StatefulWidget {
+
+import 'emoji-container.dart';
+
+class SearchPage extends StatefulWidget {
   final UserModel user;
-  final Meme meme;
+  
 
-  AddMemePage(this.user, this.meme);
+  SearchPage(this.user);
 
   @override
   State<StatefulWidget> createState() {
-    return AddMemePageState(user, meme);
+    return SearchPageState(user);
   }
 }
 
-class AddMemePageState extends State<AddMemePage> {
+class SearchPageState extends State<SearchPage> {
   BuildContext context;
-  AddMemeController controller;
-
+  SearchPageController controller;
+  List<Thought> thoughtList = [];
+  Set<Thought> thoughtSet = {};
   UserModel user;
-  Meme meme;
-  Meme memeCopy;
-
-  //bool entry = false; //keep, there was something I liked about this snippet of code from Hiep
+  String searchTerm;
 
   var formKey = GlobalKey<FormState>();
 
-  AddMemePageState(this.user, this.meme) {
-    controller = AddMemeController(this);
-    if (meme == null) {
-      //addButton
-      memeCopy = Meme.empty();
-    } else {
-      memeCopy = Meme.clone(meme);
-    }
+  SearchPageState(this.user) {
+    controller = SearchPageController(this);
   }
 
   void stateChanged(Function f) {
     setState(f);
   }
 
+
   @override
   Widget build(BuildContext context) {
     this.context = context;
-    globals.context = context;
-    var childButtons = List<UnicornButton>();
+    
     return Scaffold(
-
         appBar: AppBar(
-          actions: meme == null
-              ? null:<Widget>[
-                  IconButton(
-                      icon: Icon(Icons.delete), onPressed: controller.deleteMeme,
-                  )],
           title: Text(
-            'Memes',
+            'Search',
             style: TextStyle(
                 fontFamily: 'Quicksand',
                 fontSize: 30.0,
@@ -76,21 +81,21 @@ class AddMemePageState extends State<AddMemePage> {
                   data: Theme.of(context)
                       .copyWith(splashColor: Colors.transparent),
                   child: TextFormField(
-                    autofocus: false,
-                    initialValue: memeCopy.imgUrl,
-                    validator: controller.validateImgUrl,
-                    onSaved: controller.saveImgUrl,
+                    maxLines: 1,
+                    initialValue: '',
+                    validator: controller.validateSearchTerms,
+                    onTap: controller.search,
                     style: TextStyle(fontSize: 22.0, color: Colors.grey[700]),
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
-                      hintText: 'Input your url',
+                      hintText: 'Ex. Blue',
                       hintStyle:
                           TextStyle(fontSize: 20.0, color: Colors.grey[400]),
                       contentPadding: const EdgeInsets.only(
                           left: 14.0, bottom: 8.0, top: 8.0),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
+                        borderSide: BorderSide(color: Colors.grey[400]),
                         borderRadius: BorderRadius.circular(25.7),
                       ),
                       enabledBorder: UnderlineInputBorder(
@@ -108,16 +113,16 @@ class AddMemePageState extends State<AddMemePage> {
                       .copyWith(splashColor: Colors.transparent),
                   child: RaisedButton(
                     child: Text(
-                      'Done',
+                      'Search',
                       style: TextStyle(fontSize: 22.0, color: Colors.grey[900]),
                     ),
-                    onPressed: controller.save,
+                    onPressed: controller.search,
                     padding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                     shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(18.0),
                     ),
                   ),
-                ),
+                ),                
               ],
             ),
           ),

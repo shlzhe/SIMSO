@@ -46,6 +46,10 @@ dependencies:
   translator: ^0.1.4
   dash_chat: ^1.0.18
   agora_rtc_engine: ^1.0.8
+  audioplayers: ^0.15.0
+  emoji_picker: ^0.1.0
+  uuid: ^2.0.4
+  string_similarity: ^1.0.1
 
 
   # The following adds the Cupertino Icons font to your application.

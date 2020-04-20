@@ -1,8 +1,15 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:simso/model/entities/call-model.dart';
 import 'package:simso/model/entities/meme-model.dart';
+import 'package:simso/model/entities/message-model.dart';
+import 'package:simso/model/entities/thought-model.dart';
 import 'package:simso/model/entities/myfirebase.dart';
 import 'package:simso/model/entities/song-model.dart';
 import 'package:simso/model/entities/user-model.dart';
+import 'package:simso/model/services/icall-service.dart';
 import 'package:simso/model/services/ilimit-service.dart';
 import 'package:simso/model/services/imeme-service.dart';
 import 'package:simso/model/services/isong-service.dart';
@@ -10,19 +17,25 @@ import 'package:simso/model/services/ithought-service.dart';
 import 'package:simso/model/services/itimer-service.dart';
 import 'package:simso/model/services/itouch-service.dart';
 import 'package:simso/model/services/iuser-service.dart';
+import 'package:simso/model/services/message-service.dart';
 import 'package:simso/service-locator.dart';
 import 'package:simso/view/add-photo-page.dart';
+import 'package:simso/view/design-constants.dart';
 import 'package:simso/view/homepage.dart';
 import 'package:simso/view/mainChat-page.dart';
 import 'package:simso/view/music-feed.dart';
 import 'package:simso/view/my-memes-page.dart';
 import 'package:simso/view/new-content.dart';
 import 'package:simso/view/profile-page.dart';
+import 'package:simso/view/search-page.dart';
 import '../view/add-music-page.dart';
 import '../view/add-thought-page.dart';
 import '../model/entities/globals.dart' as globals;
+import 'package:audioplayers/audioplayers.dart';
+import 'package:uuid/uuid.dart';
 
 class HomepageController {
+  AudioPlayer audioPlayer = new AudioPlayer(playerId: null);
   HomepageState state;
   ITimerService timerService;
   ITouchService touchService;
@@ -31,10 +44,13 @@ class HomepageController {
   List<UserModel> userList;
   List<SongModel> songList = new List<SongModel>();
   String userID;
+  int result;
   final ISongService _songService = locator<ISongService>();
   final IUserService _userService = locator<IUserService>();
   final IThoughtService thoughtService = locator<IThoughtService>();
   final IMemeService memeService = locator<IMemeService>();
+  final ICallService callService = locator<ICallService>();
+  var unreadMessages;
 
   HomepageController(this.state, this.timerService, this.touchService,
       this.limitService, this.songList);
@@ -47,15 +63,18 @@ class HomepageController {
         ));
     if (s != null) {
       print("ADD SONG TO LOCAL LIST");
-      state.songlist.add(s);
+      state.songs.add(s);
     } else {
       //print("ERROR ADDING SONG TO LOCAL LIST");
     }
   }
 
   Future navigateToMemes() async {
-    List<Meme> myMemesList= await memeService.getMemes(state.user.uid);
-    Navigator.push(state.context, MaterialPageRoute(builder: (context)=>MyMemesPage(state.user, myMemesList)));
+    List<Meme> myMemesList = await memeService.getMemes(state.user.uid);
+    Navigator.push(
+        state.context,
+        MaterialPageRoute(
+            builder: (context) => MyMemesPage(state.user, myMemesList)));
   }
 
   Future addThought() async {
@@ -72,6 +91,13 @@ class HomepageController {
         MaterialPageRoute(
           builder: (context) => AddPhoto(state.user, null),
         ));
+  }
+
+  void setUpCheckCall(BuildContext thisContext) async {
+    print("me===");
+    Call call = new Call.isEmpty();
+    globals.call = call;
+    globals.call.startCallCheck(state.user.uid, state.context);
   }
 
   void setupTimer() async {
@@ -137,26 +163,6 @@ class HomepageController {
     //Retrieve User Model from friendListUID
     //friendListUID only contains friend UIDs
 
-/*
-  List<Message> messageCollection;
- 
-
-  try {
-      //Stuff in userList
-      messageCollection = await MyFirebase.getMessages(state.user.uid);
-    } catch (e) {
-      throw e.toString();
-    }
-  for(int i = 0; i< messageCollection.length; i++){
-    //GET ALL MESSAGES WITH SENDER = CURRENT USER UID
-    if(messageCollection[i].sender == userList[currentIndex].uid) {
-      //Create a Collecion where sender is current user ONLY
-      print('Testing $i:${messageCollection[i].text}');
-
-    }   
-  }
- */
-
     print('USER CURRENT INDEX: $currentIndex');
     //Navigate MainChatScreen Page
     //Passing the userList array to MainChatScreen Page
@@ -169,14 +175,28 @@ class HomepageController {
   }
 
   void newContent() async {
-    Navigator.push(state.context,
-        MaterialPageRoute(builder: (context) => NewContentPage(state.user)));
+    state.stateChanged(() {
+      state.leave = true;
+    });
+    Navigator.push(
+      state.context,
+      MaterialPageRoute(
+        builder: (context) => NewContentPage(state.user),
+      ),
+    );
   }
 
-  void snapshots() async{
-    state.memesList=[];
-    state.publicThoughtsList = [];
-    state.imageList = await state.imageService.contentSnaps(state.friends, state.user);
+  void searchContent() async {
+    Navigator.push(state.context,
+        MaterialPageRoute(builder: (context) => SearchPage(state.user)));
+  }
+
+  void snapshots() async {
+    state.memesList = [];
+    state.friendsThoughtsList = [];
+    state.allSongsList = [];
+    state.imageList =
+        await state.imageService.contentSnaps(state.friends, state.user);
     if (state.snapshots == false) {
       state.meme = false;
       state.thoughts = false;
@@ -187,6 +207,11 @@ class HomepageController {
   }
 
   Future music() async {
+    state.memesList = [];
+    state.imageList = [];
+    state.allSongsList =
+        await _songService.contentSongList(state.friends, state.user);
+    state.allUsersList = await _userService.readAllUser();
     if (state.music == false) {
       state.stateChanged(() {
         state.meme = false;
@@ -195,35 +220,22 @@ class HomepageController {
         state.snapshots = false;
       });
     }
-    List<SongModel> allSongList;
-    List<UserModel> allUserList;
-    try {
-      print("GET SONGS & USERS");
-      allSongList = await _songService.getAllSongList();
-      allUserList = await _userService.readAllUser();
-    } catch (e) {
-      allSongList = <SongModel>[];
-
-      print("SONGLIST LENGTH: " + allSongList.length.toString());
-    }
-    print("SUCCEED IN GETTING SONGS & USERS");
-    Navigator.push(
-      state.context,
-      MaterialPageRoute(
-        builder: (context) => MusicFeed(
-          state.user,
-          allUserList,
-          allSongList,
-        ),
-      ),
-    );
+    state.stateChanged(() {});
   }
 
   void thoughts() async {
-    state.memesList=[];
+    state.memesList = [];
     state.imageList = [];
-    state.publicThoughtsList = await thoughtService.contentThoughtList(state.friends, state.user, state.user.language);
-    if (state.thoughts == false){
+    state.allSongsList = [];
+    state.friendsThoughtsList =
+        await thoughtService.contentThoughtList(state.friends, state.user);
+
+    for (Thought thought in state.friendsThoughtsList) {
+      thought.text = await thoughtService.translateThought(
+          state.user.language, thought.text);
+    }
+
+    if (state.thoughts == false) {
       state.meme = false;
       state.thoughts = true;
       state.music = false;
@@ -233,10 +245,12 @@ class HomepageController {
     state.stateChanged(() {});
   }
 
-  void meme() async{
-    state.publicThoughtsList = [];
+  void meme() async {
+    state.friendsThoughtsList = [];
     state.imageList = [];
-    state.memesList = await memeService.contentMemeList(state.friends, state.user);
+    state.allSongsList = [];
+    state.memesList =
+        await memeService.contentMemeList(state.friends, state.user);
     if (state.meme == false) {
       state.meme = true;
       state.thoughts = false;
@@ -246,9 +260,154 @@ class HomepageController {
     }
   }
 
-  void gotoProfile(String uid) {
-    Navigator.push(state.context, MaterialPageRoute(
-      builder: (context)=> ProfilePage(state.user, true)));
+  Future playFunc(String songUrl) async {
+    var uuid = Uuid();
+
+    playSong() async {
+      try {
+        result = await audioPlayer.play(songUrl);
+        if (result == 1) {
+          print("============== Play Success");
+        } else {
+          print("============== Play Failed");
+        }
+      } catch (e) {
+        print("Play Error: " + e.toString());
+      }
+    }
+
+    stopSong() async {
+      try {
+        result = await audioPlayer.stop();
+        if (result == 1) {
+          print("============== Stop Success");
+        } else {
+          print("============== Stop Failed");
+        }
+      } catch (e) {
+        print("Stop Song Error: " + e.toString());
+      }
+    }
+
+    if (state.play == false && state.pause == true) {
+      if (state.playerId == "") {
+        audioPlayer = new AudioPlayer(playerId: uuid.v4());
+        //print("============= 1st playerId: " + audioPlayer.playerId.toString());
+        state.stateChanged(() {
+          state.tempSongUrl = songUrl;
+          state.playerId = audioPlayer.playerId;
+        });
+        playSong();
+        state.stateChanged(() {
+          state.play = true;
+          state.pause = false;
+        });
+      } else {
+        playSong();
+        state.stateChanged(() {
+          state.play = true;
+          state.pause = false;
+        });
+      }
+    }
+
+    if (state.play == true &&
+        state.pause == false &&
+        songUrl != state.tempSongUrl) {
+      await stopSong();
+      state.stateChanged(() {
+        //print("************* PLAY NEW SONG FRM PAUSE **************");
+        audioPlayer = new AudioPlayer(playerId: uuid.v4());
+        // print("============= Subsequent new playerId: " +
+        //     audioPlayer.playerId.toString());
+
+        state.play = true;
+        state.pause = false;
+        state.tempSongUrl = songUrl;
+        state.playerId = audioPlayer.playerId;
+        playSong();
+      });
+    }
   }
 
+  Future pauseFunc(String songUrl) async {
+    var uuid = Uuid();
+
+    playSong() async {
+      try {
+        result = await audioPlayer.play(songUrl);
+        if (result == 1) {
+          print("============== Play Success");
+        } else {
+          print("============== Play Failed");
+        }
+      } catch (e) {
+        print("Play Error: " + e.toString());
+      }
+    }
+
+    stopSong() async {
+      try {
+        result = await audioPlayer.stop();
+        if (result == 1) {
+          print("============== Stop Success");
+        } else {
+          print("============== Stop Failed");
+        }
+      } catch (e) {
+        print("Stop Song Error: " + e.toString());
+      }
+    }
+
+    pauseSong() async {
+      try {
+        result = await audioPlayer.pause();
+        if (result == 1) {
+          print("============== Pause Success");
+        } else {
+          print("============== Pause Failed");
+        }
+      } catch (e) {
+        print("Pause Error: " + e.toString());
+      }
+    }
+
+    if (state.play == true && state.pause == false) {
+      if (songUrl != state.tempSongUrl) {
+        //print("************* PLAY NEW SONG FRM PLAY **************");
+        await stopSong();
+        state.stateChanged(() {
+          audioPlayer = new AudioPlayer(playerId: uuid.v4());
+          // print("============= Subsequent new playerId: " +
+          //     audioPlayer.playerId.toString());
+          //pause = true;
+          state.play = true;
+          state.pause = false;
+          state.tempSongUrl = songUrl;
+          state.playerId = audioPlayer.playerId;
+          playSong();
+        });
+      } else {
+        pauseSong();
+        state.stateChanged(() {
+          state.pause = true;
+          state.play = false;
+        });
+      }
+    }
+  }
+
+  void gotoProfile(String uid) async {
+    UserModel visitUser = await _userService.readUser(uid);
+    //clicking a persons name from homepage list
+    Navigator.push(
+        state.context,
+        MaterialPageRoute(
+            builder: (context) => ProfilePage(state.user, visitUser, true)));
+  }
+
+  void getUnreadMessages() async {
+    print('getUnreadMessages called');
+    unreadMessages = await MyFirebase.getUnreadMessages(state.user.uid);
+  }
 }

@@ -20,6 +20,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     
     <application
+        android:usesCleartextTraffic="true"
         android:name="io.flutter.app.FlutterApplication"
         android:label="simso"
         android:icon="@mipmap/ic_launcher">

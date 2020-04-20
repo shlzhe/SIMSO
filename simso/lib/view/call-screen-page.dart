@@ -1,29 +1,38 @@
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
+import 'package:simso/model/entities/call-model.dart';
+import 'package:simso/model/services/icall-service.dart';
+import '../model/entities/globals.dart' as globals;
 
 import '../model/entities/api-constants.dart';
 import '../model/entities/user-model.dart';
+import '../service-locator.dart';
 
 class CallScreenPage extends StatefulWidget {
-  UserModel callerUser, receiverUser;
   bool videoCall;
-  CallScreenPage(this.callerUser, this.receiverUser, this.videoCall);
+  Call call;
+  CallScreenPage(this.videoCall,this.call);
   @override
   State<StatefulWidget> createState() {
-    return CallScreenPageState(callerUser, receiverUser, videoCall);
+    return CallScreenPageState(videoCall,call);
   }
 }
 
 class CallScreenPageState extends State<CallScreenPage> {
-  UserModel callerUser, receiverUser;
   bool videoCall;
   String _channel;
+  ICallService callService = locator<ICallService>();
+  Call call;
   static final _users = <int>[];
   bool muted = false;
-  CallScreenPageState(this.callerUser, this.receiverUser, this.videoCall);
+
+  CallScreenPageState(this.videoCall,this.call);
 
   @override
   void dispose() {
+    globals.callState = false;
+    globals.c = 0;
+    callService.deleteCall(call);
     // clear users
     _users.clear();
     // destroy sdk
@@ -36,7 +45,7 @@ class CallScreenPageState extends State<CallScreenPage> {
   void initState() {
     super.initState();
     // initialize agora sdk
-    _channel = "asdasdasddqwddewfefa";
+    _channel = call.callerUid+call.receiverUid;
     initialize();
   }
 
@@ -60,23 +69,29 @@ class CallScreenPageState extends State<CallScreenPage> {
       int uid,
       int elapsed,
     ) {
+      print("======join channel success");
       setState(() {});
     };
 
     AgoraRtcEngine.onLeaveChannel = () {
       setState(() {
+      print("======leave channel");
+
         _users.clear();
       });
     };
 
     AgoraRtcEngine.onUserJoined = (int uid, int elapsed) {
       setState(() {
+      print("======user join");
         _users.add(uid);
       });
     };
 
     AgoraRtcEngine.onUserOffline = (int uid, int reason) {
       setState(() {
+      print("======user offline");
+
         _users.remove(uid);
       });
     };
@@ -87,6 +102,7 @@ class CallScreenPageState extends State<CallScreenPage> {
       int height,
       int elapsed,
     ) {
+      print("======remove video frame");
       setState(() {});
     };
   }
@@ -215,6 +231,7 @@ class CallScreenPageState extends State<CallScreenPage> {
   }
 
   void _onSwitchCamera() {
+    print("=====switch camera ====");
     AgoraRtcEngine.switchCamera();
   }
 

@@ -9,6 +9,7 @@ import '../model/entities/image-model.dart';
 import '../controller/add-photo-controller.dart';
 import 'package:simso/model/services/ipicture-service.dart';
 import '../service-locator.dart';
+import '../model/entities/globals.dart' as globals;
 
 List<CameraDescription> cameras;
 
@@ -98,6 +99,7 @@ class AddPhotoState extends State<AddPhoto> {
 
   @override
   Widget build(BuildContext context) {
+    globals.context = context;
     return WillPopScope(
       onWillPop: () {
         return Future.value(true);
@@ -253,68 +255,6 @@ class AddPhotoState extends State<AddPhoto> {
     );
   }
 
-//BODY INFORMATION
-
-  // Widget infoInputsWidget() {
-  //   return Form(
-  //         child: Column(
-  //       children: [
-  //         // Padding(
-  //         //   padding: const EdgeInsets.only(left: 3, bottom: 4.0),
-  //         //   child: TextField(
-  //         //       controller: nameController,
-  //         //       onChanged: (v) => nameController.text = v,
-  //         //       decoration: InputDecoration(
-  //         //         labelText: 'Name',
-  //         //       )),
-  //         // ),
-  //         // Padding(
-  //         //   padding: const EdgeInsets.only(left: 3, bottom: 4.0),
-  //         //   child: TextField(
-  //         //       controller: summaryController,
-  //         //       onChanged: null,
-  //         //       decoration: InputDecoration(
-  //         //         labelText: "Summary",
-  //         //       )),
-  //         // ),
-  //         TextFormField(
-  //           initialValue: imageCopy.summary,
-  //           decoration: InputDecoration(
-  //             labelText: 'Summary',
-  //           ),
-  //           autocorrect: false,
-  //           validator: controller2.validateSummary,
-  //           onSaved: controller2.saveSummary,
-  //         ),
-  //         // Padding(
-  //         //   padding: const EdgeInsets.only(left: 3),
-  //         //   child: TextField(
-  //         //       controller: abvController,
-  //         //       onChanged: (v) => abvController.text = v,
-  //         //       decoration: InputDecoration(
-  //         //         labelText: 'ABV',
-  //         //       )),
-  //         // ),
-  //         Padding(
-  //           padding: const EdgeInsets.all(16.0),
-  //           child: Builder(
-  //             builder: (context) {
-  //               return RaisedButton(
-  //                 color: DesignConstants.blue,
-  //                 child: Text('Add Image',
-  //                         style: TextStyle(color:Colors.white
-  //                         ),
-  //                 ),
-  //                 onPressed: controller2.add,
-  //               );
-  //             },
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
   //retake picture
   Widget editCaptureControlRowWidget() {
     return Padding(
@@ -322,7 +262,7 @@ class AddPhotoState extends State<AddPhoto> {
       child: Align(
         alignment: Alignment.topCenter,
         child: IconButton(
-          icon: const Icon(Icons.camera_alt),
+          icon: const Icon(Icons.cancel),
           color: Colors.blue,
           onPressed: () => setState(() {
                 showCamera = true;

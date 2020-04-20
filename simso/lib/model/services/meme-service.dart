@@ -1,10 +1,8 @@
 import 'package:simso/model/entities/meme-model.dart';
-import 'package:simso/model/entities/dictionary-word-model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/service-locator.dart';
 import 'imeme-service.dart';
-//import 'idictionary-service.dart';
 
 class MemeService extends IMemeService {
   //IDictionaryService _dictionaryService = locator<IDictionaryService>();
@@ -24,7 +22,6 @@ class MemeService extends IMemeService {
         return onError.toString();
       }
       );
-   // _dictionaryService.updateDictionary(null, null, null);
   }
 
   @override
@@ -34,9 +31,6 @@ class MemeService extends IMemeService {
         .document(meme.memeId)
         .setData(meme.serialize());
     //return ref.documentID;
-    //get dictionary
-
-   // _dictionaryService.updateDictionary(null, null, null);
   }
 
   @override
@@ -46,7 +40,7 @@ class MemeService extends IMemeService {
       QuerySnapshot queryMeme = await Firestore.instance
           .collection(Meme.MEMES_COLLECTION)
           .where(Meme.OWNERID, isEqualTo: uid)
-          // .orderBy(Meme.TIMESTAMP)
+           .orderBy(Meme.TIMESTAMP)
           .getDocuments();
       if (queryMeme == null || queryMeme.documents.length == 0) {
         return myMemesList;
@@ -54,7 +48,6 @@ class MemeService extends IMemeService {
       for (DocumentSnapshot doc in queryMeme.documents) {
         myMemesList.add(Meme.deserialize(doc.data, doc.documentID));
       }
-      print(myMemesList);
       return myMemesList;
     } catch (e) {
       return myMemesList; //empty list

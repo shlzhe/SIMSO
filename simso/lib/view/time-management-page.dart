@@ -28,7 +28,8 @@ class TimeManagementPageState extends State<TimeManagementPage> {
   ILimitService limitService = locator<ILimitService>();
 
   TimeManagementPageState(this.user) {
-    controller = TimeManagementController(this, timerService, touchService, this.limitService);
+    controller = TimeManagementController(
+        this, timerService, touchService, this.limitService);
   }
 
   void stateChanged(Function f) {
@@ -37,6 +38,8 @@ class TimeManagementPageState extends State<TimeManagementPage> {
 
   @override
   Widget build(BuildContext context) {
+    globals.context = context;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Time Management'),
@@ -48,11 +51,11 @@ class TimeManagementPageState extends State<TimeManagementPage> {
           children: <Widget>[
             Center(
               child: Container(
-                margin: EdgeInsets.only(top: 75),
+                  margin: EdgeInsets.only(top: 75),
                   child: Text(
-                'Time Spent Today',
-                style: TextStyle(fontSize: 24, color: Colors.white),
-              )),
+                    'Time Spent Today',
+                    style: TextStyle(fontSize: 24, color: Colors.white),
+                  )),
             ),
             Container(
                 margin: EdgeInsets.only(top: 15),
@@ -103,20 +106,20 @@ class TimeManagementPageState extends State<TimeManagementPage> {
                       ),
                     ),
                   ],
-                )),  
+                )),
             Center(
               child: Container(
-                margin: EdgeInsets.only(top: 50),
+                  margin: EdgeInsets.only(top: 50),
                   child: Text(
-                'Touches Today',
-                style: TextStyle(fontSize: 24, color: Colors.white),
-              )),
-            ),            
+                    'Touches Today',
+                    style: TextStyle(fontSize: 24, color: Colors.white),
+                  )),
+            ),
             Container(
                 margin: EdgeInsets.only(top: 15),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[                    
+                  children: <Widget>[
                     Text(
                       '${globals.touchCounter.touches}',
                       style: TextStyle(fontSize: 64, color: Colors.white),
@@ -130,9 +133,13 @@ class TimeManagementPageState extends State<TimeManagementPage> {
                   borderRadius: new BorderRadius.circular(5.0),
                 ),
                 color: DesignConstants.blueLight,
-                child: Text('Review Week', style: TextStyle(color: Colors.white, fontSize: 18),),
+                child: Text(
+                  'Review Week',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
                 onPressed: controller.reviewWeek,
-              ),),
+              ),
+            ),
             Container(
               margin: EdgeInsets.only(left: 65, right: 65, top: 10),
               child: FlatButton(
@@ -140,9 +147,13 @@ class TimeManagementPageState extends State<TimeManagementPage> {
                   borderRadius: new BorderRadius.circular(5.0),
                 ),
                 color: DesignConstants.yellow,
-                child: Text('Set Limits', style: TextStyle(color: Colors.black, fontSize: 18),),
+                child: Text(
+                  'Set Limits',
+                  style: TextStyle(color: Colors.black, fontSize: 18),
+                ),
                 onPressed: controller.setLimits,
-              ),),
+              ),
+            ),
           ],
         ),
       ),
