@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:simso/model/entities/call-model.dart';
@@ -23,6 +25,8 @@ class CallScreenPageState extends State<CallScreenPage> {
   String _channel;
   ICallService callService = locator<ICallService>();
   Call call;
+  BuildContext context;
+  Timer timer;
   static final _users = <int>[];
   bool muted = false;
 
@@ -47,6 +51,14 @@ class CallScreenPageState extends State<CallScreenPage> {
     // initialize agora sdk
     _channel = call.callerUid+call.receiverUid;
     initialize();
+    timer = Timer.periodic(Duration(seconds: 2), (t)=>{
+      callService.checkCall(call.receiverUid).then((value)=>{
+        if(value == null){
+          t.cancel(),
+          Navigator.pop(context)
+        }
+      })
+    });
   }
 
   Future<void> initialize() async {
@@ -69,13 +81,13 @@ class CallScreenPageState extends State<CallScreenPage> {
       int uid,
       int elapsed,
     ) {
-      print("======join channel success");
+      // print("======join channel success");
       setState(() {});
     };
 
     AgoraRtcEngine.onLeaveChannel = () {
       setState(() {
-      print("======leave channel");
+      // print("======leave channel");
 
         _users.clear();
       });
@@ -83,14 +95,14 @@ class CallScreenPageState extends State<CallScreenPage> {
 
     AgoraRtcEngine.onUserJoined = (int uid, int elapsed) {
       setState(() {
-      print("======user join");
+      // print("======user join");
         _users.add(uid);
       });
     };
 
     AgoraRtcEngine.onUserOffline = (int uid, int reason) {
       setState(() {
-      print("======user offline");
+      // print("======user offline");
 
         _users.remove(uid);
       });
@@ -102,7 +114,7 @@ class CallScreenPageState extends State<CallScreenPage> {
       int height,
       int elapsed,
     ) {
-      print("======remove video frame");
+      // print("======remove video frame");
       setState(() {});
     };
   }
@@ -237,6 +249,7 @@ class CallScreenPageState extends State<CallScreenPage> {
 
   @override
   Widget build(BuildContext context) {
+    this.context = context;
     return Scaffold(
       appBar: AppBar(
         title: Text('Audio/Video Call'),

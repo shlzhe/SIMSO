@@ -29,11 +29,10 @@ import 'emoji-container.dart';
 import '../model/entities/globals.dart' as globals;
 import 'package:audioplayers/audioplayers.dart';
 
-
 class Homepage extends StatefulWidget {
   final UserModel user;
   final List<SongModel> songlist;
-   
+
   Homepage(this.user, this.songlist);
 
   @override
@@ -96,11 +95,11 @@ class HomepageState extends State<Homepage> {
   void stateChanged(Function f) {
     setState(f);
   }
-  
+
   @override
   Widget build(BuildContext context) {
     this.context = context;
-     if (music == false || leave == true) {
+    if (music == false || leave == true) {
       play = false;
       pause = true;
       playerId = "";
@@ -119,13 +118,13 @@ class HomepageState extends State<Homepage> {
         leave = false;
       });
     } else {}
-    if(globals.callState){
-      // print("====global true");
-      } else {
-      // print("====global false");
+    //call init
+    if (globals.callState) {
+      print("====global true");
+    } else {
+      print("====global false");
       controller.setUpCheckCall(this.context);
     }
-    
 
     var childButtons = List<UnicornButton>();
     final IconButton messageIcon = IconButton(
@@ -601,8 +600,10 @@ class HomepageState extends State<Homepage> {
                                                         EmojiContainer(
                                                           this.context,
                                                           this.user,
-                                                          mediaTypes.music.index,
-                                                          allSongsList[index].songId,
+                                                          mediaTypes
+                                                              .music.index,
+                                                          allSongsList[index]
+                                                              .songId,
                                                           users.uid,
                                                         ),
                                                       ],
@@ -634,7 +635,7 @@ class HomepageState extends State<Homepage> {
                                           BoxConstraints.expand(height: 300),
                                       child: FlatButton(
                                         onPressed: () {
-                                         play == false && pause == true
+                                          play == false && pause == true
                                               ? setState(() {
                                                   controller.playFunc(
                                                     allSongsList[index].songURL,
@@ -763,7 +764,6 @@ class HomepageState extends State<Homepage> {
   }
 
   void myFriendsRequest() async {
-   
     List<FriendRequests> friendRequests =
         await friendService.getFriendRequests(user.friendRequestRecieved);
     Navigator.push(
