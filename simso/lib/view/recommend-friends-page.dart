@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/model/services/ifriend-service.dart';
+import '../controller/recommend-friends-controller.dart';
 import 'package:string_similarity/string_similarity.dart';
 import '../model/entities/globals.dart' as globals;
 
@@ -12,7 +13,9 @@ import 'design-constants.dart';
 
 class RecommendFriends extends StatefulWidget {
   final UserModel currentUser;
+
   RecommendFriends(this.currentUser);
+
   @override
   State<StatefulWidget> createState() {
     return RecommendFriendsState(currentUser);
@@ -20,8 +23,14 @@ class RecommendFriends extends StatefulWidget {
 }
 
 class RecommendFriendsState extends State<RecommendFriends> {
+  
   UserModel currentUser;
-  RecommendFriendsState(this.currentUser);
+  RecommendFriendsController controller;
+  BuildContext context;
+
+  RecommendFriendsState(this.currentUser) {
+    controller = RecommendFriendsController(this, this.currentUser);
+  }
   final IFriendService friendService = locator<IFriendService>();
   List<UserModel> userList = new List<UserModel>();
   List<UserModel> showList = new List<UserModel>();
@@ -38,6 +47,7 @@ class RecommendFriendsState extends State<RecommendFriends> {
 
   @override
   Widget build(BuildContext context) {
+    this.context = context;
     globals.context = context;
 
     return Scaffold(
@@ -193,7 +203,9 @@ class RecommendFriendsState extends State<RecommendFriends> {
       ),
       actions: <Widget>[
         new FlatButton(
-          onPressed: null,
+          onPressed: () {
+            controller.viewProfile(friendUser.uid);
+          },
           child: new Text('View Profile'),
         ),
         new FlatButton(

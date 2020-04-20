@@ -87,10 +87,6 @@ class AddPhotoController {
             // from homepage to edit a picture
             await imageService.updateImage(state.imageCopy);
           }
-
-          // pass a value back to caller, which is 2nd argument
-          // song just stored in firestore
-          // using 2nd arg, caller in homepage addbutton could receive return val
           Navigator.pop(state.context, state.imageCopy);
         } catch (e) {
           // if any error occur in firestore, than give null val
