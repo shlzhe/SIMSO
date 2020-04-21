@@ -13,15 +13,16 @@ import '../service-locator.dart';
 class CallScreenPage extends StatefulWidget {
   bool videoCall;
   Call call;
-  CallScreenPage(this.videoCall,this.call);
+  CallScreenPage(this.videoCall, this.call);
   @override
   State<StatefulWidget> createState() {
-    return CallScreenPageState(videoCall,call);
+    return CallScreenPageState(videoCall, call);
   }
 }
 
 class CallScreenPageState extends State<CallScreenPage> {
   bool videoCall;
+  bool callControl = false;
   String _channel;
   ICallService callService = locator<ICallService>();
   Call call;
@@ -30,7 +31,7 @@ class CallScreenPageState extends State<CallScreenPage> {
   static final _users = <int>[];
   bool muted = false;
 
-  CallScreenPageState(this.videoCall,this.call);
+  CallScreenPageState(this.videoCall, this.call);
 
   @override
   void dispose() {
@@ -49,16 +50,22 @@ class CallScreenPageState extends State<CallScreenPage> {
   void initState() {
     super.initState();
     // initialize agora sdk
-    _channel = call.callerUid+call.receiverUid;
+    _channel = call.callerUid + call.receiverUid;
     initialize();
-    timer = Timer.periodic(Duration(seconds: 2), (t)=>{
-      callService.checkCall(call.receiverUid).then((value)=>{
-        if(value == null){
-          t.cancel(),
-          _onCallEnd(this.context)
-        }
-      })
-    });
+    timer = Timer.periodic(
+        Duration(seconds: 2),
+        (t) => {
+              callService.checkCall(call.receiverUid).then((value) => {
+                    if (callControl)
+                      {t.cancel()}
+                    else if (value == null)
+                      {
+                        t.cancel(),
+                        print("======call auto cancel"),
+                        _onCallEnd(this.context)
+                      }
+                  })
+            });
   }
 
   Future<void> initialize() async {
@@ -87,7 +94,7 @@ class CallScreenPageState extends State<CallScreenPage> {
 
     AgoraRtcEngine.onLeaveChannel = () {
       setState(() {
-      // print("======leave channel");
+        // print("======leave channel");
 
         _users.clear();
       });
@@ -95,14 +102,14 @@ class CallScreenPageState extends State<CallScreenPage> {
 
     AgoraRtcEngine.onUserJoined = (int uid, int elapsed) {
       setState(() {
-      // print("======user join");
+        // print("======user join");
         _users.add(uid);
       });
     };
 
     AgoraRtcEngine.onUserOffline = (int uid, int reason) {
       setState(() {
-      // print("======user offline");
+        // print("======user offline");
 
         _users.remove(uid);
       });
@@ -202,7 +209,11 @@ class CallScreenPageState extends State<CallScreenPage> {
             padding: const EdgeInsets.all(12.0),
           ),
           RawMaterialButton(
-            onPressed: () => _onCallEnd(this.context),
+            onPressed: () => {
+              print("======call manual cancel"),
+              callControl = true,
+              _onCallEnd(this.context),
+            },
             child: Icon(
               Icons.call_end,
               color: Colors.white,
@@ -229,7 +240,6 @@ class CallScreenPageState extends State<CallScreenPage> {
       ),
     );
   }
-
 
   void _onCallEnd(BuildContext context) {
     print("======end call");
