@@ -81,6 +81,7 @@ class Call {
                                     actions: <Widget>[
                                       new FlatButton(
                                         onPressed: ()=>{
+                                          global.callState = false,
                                           Navigator.pop(context),
                                           callService.deleteCall(value)
                                         },

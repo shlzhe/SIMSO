@@ -34,7 +34,7 @@ class CallScreenPageState extends State<CallScreenPage> {
 
   @override
   void dispose() {
-    globals.callState = false;
+    print("======call dispose");
     globals.c = 0;
     callService.deleteCall(call);
     // clear users
@@ -55,7 +55,7 @@ class CallScreenPageState extends State<CallScreenPage> {
       callService.checkCall(call.receiverUid).then((value)=>{
         if(value == null){
           t.cancel(),
-          Navigator.pop(context)
+          _onCallEnd(this.context)
         }
       })
     });
@@ -202,7 +202,7 @@ class CallScreenPageState extends State<CallScreenPage> {
             padding: const EdgeInsets.all(12.0),
           ),
           RawMaterialButton(
-            onPressed: () => _onCallEnd(context),
+            onPressed: () => _onCallEnd(this.context),
             child: Icon(
               Icons.call_end,
               color: Colors.white,
@@ -232,6 +232,8 @@ class CallScreenPageState extends State<CallScreenPage> {
 
 
   void _onCallEnd(BuildContext context) {
+    print("======end call");
+    globals.callState = false;
     Navigator.pop(context);
   }
 
@@ -250,6 +252,7 @@ class CallScreenPageState extends State<CallScreenPage> {
   @override
   Widget build(BuildContext context) {
     this.context = context;
+    print("======call build");
     return Scaffold(
       appBar: AppBar(
         title: Text('Audio/Video Call'),

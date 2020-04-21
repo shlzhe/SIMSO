@@ -99,6 +99,7 @@ class HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     this.context = context;
+    globals.context = context;
     if (music == false || leave == true) {
       play = false;
       pause = true;

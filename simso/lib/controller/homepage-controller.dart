@@ -97,6 +97,7 @@ class HomepageController {
     print("me===");
     Call call = new Call.isEmpty();
     globals.call = call;
+    globals.user = state.user;
     globals.call.startCallCheck(state.user.uid, state.context);
   }
 
