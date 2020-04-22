@@ -4,16 +4,12 @@ import 'package:intl/intl.dart';
 import 'package:simso/model/entities/image-model.dart';
 import 'package:simso/model/entities/meme-model.dart';
 import 'package:simso/model/entities/message-model.dart';
-import 'package:simso/model/entities/myfirebase.dart';
 import 'package:simso/model/entities/song-model.dart';
 import 'package:simso/model/entities/thought-model.dart';
 import 'package:simso/model/services/ilimit-service.dart';
 import 'package:simso/model/services/ipicture-service.dart';
 import 'package:simso/model/services/itouch-service.dart';
-import 'package:simso/view/friends-page.dart';
-import 'package:simso/view/music-feed.dart';
 import 'package:simso/view/navigation-drawer.dart';
-import 'package:simso/view/profile-page.dart';
 import 'package:unicorndial/unicorndial.dart';
 import 'package:flutter/material.dart';
 import 'package:simso/controller/homepage-controller.dart';
@@ -27,7 +23,6 @@ import 'package:simso/model/services/ifriend-service.dart';
 import 'package:simso/view/notification-page.dart';
 import 'emoji-container.dart';
 import '../model/entities/globals.dart' as globals;
-import 'package:audioplayers/audioplayers.dart';
 
 class Homepage extends StatefulWidget {
   final UserModel user;

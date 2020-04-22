@@ -11,17 +11,15 @@ import '../model/entities/user-model.dart';
 import '../service-locator.dart';
 
 class CallScreenPage extends StatefulWidget {
-  bool videoCall;
   Call call;
-  CallScreenPage(this.videoCall, this.call);
+  CallScreenPage(this.call);
   @override
   State<StatefulWidget> createState() {
-    return CallScreenPageState(videoCall, call);
+    return CallScreenPageState(call);
   }
 }
 
 class CallScreenPageState extends State<CallScreenPage> {
-  bool videoCall;
   bool callControl = false;
   String _channel;
   ICallService callService = locator<ICallService>();
@@ -31,7 +29,7 @@ class CallScreenPageState extends State<CallScreenPage> {
   static final _users = <int>[];
   bool muted = false;
 
-  CallScreenPageState(this.videoCall, this.call);
+  CallScreenPageState(this.call);
 
   @override
   void dispose() {
@@ -70,7 +68,7 @@ class CallScreenPageState extends State<CallScreenPage> {
 
   Future<void> initialize() async {
     await AgoraRtcEngine.create(APIConstants.APP_ID);
-    if (videoCall) await AgoraRtcEngine.enableVideo();
+    if (call.videoCall) await AgoraRtcEngine.enableVideo();
     _addAgoraEventHandlers();
     await AgoraRtcEngine.enableWebSdkInteroperability(true);
     await AgoraRtcEngine.setParameters(
