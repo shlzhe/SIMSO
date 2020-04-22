@@ -190,12 +190,12 @@ class PersonalChatPageState extends State<PersonalChatPage> {
                 onPressed: () async => {
                       await _handleCameraAndMic(),
                       call =
-                          new Call(user.uid, userList[index].uid, false, true),
+                          new Call(user.uid, userList[index].uid, false,user.email,user.profilePic),
                       callService.addCall(call),
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CallScreenPage(false, call),
+                          builder: (context) => CallScreenPage(call),
                         ),
                       ),
                     }),
@@ -207,12 +207,12 @@ class PersonalChatPageState extends State<PersonalChatPage> {
                 onPressed: () async => {
                       await _handleCameraAndMic(),
                       call =
-                          new Call(user.uid, userList[index].uid, false, true),
+                          new Call(user.uid, userList[index].uid, true,user.email,user.profilePic),
                       callService.addCall(call),
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CallScreenPage(true, call),
+                          builder: (context) => CallScreenPage(call),
                         ),
                       ),
                     }),

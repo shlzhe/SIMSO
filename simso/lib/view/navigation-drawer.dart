@@ -95,6 +95,9 @@ class MyDrawer extends StatelessWidget {
                 FirebaseAuth.instance.signOut();
                 globals.timer.stopTimer();
                 globals.call.stopCallCheck();
+                globals.c = -1;
+                globals.callState = null;
+                globals.user = null;
                 globals.timer = null;
                 globals.touchCounter = null;
                 globals.limit = null;

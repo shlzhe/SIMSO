@@ -3,6 +3,7 @@ library simso.globals;
 
 import 'package:flutter/cupertino.dart';
 import 'package:simso/model/entities/call-model.dart';
+import 'package:simso/model/entities/user-model.dart';
 import 'package:simso/model/entities/limit-model.dart';
 import 'package:simso/model/entities/timer-model.dart';
 import 'package:simso/model/entities/touch-counter-model.dart';
@@ -13,6 +14,7 @@ LimitModel limit;
 Call call;
 BuildContext context;
 bool callState = false;
+UserModel user;
 int c = 0;
 DateTime getDate(String dateString) {
   var firstDashIndex = dateString.indexOf('/', 1);

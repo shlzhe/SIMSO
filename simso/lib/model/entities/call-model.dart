@@ -1,54 +1,62 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:simso/model/services/call-service.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:simso/model/services/icall-service.dart';
-import 'package:simso/view/call-request-page.dart';
 import 'package:simso/model/entities/globals.dart' as global;
 import 'package:simso/view/call-screen-page.dart';
 
 import '../../service-locator.dart';
+import '../../view/design-constants.dart';
 
 class Call {
   String callerUid;
   String receiverUid;
-  bool callAccepted;
-  bool callStatus;
+  bool videoCall;
+  String callerName;
+  String callerPic;
   ICallService callService = locator<ICallService>();
 
-  Call(this.callerUid, this.receiverUid, this.callAccepted, this.callStatus);
+  Call(this.callerUid, this.receiverUid, this.videoCall, this.callerName,
+      this.callerPic);
   Call.clone(Call b) {
     this.callerUid = b.callerUid;
     this.receiverUid = b.receiverUid;
-    this.callAccepted = b.callAccepted;
-    this.callStatus = b.callStatus;
+    this.videoCall = b.videoCall;
+    this.callerName = b.callerName;
+    this.callerPic = b.callerPic;
   }
   Call.isEmpty() {
     this.callerUid = '';
     this.receiverUid = '';
-    this.callAccepted = null;
-    this.callStatus = null;
+    this.videoCall = null;
+    this.callerName = '';
+    this.callerPic = '';
   }
   static const CALLERUID = 'calleruid';
   static const RECEIVERUID = 'receiveruid';
-  static const CALLACCEPTED = 'callaccepted';
+  static const VIDEOCALL = 'videocall';
   static const CALLLOG = 'callLog';
-  static const CALLSTATUS = 'callstatus';
+  static const CALLERNAME = 'callername';
+  static const CALLERPIC = 'callerpic';
   Map<String, dynamic> serialize() {
     return <String, dynamic>{
       CALLERUID: callerUid,
       RECEIVERUID: receiverUid,
-      CALLACCEPTED: callAccepted,
-      CALLSTATUS: callStatus,
+      VIDEOCALL: videoCall,
+      CALLERNAME: callerName,
+      CALLERPIC: callerPic,
     };
   }
 
   Call.deserialize(Map<String, dynamic> doc)
-      : callAccepted = doc[CALLACCEPTED],
+      : videoCall = doc[VIDEOCALL],
         callerUid = doc[CALLERUID],
-        callStatus = doc[CALLSTATUS],
-        receiverUid = doc[RECEIVERUID];
+        callerName = doc[CALLERNAME],
+        receiverUid = doc[RECEIVERUID],
+        callerPic = doc[CALLERPIC];
 
   bool callCheck;
 
@@ -75,28 +83,66 @@ class Call {
                                   context: context,
                                   barrierDismissible: false,
                                   builder: (_) => AlertDialog(
-                                    title: Text("Incoming Call"),
-                                    content:
-                                        Text("Do you want to accept the call?"),
+                                    title: Text("Incoming Call..."),
+                                    content: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        Container(
+                                          child: Text(value.callerName),
+                                        ),
+                                        Container(
+                                          child: CircleAvatar(
+                                            child: CachedNetworkImage(
+                                              imageUrl: value.callerPic != ''
+                                                  ? value.callerPic
+                                                  : DesignConstants.profile,
+                                              placeholder: (context, url) =>
+                                                  CircularProgressIndicator(),
+                                              errorWidget: (context, url,
+                                                      error) =>
+                                                  Icon(Icons.account_circle),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            new BorderRadius.circular(30.0)),
                                     actions: <Widget>[
-                                      new FlatButton(
-                                        onPressed: ()=>{
+                                      new FlatButton.icon(
+                                        onPressed: () => {
+                                          global.callState = false,
                                           Navigator.pop(context),
                                           callService.deleteCall(value)
                                         },
-                                        child: Text("No"),
+                                        icon: Icon(Icons.call_end),
+                                        color: Colors.red,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              new BorderRadius.circular(30.0),
+                                        ),
+                                        label: Text("Reject"),
                                       ),
-                                      new FlatButton(
-                                        onPressed: () => {
+                                      new FlatButton.icon(
+                                        onPressed: () async => {
+                                          await _handleCameraAndMic(),
                                           Navigator.pop(context),
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    CallScreenPage(true, value),
+                                                    CallScreenPage(value),
                                               )),
                                         },
-                                        child: Text("Yes"),
+                                        icon: Icon(Icons.call),
+                                        color: Colors.green,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                new BorderRadius.circular(
+                                                    30.0)),
+                                        label: Text("Accept"),
                                       ),
                                     ],
                                   ),
@@ -111,5 +157,11 @@ class Call {
 
   stopCallCheck() {
     this.callCheck = false;
+  }
+
+  Future<void> _handleCameraAndMic() async {
+    await PermissionHandler().requestPermissions(
+      [PermissionGroup.camera, PermissionGroup.microphone],
+    );
   }
 }
