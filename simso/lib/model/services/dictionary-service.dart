@@ -1,6 +1,4 @@
 import 'package:simso/model/entities/thought-model.dart';
-import 'package:simso/model/entities/song-model.dart';
-import 'package:simso/model/entities/image-model.dart';
 import 'package:simso/model/entities/dictionary-word-model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -16,6 +14,7 @@ class DictionaryService extends IDictionaryService {
       var thoughtWordList = thought.text
           .replaceAll(new RegExp(r"[^\'\w\s]+"), '')
           .replaceAll(new RegExp(r'[ ]{2,}'), ' ')
+          .toLowerCase()
           .split(' ')
           .toSet();
 
@@ -24,7 +23,6 @@ class DictionaryService extends IDictionaryService {
       var matched = false;
 
       thoughtWordList.forEach((word) async => {
-            word = word.toLowerCase(),
             matched = false,
             if (dictionaryWordList != null)
               {
@@ -184,10 +182,12 @@ class DictionaryService extends IDictionaryService {
 
   //Future<List<Thought>> searchTermRetrieval(String searchTerm) async {
   Future<Set<Thought>> searchTermRetrieval(String searchTerm) async {
+    print('searchTerm: ' +searchTerm);
     //first break down search term into a list of terms
     var searchWordList = searchTerm
         .replaceAll(new RegExp(r"[^\'\w\s]+"), '')
         .replaceAll(new RegExp(r'[ ]{2,}'), ' ')
+        .toLowerCase()
         .split(' ')
         .toSet();
 

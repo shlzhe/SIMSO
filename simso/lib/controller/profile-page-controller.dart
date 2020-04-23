@@ -114,28 +114,30 @@ class ProfilePageController {
           thoughtsList = await _thoughtService.getThoughts(state.visitUser.uid);
 
           for (Thought thought in thoughtsList) {
-            thought.text = await _thoughtService.translateThought(
+            var tempText = await _thoughtService.translateThought(
                 state.currentUser.language, thought.text);
+            if (tempText != null) thought.text = tempText;
           }
 
           Navigator.push(
               state.context,
               MaterialPageRoute(
-                  builder: (context) => VisitThoughtsPage(currentUser, visitUser, thoughtsList)));
+                  builder: (context) =>
+                      VisitThoughtsPage(currentUser, visitUser, thoughtsList)));
         } catch (e) {
           print(e);
         }
       }
     }
-    if (index == 1) {  //Meme
+    if (index == 1) {
+      //Meme
       List<Meme> memesList = [];
 
       if (state.currentUser.uid == state.visitUser.uid ||
           state.visitUser == null) {
         //user wants to visit their own memes
         try {
-          memesList =
-              await _memeService.getMemes(state.currentUser.uid);
+          memesList = await _memeService.getMemes(state.currentUser.uid);
           Navigator.push(
               state.context,
               MaterialPageRoute(
@@ -157,7 +159,8 @@ class ProfilePageController {
           Navigator.push(
               state.context,
               MaterialPageRoute(
-                  builder: (context) => VisitMemesPage(currentUser, visitUser, memesList)));
+                  builder: (context) =>
+                      VisitMemesPage(currentUser, visitUser, memesList)));
         } catch (e) {
           print(e);
         }
@@ -218,6 +221,4 @@ class ProfilePageController {
       print('Limit Dialog opened');
     }
   }
-
-
 }

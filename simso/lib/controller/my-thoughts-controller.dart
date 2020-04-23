@@ -18,14 +18,6 @@ class MyThoughtsController {
 
   MyThoughtsController(this.state);
 
-  void addThought() {
-    Navigator.push(
-        state.context,
-        MaterialPageRoute(
-          builder: (context) => AddThoughtPage(state.user),
-        ));
-  }
-
   void onTapThought(List<Thought> myThoughtsList, int index) async {
     MyDialog.showProgressBar(state.context);
 
@@ -41,7 +33,6 @@ class MyThoughtsController {
             myKeywords,
           ),
         ));
-    Navigator.pop(state.context);
-    Navigator.pop(state.context, null);
+    //Navigator.pop(state.context);
   }
 }

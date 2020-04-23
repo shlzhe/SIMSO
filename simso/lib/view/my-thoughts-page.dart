@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:unicorndial/unicorndial.dart';
 import '../model/entities/user-model.dart';
 import '../model/entities/thought-model.dart';
 import '../view/design-constants.dart';
-import '../view/navigation-drawer.dart';
 import '../controller/my-thoughts-controller.dart';
 import '../model/entities/globals.dart' as globals;
 
@@ -27,8 +25,6 @@ class MyThoughtsPageState extends State<MyThoughtsPage> {
   UserModel user;
   List<Thought> myThoughtsList;
   
-  //bool entry = false; //keep, there was something I liked about this snippet of code from Hiep
-
   var formKey = GlobalKey<FormState>();
 
   MyThoughtsPageState(this.user, this.myThoughtsList) {
@@ -45,38 +41,11 @@ class MyThoughtsPageState extends State<MyThoughtsPage> {
   Widget build(BuildContext context) {
     this.context = context;
     globals.context = context;
-    var childButtons = List<UnicornButton>();
-
-    childButtons.add(
-      UnicornButton(
-        hasLabel: true,
-        labelText: "Add Thoughts",
-        labelFontSize: 10,
-        currentButton: FloatingActionButton(
-          heroTag: "Add Thoughts",
-          backgroundColor: Colors.white,
-          mini: true,
-          child: Icon(
-            Icons.bubble_chart,
-            color: Colors.black,
-          ),
-          onPressed: controller.addThought,
-        ),
-      ),
-    );
+  
 
 
 
     return Scaffold(
-        floatingActionButton: UnicornDialer(
-          backgroundColor: Colors.transparent,
-          parentButtonBackground: Colors.blueGrey[300],
-          orientation: UnicornOrientation.VERTICAL,
-          parentButton: Icon(
-            Icons.add,
-          ),
-          childButtons: childButtons,
-        ),
         appBar: AppBar(
           title: Text(
             'My Thoughts',
@@ -96,8 +65,6 @@ class MyThoughtsPageState extends State<MyThoughtsPage> {
               return Container(
                 padding: EdgeInsets.all(15.0),
                 child: Container(
-                  //padding: EdgeInsets.all(15.0),
-                  //color: Colors.grey[200],
                   padding: EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
                   decoration: BoxDecoration(
                     color: const Color(0xFFFFFFFF),
