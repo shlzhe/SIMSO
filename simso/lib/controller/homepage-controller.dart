@@ -94,7 +94,7 @@ class HomepageController {
   }
 
   void setUpCheckCall(BuildContext thisContext) async {
-    print("home page controller set up check call===");
+    //print("home page controller set up check call===");
     Call call = new Call.isEmpty();
     globals.call = call;
     globals.user = state.user;
@@ -231,9 +231,12 @@ class HomepageController {
     state.friendsThoughtsList =
         await thoughtService.contentThoughtList(state.friends, state.user);
 
+  
     for (Thought thought in state.friendsThoughtsList) {
-      thought.text = await thoughtService.translateThought(
+      var tempText = await thoughtService.translateThought(
           state.user.language, thought.text);
+      if(tempText != null)
+        thought.text = tempText;
     }
 
     if (state.thoughts == false) {

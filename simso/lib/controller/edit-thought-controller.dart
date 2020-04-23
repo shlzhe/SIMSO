@@ -1,16 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:simso/model/entities/song-model.dart';
 import '../service-locator.dart';
 import '../model/entities/user-model.dart';
 import '../model/entities/thought-model.dart';
-import '../model/entities/dictionary-word-model.dart';
 import '../model/services/ithought-service.dart';
 import '../view/mydialog.dart';
-import '../view/homepage.dart';
 import '../view/edit-thought-page.dart';
 import '../view/my-thoughts-page.dart';
-import '../view/profile-page.dart';
 
 class EditThoughtController {
   EditThoughtPageState state;
@@ -76,6 +72,7 @@ class EditThoughtController {
           MaterialPageRoute(
             builder: (context) => MyThoughtsPage(state.user, myThoughtsList),
           ));
+      Navigator.pop(state.context);
       Navigator.pop(state.context);
     } catch (e) {
       MyDialog.info(
