@@ -127,8 +127,8 @@ class ThoughtService extends IThoughtService {
     Future<String> translateThought(String langPref, String text) async {
       String translatedText;
         if (langPref != 'none' && langPref != null) {
-          translatedText =
-              await translator.translate(text, to: langPref);
+          text =
+              await translator.translate(text.toString(), to: langPref);
         }
 
         if(translatedText != null) 

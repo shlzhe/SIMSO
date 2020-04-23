@@ -175,7 +175,7 @@ class NewContentPageState extends State<NewContentPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            publicThoughtsList.elementAt(index).text,
+                            publicThoughtsList.elementAt(index).text.toString(),
                             style: TextStyle(fontSize: 24),
                           ),
                         ],
