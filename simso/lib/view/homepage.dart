@@ -337,7 +337,7 @@ class HomepageState extends State<Homepage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            friendsThoughtsList.elementAt(index).text,
+                            friendsThoughtsList.elementAt(index).text.toString(),
                             style: TextStyle(fontSize: 24),
                           ),
                         ],
