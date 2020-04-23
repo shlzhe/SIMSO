@@ -65,7 +65,7 @@ class SearchPageState extends State<SearchPage> {
                     maxLines: 1,
                     initialValue: '',
                     validator: controller.validateSearchTerms,
-                    onTap: controller.search,
+                    //onSaved: controller.search,
                     style: TextStyle(fontSize: 22.0, color: Colors.grey[700]),
                     decoration: InputDecoration(
                       filled: true,
