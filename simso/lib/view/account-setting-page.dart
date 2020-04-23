@@ -240,7 +240,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
 
   CardSettingsListPicker _buildCardSettingsListPicker_Language() {
     return CardSettingsListPicker(
-      label: 'Language',
+      label: 'Language (Limited Use)',
       initialValue: userCopy.language,
       hintText: 'Language',
       autovalidate: autoValidate,

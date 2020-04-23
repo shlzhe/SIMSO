@@ -34,6 +34,7 @@ class SearchResultsPageState extends State<SearchResultsPage> {
   BuildContext context;
   IUserService userService = locator<IUserService>();
   List<Thought> thoughtList;
+  bool emptyList = true;
 
   gotoProfile(String uid) async {
     UserModel visitUser = await userService.readUser(uid);
@@ -47,6 +48,10 @@ class SearchResultsPageState extends State<SearchResultsPage> {
 
   SearchResultsPageState(this.user, this.thoughtList) {
     controller = SearchResultsPageController(this);
+    if(this.thoughtList.length > 0)
+      emptyList = false;
+    else
+      emptyList = true;
   }
   @override
   Widget build(BuildContext context) {
@@ -60,7 +65,11 @@ class SearchResultsPageState extends State<SearchResultsPage> {
         ),
         backgroundColor: DesignConstants.blue,
       ),
-      body: ListView.builder(
+      body: emptyList 
+      ? Container(
+        child: Text('No results found',style: TextStyle(fontSize: 24)),
+      )
+      : ListView.builder(
               itemCount: thoughtList.length,
               itemBuilder: (BuildContext context, int index) {
                 return Container(
