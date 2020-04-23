@@ -115,10 +115,14 @@ class HomepageState extends State<Homepage> {
       });
     } else {}
     //call init
-    if (globals.callState) {
-      print("====global true");
-    } else {
-      print("====global false");
+    if (globals.callState.toString()!="null"){
+      if (globals.callState) {
+        print("====global true");
+      } else {
+        print("====global false");
+        controller.setUpCheckCall(this.context);
+      }
+    }else{
       controller.setUpCheckCall(this.context);
     }
 
