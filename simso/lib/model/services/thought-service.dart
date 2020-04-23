@@ -125,10 +125,15 @@ class ThoughtService extends IThoughtService {
 
        @override
     Future<String> translateThought(String langPref, String text) async {
+      String translatedText;
         if (langPref != 'none' && langPref != null) {
           text =
               await translator.translate(text.toString(), to: langPref);
         }
-        return text;
+
+        if(translatedText != null) 
+          return translatedText;
+        else
+          return text;
       }
 }

@@ -44,7 +44,7 @@ class EditThoughtPageState extends State<EditThoughtPage> {
   @override
   Widget build(BuildContext context) {
     this.context = context;
-    globals.context = context;
+    
     var childButtons = List<UnicornButton>();
 
 childButtons.add(
@@ -93,6 +93,7 @@ childButtons.add(
         parentButton: Icon(
           Icons.add,
         ),
+        childButtons: childButtons,
       ),
         appBar: AppBar(
           title: Text(

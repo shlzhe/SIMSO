@@ -169,11 +169,13 @@ class PersonalChatPageState extends State<PersonalChatPage> {
             new Column(
               children: <Widget>[
                 //Display profile picture
-                userList[index].profilePic == ''
+                userList[index].profilePic == null || userList[index].profilePic ==''
                     ? Icon(Icons.tag_faces)
                     : CachedNetworkImage(
-                        imageUrl: userList[index].profilePic, height: 30),
-
+                        imageUrl: userList[index].profilePic, height: 30,
+                        placeholder: (context, url)=>CircularProgressIndicator(),
+                      ),
+                        
                 //Display username
                 Text(
                   '${userList[index].username}',
