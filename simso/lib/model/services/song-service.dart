@@ -177,7 +177,7 @@ class SongService extends ISongService {
       }
       return friendsSongsList.reversed.toList();
     } catch (error) {
-      return songlist.reversed.toList();
+      return songlist.toList();
     }
   }
 }
