@@ -52,9 +52,11 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       onWillPop: controller.onBackPressed,
       child: Scaffold(
         key: scaffoldKey,
-        backgroundColor: Colors.white,
+        backgroundColor: DesignConstants.blue,
         appBar: AppBar(
-          title: Text("Account Settings"),
+          backgroundColor: DesignConstants.blue,
+          title: Text("Account Settings",
+              style: TextStyle(color: DesignConstants.yellow, fontSize: 30)),
           actions: (changing || (changing_p && changing_s)) == true
               ? <Widget>[
                   IconButton(
@@ -75,12 +77,13 @@ class AccountSettingPageState extends State<AccountSettingPage> {
         CardSettingsSection(
           header: CardSettingsHeader(
             label: 'Info',
+            color: Colors.white,
           ),
           children: <Widget>[
             Container(
-              padding: EdgeInsets.all(10),
-              width: 70,
-              height: 120,
+              //padding: EdgeInsets.all(10),
+              width: 120,
+              height: 100,
               child: CachedNetworkImage(
                 imageUrl: user.profilePic != null && user.profilePic != ''
                     ? user.profilePic
@@ -97,14 +100,6 @@ class AccountSettingPageState extends State<AccountSettingPage> {
             _buildCardSettingsListPicker_Language(),
             _buildCardSettingsNumberPicker(),
             _buildCardSettingsParagraph(3),
-          ],
-        ),
-        CardSettingsSection(
-          header: CardSettingsHeader(
-            label: 'Security',
-          ),
-          children: <Widget>[
-            //_buildCardSettingsEmail(),
             _buildCardSettingsSwitch(),
             _buildCardSettingsPassword(),
             //_buildCardSettingsButton_Logout(),
@@ -121,8 +116,8 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       label: 'Delete Account',
       isDestructive: true,
       onPressed: controller.deleteUser,
-      backgroundColor: Colors.redAccent,
-      textColor: Colors.white,
+      backgroundColor: Colors.white,
+      textColor: DesignConstants.red,
     );
   }
 
@@ -130,8 +125,8 @@ class AccountSettingPageState extends State<AccountSettingPage> {
     return CardSettingsButton(
       label: 'Change Avatar',
       onPressed: controller.changeAvatar,
-      backgroundColor: Colors.blueGrey,
-      textColor: Colors.white,
+      backgroundColor: Colors.white,
+      textColor: DesignConstants.blue,
     );
   }
 
@@ -174,7 +169,6 @@ class AccountSettingPageState extends State<AccountSettingPage> {
       },
     );
   }
-
 
   CardSettingsParagraph _buildCardSettingsParagraph(int lines) {
     return CardSettingsParagraph(
@@ -240,7 +234,7 @@ class AccountSettingPageState extends State<AccountSettingPage> {
 
   CardSettingsListPicker _buildCardSettingsListPicker_Language() {
     return CardSettingsListPicker(
-      label: 'Language (Limited Use)',
+      label: 'Language',
       initialValue: userCopy.language,
       hintText: 'Language',
       autovalidate: autoValidate,
